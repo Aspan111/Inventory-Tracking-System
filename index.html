@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Prototype - Inventory Tracking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* Шапка в стиле Katana */
+        .navbar {
+            background-color: #0b1e33;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 56px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            height: 100%;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #b0bec5;
+            text-decoration: none;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: white;
+            background-color: #162d4a;
+            border-bottom: 3px solid #2196f3;
+        }
+
+        /* Панель управления под шапкой */
+        .sub-nav {
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 20px;
+        }
+
+        .tab {
+            font-size: 14px;
+            color: #666;
+            padding-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            color: #0b1e33;
+            font-weight: bold;
+            border-bottom: 2px solid #0b1e33;
+        }
+
+        /* Кнопка добавления заказа */
+        .btn-add {
+            background-color: #0043a4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-add:hover {
+            background-color: #002d72;
+        }
+
+        /* Контейнер таблицы */
+        .table-container {
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 13px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #f1f3f5;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Цветные ячейки статусов */
+        .status {
+            font-weight: 600;
+            text-align: center;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 12px;
+            display: inline-block;
+            width: 100%;
+            max-width: 160px;
+        }
+
+        .status.in-stock {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status.not-available {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .status.expected {
+            background-color: #fffde7;
+            color: #f57f17;
+        }
+
+        .status.packed {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Навигация Katana -->
+    <div class="navbar">
+        <div class="logo">Application</div>
+        <div class="nav-links">
+            <div class="nav-item active"><span>🛒 Sell</span></div>
+            <div class="nav-item"><span>📦 Stock</span></div>
+            <div class="nav-item"><span>📋 Items</span></div>
+        </div>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Вкладки листов -->
+    <div class="sub-nav">
+        <div class="tabs">
+            <div class="tab active">Sales orders</div>
+            <div class="tab">Done</div>
+        </div>
+        <!-- Кнопка теперь гарантированно вызывает диалоговые окна -->
+        <button class="btn-add" onclick="addNewOrder()">+ Sales order</button>
+    </div>
+
+    <!-- Таблица учета заказов -->
+    <div class="table-container">
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Amount (\$)</th>
+                    <th>Delivery Deadline</th>
+                    <th>Sales Items (Stock Status)</th>
+                    <th>Delivery Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="color: #0043a4; font-weight: 600;">SO-4</td>
+                    <td>B2B Customer</td>
+                    <td>4,656.00</td>
+                    <td>2026-10-15</td>
+                    <td><div class="status in-stock">In stock</div></td>
+                    <td><div class="status expected">Partially Packed</div></td>
+                </tr>
+                <tr>
+                    <td style="color: #0043a4; font-weight: 600;">SO-5</td>
+                    <td>Shopify Customer</td>
+                    <td>881.32</td>
+                    <td>2026-10-20</td>
+                    <td><div class="status in-stock">In stock</div></td>
+                    <td><div class="status packed">Packed</div></td>
+                </tr>
+                <tr>
+                    <td style="color: #0043a4; font-weight: 600;">SO-6</td>
+                    <td>BigCommerce User</td>
+                    <td>326.94</td>
+                    <td>2026-11-01</td>
+                    <td><div class="status not-available">Not available</div></td>
+                    <td><div class="status expected">Not shipped</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let orderCounter = 7;
+
+        function addNewOrder() {
+            // 1. Запрашиваем имя клиента
+            let customer = prompt("Введите имя клиента (Customer Name):", "Новый Покупатель");
+            if (customer === null) return; // Отмена
+
+            // 2. Запрашиваем сумму
+            let amount = prompt("Введите сумму заказа в \$ (Amount):", "150.00");
+            if (amount === null) return;
+
+            // 3. Запрашиваем дедлайн
+            let deadline = prompt("Введите дату доставки (YYYY-MM-DD):", "2026-11-15");
+            if (deadline === null) return;
+
+            // 4. Выбор статуса склада через простое числовое меню
+            let stockChoice = prompt("Выберите статус товара на складе:\n1 - In stock 🟩\n2 - Not available 🟥", "1");
+            let stockHTML = '';
+            if (stockChoice === "2") {
+                stockHTML = '<div class="status not-available">Not available</div>';
+            } else {
+                stockHTML = '<div class="status in-stock">In stock</div>';
+            }
+
+            // 5. Выбор статуса доставки
+            let deliveryChoice = prompt("Выберите статус доставки:\n1 - Not shipped 🟨\n2 - Packed 🟦", "1");
+            let deliveryHTML = '';
+            if (deliveryChoice === "2") {
+                deliveryHTML = '<div class="status packed">Packed</div>';
+            } else {
+                deliveryHTML = '<div class="status expected">Not shipped</div>';
+            }
+
+            // Вставка новой строки в таблицу
+            const tableBody = document.querySelector("#ordersTable tbody");
+            const newRow = document.createElement("tr");
+
+            newRow.innerHTML = `
+                <td style="color: #0043a4; font-weight: 600;">SO-${orderCounter}</td>
+                <td>${customer}</td>
+                <td>${parseFloat(amount).toFixed(2)}</td>
+                <td>${deadline}</td>
+                <td>${stockHTML}</td>
+                <td>${deliveryHTML}</td>
+            `;
+
+            // Добавляем запись в самый верх таблицы
+            tableBody.insertBefore(newRow, tableBody.firstChild);
+            orderCounter++;
+        }
+    </script>
+</body>
+</html>
