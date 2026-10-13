@@ -232,57 +232,103 @@
     </div>
 
     <script>
-        let orderCounter = 7;
+        // Change this if your backend runs on a different port
+        const API_URL = "https://inventory-backend-1-md7r.onrender.com";
 
-        function addNewOrder() {
-            // 1. Запрашиваем имя клиента
-            let customer = prompt("Введите имя клиента (Customer Name):", "Новый Покупатель");
-            if (customer === null) return; // Отмена
+        // 1. READ Operation: Автоматическая загрузка заказов при открытии страницы
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}/orders`);
+                if (!response.ok) throw new Error("Failed to load orders");
+                const orders = await response.json();
 
-            // 2. Запрашиваем сумму
-            let amount = prompt("Введите сумму заказа в \$ (Amount):", "150.00");
-            if (amount === null) return;
+                const tbody = document.querySelector("#ordersTable tbody");
+                if (!tbody) return;
+                tbody.innerHTML = "";   // Очищаем старые тестовые строки
 
-            // 3. Запрашиваем дедлайн
-            let deadline = prompt("Введите дату доставки (YYYY-MM-DD):", "2026-11-15");
-            if (deadline === null) return;
+                orders.forEach(order => {
+                    // Приведение к нижнему регистру для соответствия классам стилей (например, "in-stock")
+                    const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
+                    const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
 
-            // 4. Выбор статуса склада через простое числовое меню
-            let stockChoice = prompt("Выберите статус товара на складе:\n1 - In stock 🟩\n2 - Not available 🟥", "1");
-            let stockHTML = '';
-            if (stockChoice === "2") {
-                stockHTML = '<div class="status not-available">Not available</div>';
-            } else {
-                stockHTML = '<div class="status in-stock">In stock</div>';
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+                        <td>${order.customer}</td>
+                        <td>$${Number(order.amount).toFixed(2)}</td>
+                        <td>${order.deadline || "No Deadline"}</td>
+                        <td><div class="status ${stockClass}">${order.stock_status}</div></td>
+                        <td><div class="status ${deliveryClass}">${order.delivery_status}</div></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error(err);
+                alert("Could not load orders from the server. Is the backend running?");
             }
-
-            // 5. Выбор статуса доставки
-            let deliveryChoice = prompt("Выберите статус доставки:\n1 - Not shipped 🟨\n2 - Packed 🟦", "1");
-            let deliveryHTML = '';
-            if (deliveryChoice === "2") {
-                deliveryHTML = '<div class="status packed">Packed</div>';
-            } else {
-                deliveryHTML = '<div class="status expected">Not shipped</div>';
-            }
-
-            // Вставка новой строки в таблицу
-            const tableBody = document.querySelector("#ordersTable tbody");
-            const newRow = document.createElement("tr");
-
-            newRow.innerHTML = `
-                <td style="color: #0043a4; font-weight: 600;">SO-${orderCounter}</td>
-                <td>${customer}</td>
-                <td>${parseFloat(amount).toFixed(2)}</td>
-                <td>${deadline}</td>
-                <td>${stockHTML}</td>
-                <td>${deliveryHTML}</td>
-            `;
-
-            // Добавляем запись в самый верх таблицы
-            tableBody.insertBefore(newRow, tableBody.firstChild);
-            orderCounter++;
         }
+
+        // 2. WRITE Operation: Вызывается кнопкой "+ Sales order"
+        async function addNewOrder() {
+            // Имя клиента
+            let customer = prompt("Введите имя клиента (Customer Name):", "Новый Покупатель");
+            if (!customer) return;
+
+            // Сумма заказа
+            let amountInput = prompt("Введите сумму заказа в \$ (Amount):", "150.00");
+            if (!amountInput) return;
+            let amount = parseFloat(amountInput);
+            if (isNaN(amount)) {
+                alert("Invalid amount");
+                return;
+            }
+
+            // Дедлайн
+            let deadline = prompt("Введите дату доставки (YYYY-MM-DD):", "2026-11-15");
+            if (!deadline) return;
+
+            // Статус товара на складе
+            let stockChoice = prompt("Выберите статус товара на складе:\n1 - In stock 🟩\n2 - Not available 🟥", "1");
+            if (!stockChoice) return;
+            let stock_status = (stockChoice === "2") ? "Not available" : "In stock";
+
+            // Статус доставки
+            let deliveryChoice = prompt("Выберите статус доставки:\n1 - Not shipped 🟨\n2 - Packed 🟦", "1");
+            if (!deliveryChoice) return;
+            // Корректировка: В коде Python по умолчанию ожидается "Not shipped" или "Packed"
+            let delivery_status = (deliveryChoice === "2") ? "Packed" : "Not shipped";
+
+            // Отправка JSON-структуры на бэкенд FastAPI
+            try {
+                const response = await fetch(`${API_URL}/orders`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        customer: customer,
+                        amount: amount,
+                        deadline: deadline,
+                        stock_status: stock_status,
+                        delivery_status: delivery_status
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    // Если FastAPI вернул ошибку валидации Pydantic
+                    throw new Error(err.detail || "Validation or Database error");
+                }
+
+                // Перезагружаем таблицу, чтобы увидеть новый добавленный заказ (сгенерированный как SO-036 и т.д.)
+                await loadOrders();
+                alert("Order saved successfully inside Aiven Cloud Database!");
+            } catch (err) {
+                console.error(err);
+                alert("Error saving order: " + err.message);
+            }
+        }
+
+        // Привязываем автоматический вызов функции при загрузке DOM-дерева страницы
+        document.addEventListener("DOMContentLoaded", loadOrders);
     </script>
 </body>
 </html>
- 
