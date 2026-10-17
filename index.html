@@ -1,379 +1,251 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Prototype - Inventory Tracking</title>
+    <title>Inventory Tracking System</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f8f9fa;
-            color: #333;
-        }
-
-        /* Шапка в стиле Katana */
-        .navbar {
-            background-color: #0b1e33;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            height: 56px;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-links {
-            display: flex;
-            height: 100%;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            color: #b0bec5;
-            text-decoration: none;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .nav-item.active {
-            color: white;
-            background-color: #162d4a;
-            border-bottom: 3px solid #2196f3;
-        }
-
-        /* Панель управления под шапкой */
-        .sub-nav {
-            background-color: white;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 20px;
-        }
-
-        .tab {
-            font-size: 14px;
-            color: #666;
-            padding-bottom: 5px;
-            cursor: pointer;
-        }
-
-        .tab.active {
-            color: #0b1e33;
-            font-weight: bold;
-            border-bottom: 2px solid #0b1e33;
-        }
-
-        /* Кнопка добавления заказа */
-        .btn-add {
-            background-color: #0043a4;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 13px;
-            transition: background-color 0.2s;
-        }
-
-        .btn-add:hover {
-            background-color: #002d72;
-        }
-
-        /* Контейнер таблицы */
-        .table-container {
-            padding: 20px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            font-size: 13px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        th {
-            background-color: #f1f3f5;
-            color: #666;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        /* Цветные ячейки статусов */
-        .status {
-            font-weight: 600;
-            text-align: center;
-            border-radius: 4px;
-            padding: 6px 10px;
-            font-size: 12px;
-            display: inline-block;
-            width: 100%;
-            max-width: 160px;
-        }
-
-        .status.in-stock {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status.not-available {
-            background-color: #ffebee;
-            color: #c62828;
-        }
-
-        .status.expected {
-            background-color: #fffde7;
-            color: #f57f17;
-        }
-
-        .status.packed {
-            background-color: #e3f2fd;
-            color: #1565c0;
-        }
-
-        /* Делаем ячейку статуса контейнером для абсолютного позиционирования иконки */
-        .delivery-cell-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-right: 35px; /* Освобождаем место для корзины справа */
-        }
+        /* General layout configurations */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f7f9fb; }
         
-        /* Стили для кнопки-корзины */
-        .trash-delete-btn {
-            position: absolute;
-            right: 8px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 4px;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s ease, transform 0.1s ease;
-            
-            /* Состояние по умолчанию: серая корзина */
-            color: #a0a0a0; 
-        }
-        
-        /* Состояние при наведении: корзина становится ярко-красной */
-        .trash-delete-btn:hover {
-            color: #ff4d4d;
-            transform: scale(1.15); /* Легкое увеличение при наведении */
-        }
-        
-        /* Эффект при нажатии */
-        .trash-delete-btn:active {
-            transform: scale(0.95);
-        }
+        /* Navigation Top Menu Bar Style */
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .logo-text { font-size: 20px; font-weight: 700; color: #0043a4; }
+        .login-btn, .logout-btn { background-color: #0043a4; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 14px; }
+        .logout-btn { background-color: #ff4d4d; display: none; }
 
+        /* Interface panel toggle mechanics */
+        .interface-panel { display: none; padding: 40px; }
+        .interface-panel.active { display: block; }
+
+        /* Google-Style User Search Interface Box Design Layout */
+        .search-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; }
+        .search-box-container { display: flex; align-items: center; background: white; border: 1px solid #dfe1e5; box-shadow: none; border-radius: 24px; width: 100%; max-width: 600px; height: 44px; padding: 0 16px; box-sizing: border-box; }
+        .search-box-container:hover { box-shadow: 0 1px 6px rgba(32,33,36,0.28); border-color: rgba(223,225,229,0); }
+        .search-input { flex-grow: 1; height: 34px; border: none; padding: 0; font-size: 16px; outline: none; color: #202124; }
+        .search-input::placeholder { color: #9aa0a6; }
+
+        /* Management Table styling properties */
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #edf2f7; }
+        th { background-color: #f8fafc; font-weight: 600; color: #4a5568; }
+        
+        /* Badges & Actions styles */
+        .status { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .status.in-stock { background-color: #def7ec; color: #03543f; }
+        .status.not-available { background-color: #fde8e8; color: #9b1c1c; }
+        .status.packed { background-color: #e1effe; color: #1e429f; }
+        .status.not-shipped { background-color: #fef08a; color: #713f12; }
+        .delivery-cell-container { position: relative; display: flex; align-items: center; justify-content: space-between; }
+        .trash-delete-btn { background: none; border: none; cursor: pointer; color: #a0a0a0; }
+        .trash-delete-btn:hover { color: #ff4d4d; }
+        .admin-controls { display: none; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- Навигация Katana -->
-    <div class="navbar">
-        <div class="logo">I.T.S.</div>
-        <div style="width: 40px;"></div>
+    <!-- Unified Application Top Header Bar -->
+    <div class="top-navbar">
+        <div class="logo-text">Katana Inventory</div>
+        <button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>
+        <button id="logoutBtn" class="logout-btn" onclick="triggerLogout()">Logout</button>
     </div>
 
-    <!-- Вкладки листов -->
-    <div class="sub-nav">
-        <div class="tabs">
-            <div class="tab active">Sales orders</div>
+    <!-- 1. USER INTERFACE MODE PANEL -->
+    <div id="userPanel" class="interface-panel active">
+        <div class="search-wrapper">
+            <div class="search-box-container">
+                <input type="text" id="userQueryInput" class="search-input" placeholder="Enter order ID or Customer name" onkeypress="handleSearchKeyPress(event)">
+            </div>
+            
+            <!-- Result Output Table directly rendered inside the consumer pipeline panel -->
+            <table id="userResultsTable" style="display: none; margin-top: 40px;">
+                <thead>
+                    <tr>
+                        <th>ORDER #</th>
+                        <th>CUSTOMER</th>
+                        <th>AMOUNT ($)</th>
+                        <th>DELIVERY DEADLINE</th>
+                        <th>STOCK STATUS</th>
+                        <th>DELIVERY STATUS</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
-        <!-- Кнопка теперь гарантированно вызывает диалоговые окна -->
-        <button class="btn-add" onclick="addNewOrder()">+ Sales order</button>
     </div>
 
-    <!-- Таблица учета заказов -->
-    <div class="table-container">
+    <!-- 2. ADMIN INTERFACE MODE PANEL -->
+    <div id="adminPanel" class="interface-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
+            <button class="login-btn" onclick="addNewOrder()">+ Sales order</button>
+        </div>
+        
         <table id="ordersTable">
             <thead>
                 <tr>
-                    <th>Order #</th>
-                    <th>Customer</th>
-                    <th>Amount (\$)</th>
-                    <th>Delivery Deadline</th>
-                    <th>Sales Items (Stock Status)</th>
-                    <th>Delivery Status</th>
+                    <th>ORDER #</th>
+                    <th>CUSTOMER</th>
+                    <th>AMOUNT ($)</th>
+                    <th>DELIVERY DEADLINE</th>
+                    <th>STOCK STATUS</th>
+                    <th>DELIVERY STATUS</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
 
+    <!-- Execution Script bindings -->
     <script>
-        // Change this if your backend runs on a different port
         const API_URL = "https://inventory-backend-1-md7r.onrender.com";
+        let currentRole = "User"; // Standard default state rule parameter
 
-        // 1. READ Operation: Автоматическая загрузка заказов при открытии страницы
-        async function loadOrders() {
-        try {
-            const response = await fetch(`${API_URL}/orders`);
-            if (!response.ok) throw new Error("Failed to load orders");
-            const orders = await response.json();
-    
-            const tbody = document.querySelector("#ordersTable tbody");
-            if (!tbody) return;
-            tbody.innerHTML = "";   // Clear existing temporary rows
-    
-            orders.forEach(order => {
-                const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
-                const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
-    
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
-                    <td>${order.customer}</td>
-                    <td>$${Number(order.amount).toFixed(2)}</td>
-                    <td>${order.deadline || "No Deadline"}</td>
-                    <td><div class="status ${stockClass}">${order.stock_status}</div></td>
+        // Handles conditional role navigation flows
+        function handleAuthAction() {
+            const userVal = prompt("Enter Admin Username:", "avnadmin");
+            if (!userVal) return;
+            const passVal = prompt("Enter Admin Password:");
+            if (!passVal) return;
+
+            // Trigger secure authentication validation request targeting Python API
+            fetch(`${API_URL}/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: userVal, password: passVal })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Unauthorized credentials error");
+                return res.json();
+            })
+            .then(data => {
+                alert("Login Successful! Access granted to Admin Dashboard.");
+                currentRole = "Admin";
+                document.getElementById("authBtn").style.display = "none";
+                document.getElementById("logoutBtn").style.display = "block";
+                
+                document.getElementById("userPanel").classList.remove("active");
+                document.getElementById("adminPanel").classList.add("active");
+                loadAdminTableRecords();
+            })
+            .catch(err => alert("Access Denied: Invalid Username or Password."));
+        }
+
+        function triggerLogout() {
+            currentRole = "User";
+            document.getElementById("authBtn").style.display = "block";
+            document.getElementById("logoutBtn").style.display = "none";
+            document.getElementById("adminPanel").classList.remove("active");
+            document.getElementById("userPanel").classList.add("active");
+            document.getElementById("userResultsTable").style.display = "none";
+            document.getElementById("userQueryInput").value = "";
+        }
+
+        // Listener evaluating User interface Enter clicks
+        function handleSearchKeyPress(event) {
+            if (event.key === "Enter") {
+                const searchVal = document.getElementById("userQueryInput").value.trim();
+                if (!searchVal) return;
+
+                fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
+                .then(res => res.json())
+                .then(orders => {
+                    const tbody = document.querySelector("#userResultsTable tbody");
+                    tbody.innerHTML = "";
                     
-                    <!-- Fixed: Combined into exactly one structured cell container to drop the duplicate item column -->
-                    <td>
-                        <div class="delivery-cell-container">
-                            <div class="status ${deliveryClass}">${order.delivery_status}</div>
-                            <button class="trash-delete-btn" title="Delete Order" onclick="deleteOrder('${order.order_number}')">
-                                <svg width="16" height="18" viewBox="0 0 448 512" fill="currentColor">
-                                    <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        } catch (err) {
-            console.error(err);
-            alert("Could not load orders from the server.");
-        }
-    }
+                    if(orders.length === 0) {
+                        alert("No transaction records found matching your input parameters.");
+                        document.getElementById("userResultsTable").style.display = "none";
+                        return;
+                    }
 
-        async function deleteOrder(orderNumber) {
-        if (!confirm(`Are you sure you want to delete order ${orderNumber}?`)) {
-            return;
-        }
-    
-        try {
-            // Enforces explicit routing path targeting the unique string key
-            const response = await fetch(`${API_URL}/orders/${orderNumber}`, {
-                method: "DELETE"
-            });
-    
-            if (!response.ok) {
-                const err = await response.json();
-                throw new Error(err.detail || "Failed to delete order");
+                    orders.forEach(order => {
+                        const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
+                        const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+                            <td>${order.customer}</td>
+                            <td>$${Number(order.amount).toFixed(2)}</td>
+                            <td>${order.deadline || "No Deadline"}</td>
+                            <td><div class="status ${stockClass}">${order.stock_status}</div></td>
+                            <td><div class="status ${deliveryClass}">${order.delivery_status}</div></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    document.getElementById("userResultsTable").style.display = "table";
+                });
             }
-    
-            alert(`Order ${orderNumber} deleted successfully!`);
-            await loadOrders(); // Dynamically refreshes grid rows instantly
-        } catch (err) {
-            console.error(err);
-            alert("Error deleting order: " + err.message);
         }
-    }
 
+        // Pulls full operational tracking data for the admin management console panel view
+        function loadAdminTableRecords() {
+            fetch(`${API_URL}/orders`)
+            .then(res => res.json())
+            .then(orders => {
+                const tbody = document.querySelector("#ordersTable tbody");
+                tbody.innerHTML = "";
+                orders.forEach(order => {
+                    const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
+                    const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+                        <td>${order.customer}</td>
+                        <td>$${Number(order.amount).toFixed(2)}</td>
+                        <td>${order.deadline || "No Deadline"}</td>
+                        <td><div class="status ${stockClass}">${order.stock_status}</div></td>
+                        <td>
+                            <div class="delivery-cell-container">
+                                <div class="status ${deliveryClass}">${order.delivery_status}</div>
+                                <button class="trash-delete-btn" title="Delete Row" onclick="deleteOrder('${order.order_number}')">
+                                    <svg width="14" height="16" viewBox="0 0 448 512" fill="currentColor"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+        }
 
-
-        // 2. WRITE Operation: Вызывается кнопкой "+ Sales order"
+        // Administrative WRITE Action: Adds a row
         async function addNewOrder() {
-            // Имя клиента
-            let customer = prompt("Введите имя клиента (Customer Name):", "Новый Покупатель");
+            let customer = prompt("Enter Customer Name:", "New Wholesale Buyer");
             if (!customer) return;
-
-            // Сумма заказа
-            let amountInput = prompt("Введите сумму заказа в \$ (Amount):", "150.00");
+            let amountInput = prompt("Enter Purchase Amount ($):", "250.00");
             if (!amountInput) return;
             let amount = parseFloat(amountInput);
-            if (isNaN(amount)) {
-                alert("Invalid amount");
-                return;
-            }
-
-            // Дедлайн
-            let deadline = prompt("Введите дату доставки (YYYY-MM-DD):", "2026-11-15");
+            let deadline = prompt("Enter Target Delivery Date (YYYY-MM-DD):", "2026-11-20");
             if (!deadline) return;
-
-            // Статус товара на складе
-            let stockChoice = prompt("Выберите статус товара на складе:\n1 - In stock 🟩\n2 - Not available 🟥", "1");
-            if (!stockChoice) return;
+            let stockChoice = prompt("Stock State:1 - In stock 2 - Not available", "1");
             let stock_status = (stockChoice === "2") ? "Not available" : "In stock";
-
-            // Статус доставки
-            let deliveryChoice = prompt("Выберите статус доставки:\n1 - Not shipped 🟨\n2 - Packed 🟦", "1");
-            if (!deliveryChoice) return;
-            // Корректировка: В коде Python по умолчанию ожидается "Not shipped" или "Packed"
+            let deliveryChoice = prompt("Delivery State: 1 - Not shipped 2 - Packed", "1");
             let delivery_status = (deliveryChoice === "2") ? "Packed" : "Not shipped";
 
-            // Отправка JSON-структуры на бэкенд FastAPI
             try {
                 const response = await fetch(`${API_URL}/orders`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        customer: customer,
-                        amount: amount,
-                        deadline: deadline,
-                        stock_status: stock_status,
-                        delivery_status: delivery_status
-                    })
+                    body: JSON.stringify({ customer, amount, deadline, stock_status, delivery_status })
                 });
-
-                if (!response.ok) {
-                    const err = await response.json();
-                    // Если FastAPI вернул ошибку валидации Pydantic
-                    throw new Error(err.detail || "Validation or Database error");
-                }
-
-                // Перезагружаем таблицу, чтобы увидеть новый добавленный заказ (сгенерированный как SO-036 и т.д.)
-                await loadOrders();
-                alert("Order saved successfully inside Aiven Cloud Database!");
-            } catch (err) {
-                console.error(err);
-                alert("Error saving order: " + err.message);
-            }
+                if (!response.ok) throw new Error("Submission transaction rejected.");
+                alert("Order logged successfully inside cloud infrastructure database tables.");
+                loadAdminTableRecords();
+            } catch (err) { alert("Error saving order: " + err.message); }
         }
 
-        // Привязываем автоматический вызов функции при загрузке DOM-дерева страницы
-        document.addEventListener("DOMContentLoaded", loadOrders);
+        // Administrative DELETE Action: Erases a row
+        async function deleteOrder(orderNumber) {
+            if (!confirm(`Are you sure you want to permanently delete order entry ${orderNumber}?`)) return;
+            try {
+                const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
+                if (!response.ok) throw new Error("Deletion request error.");
+                alert(`Order ${orderNumber} deleted successfully.`);
+                loadAdminTableRecords();
+            } catch (err) { alert("Error deleting entry: " + err.message); }
+        }
     </script>
 </body>
 </html>
+        
