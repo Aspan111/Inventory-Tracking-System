@@ -252,49 +252,72 @@
 
         // 1. READ Operation: Автоматическая загрузка заказов при открытии страницы
         async function loadOrders() {
-            try {
-                const response = await fetch(`${API_URL}/orders`);
-                if (!response.ok) throw new Error("Failed to load orders");
-                const orders = await response.json();
-
-                const tbody = document.querySelector("#ordersTable tbody");
-                if (!tbody) return;
-                tbody.innerHTML = "";   // Очищаем старые тестовые строки
-
-                orders.forEach(order => {
-                    // Приведение к нижнему регистру для соответствия классам стилей (например, "in-stock")
-                    const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
-                    const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
-
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
-                        <td>${order.customer}</td>
-                        <td>$${Number(order.amount).toFixed(2)}</td>
-                        <td>${order.deadline || "No Deadline"}</td>
-                        <td><div class="status ${stockClass}">${order.stock_status}</div></td>
-                        <td><div class="status ${deliveryClass}">${order.delivery_status}</div></td>
-
-                        <td>
+        try {
+            const response = await fetch(`${API_URL}/orders`);
+            if (!response.ok) throw new Error("Failed to load orders");
+            const orders = await response.json();
+    
+            const tbody = document.querySelector("#ordersTable tbody");
+            if (!tbody) return;
+            tbody.innerHTML = "";   // Clear existing temporary rows
+    
+            orders.forEach(order => {
+                const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
+                const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
+    
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+                    <td>${order.customer}</td>
+                    <td>$${Number(order.amount).toFixed(2)}</td>
+                    <td>${order.deadline || "No Deadline"}</td>
+                    <td><div class="status ${stockClass}">${order.stock_status}</div></td>
+                    
+                    <!-- Fixed: Combined into exactly one structured cell container to drop the duplicate item column -->
+                    <td>
                         <div class="delivery-cell-container">
                             <div class="status ${deliveryClass}">${order.delivery_status}</div>
                             <button class="trash-delete-btn" title="Delete Order" onclick="deleteOrder('${order.order_number}')">
-                                <!-- Используем SVG иконку мусорного бака для идеального отображения на всех устройствах -->
                                 <svg width="16" height="18" viewBox="0 0 448 512" fill="currentColor">
                                     <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/>
                                 </svg>
                             </button>
                         </div>
                     </td>
-                        
-                    `;
-                    tbody.appendChild(row);
-                });
-            } catch (err) {
-                console.error(err);
-                alert("Could not load orders from the server. Is the backend running?");
-            }
+                `;
+                tbody.appendChild(row);
+            });
+        } catch (err) {
+            console.error(err);
+            alert("Could not load orders from the server.");
         }
+    }
+
+        async function deleteOrder(orderNumber) {
+        if (!confirm(`Are you sure you want to delete order ${orderNumber}?`)) {
+            return;
+        }
+    
+        try {
+            // Enforces explicit routing path targeting the unique string key
+            const response = await fetch(`${API_URL}/orders/${orderNumber}`, {
+                method: "DELETE"
+            });
+    
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.detail || "Failed to delete order");
+            }
+    
+            alert(`Order ${orderNumber} deleted successfully!`);
+            await loadOrders(); // Dynamically refreshes grid rows instantly
+        } catch (err) {
+            console.error(err);
+            alert("Error deleting order: " + err.message);
+        }
+    }
+
+
 
         // 2. WRITE Operation: Вызывается кнопкой "+ Sales order"
         async function addNewOrder() {
