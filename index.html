@@ -45,7 +45,7 @@
 
     <!-- Unified Application Top Header Bar -->
     <div class="top-navbar">
-        <div class="logo-text">I.T.S</div>
+        <div class="logo-text">ITS</div>
         <button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>
         <button id="logoutBtn" class="logout-btn" onclick="triggerLogout()">Logout</button>
     </div>
@@ -101,9 +101,27 @@
         const API_URL = "https://inventory-backend-1-md7r.onrender.com";
         let currentRole = "User"; // Standard default state rule parameter
 
+        // NEW: This function runs automatically every time the page loads or refreshes
+        function checkPersistentLogin() {
+            const savedRole = localStorage.getItem("userRole");
+            
+            if (savedRole === "Admin") {
+                // If the browser remembers you were an Admin, restore the Admin interface instantly
+                currentRole = "Admin";
+                document.getElementById("authBtn").style.display = "none";
+                document.getElementById("logoutBtn").style.display = "block";
+                document.getElementById("userPanel").classList.remove("active");
+                document.getElementById("adminPanel").classList.add("active");
+                loadAdminTableRecords();
+            } else {
+                // Otherwise, keep the standard clean User search view
+                triggerLogout();
+            }
+        }
+
         // Handles conditional role navigation flows
         function handleAuthAction() {
-            const userVal = prompt("Enter Admin Username:", "avnadmin");
+            const userVal = prompt("Enter Admin Username:", "admin");
             if (!userVal) return;
             const passVal = prompt("Enter Admin Password:");
             if (!passVal) return;
@@ -140,6 +158,11 @@
             document.getElementById("userResultsTable").style.display = "none";
             document.getElementById("userQueryInput").value = "";
         }
+
+        // Modified: Ensure BOTH loadAdminTableRecords and checkPersistentLogin run smoothly
+        document.addEventListener("DOMContentLoaded", () => {
+            checkPersistentLogin(); // Natively restores session on page launch or reload actions
+        });
 
         // Listener evaluating User interface Enter clicks
         function handleSearchKeyPress(event) {
