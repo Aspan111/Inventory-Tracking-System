@@ -151,6 +151,9 @@
 
         function triggerLogout() {
             currentRole = "User";
+
+            localStorage.removeItem("userRole");
+            
             document.getElementById("authBtn").style.display = "block";
             document.getElementById("logoutBtn").style.display = "none";
             document.getElementById("adminPanel").classList.remove("active");
