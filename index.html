@@ -139,9 +139,11 @@
             .then(data => {
                 alert("Login Successful! Access granted to Admin Dashboard.");
                 currentRole = "Admin";
+
+                localStorage.setItem("userRole", "Admin");
+                
                 document.getElementById("authBtn").style.display = "none";
                 document.getElementById("logoutBtn").style.display = "block";
-                
                 document.getElementById("userPanel").classList.remove("active");
                 document.getElementById("adminPanel").classList.add("active");
                 loadAdminTableRecords();
