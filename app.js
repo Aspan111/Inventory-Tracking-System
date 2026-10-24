@@ -20,7 +20,7 @@ function checkPersistentLogin() {
 function handleAuthAction() {
     const userVal = prompt("Enter Admin Username:", "admin");
     if (!userVal) return;
-    const passVal = prompt("Enter Admin Password:", "Admin123");
+    const passVal = prompt("Enter Admin Password:");
     if (!passVal) return;
 
     fetch(`${API_URL}/login`, {
