@@ -3,27 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <title>Inventory Tracking System</title>
-    <!-- Подключаем файл со стилями CSS -->
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* General layout configurations */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f7f9fb; }
+        
+        /* Navigation Top Menu Bar Style */
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .logo-text { font-size: 20px; font-weight: 700; color: #0043a4; }
+        .login-btn, .logout-btn { background-color: #0043a4; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 14px; }
+        .logout-btn { background-color: #ff4d4d; display: none; }
+
+        /* Interface panel toggle mechanics */
+        .interface-panel { display: none; padding: 40px; }
+        .interface-panel.active { display: block; }
+
+        /* Google-Style User Search Interface Box Design Layout */
+        .search-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; }
+        .search-box-container { display: flex; align-items: center; background: white; border: 1px solid #dfe1e5; box-shadow: none; border-radius: 24px; width: 100%; max-width: 600px; height: 44px; padding: 0 16px; box-sizing: border-box; }
+        .search-box-container:hover { box-shadow: 0 1px 6px rgba(32,33,36,0.28); border-color: rgba(223,225,229,0); }
+        .search-input { flex-grow: 1; height: 34px; border: none; padding: 0; font-size: 16px; outline: none; color: #202124; }
+        .search-input::placeholder { color: #9aa0a6; }
+
+        /* Management Table styling properties */
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #edf2f7; }
+        th { background-color: #f8fafc; font-weight: 600; color: #4a5568; }
+        
+        /* Badges & Actions styles */
+        .status { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .status.in-stock { background-color: #def7ec; color: #03543f; }
+        .status.not-available { background-color: #fde8e8; color: #9b1c1c; }
+        .status.packed { background-color: #e1effe; color: #1e429f; }
+        .status.not-shipped { background-color: #fef08a; color: #713f12; }
+        .delivery-cell-container { position: relative; display: flex; align-items: center; justify-content: space-between; }
+        .trash-delete-btn { background: none; border: none; cursor: pointer; color: #a0a0a0; }
+        .trash-delete-btn:hover { color: #ff4d4d; }
+        .admin-controls { display: none; margin-bottom: 20px; }
+
+        /* Overlay layer blurring out the background grid views */
+        .modal-overlay-container {
+            display: none; /* Hidden by default state criteria */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Open visibility class trigger state parameter */
+        .modal-overlay-container.is-visible {
+            display: flex;
+        }
+        
+        /* White centered container card matching your structural layout photo reference */
+        .modal-card-content {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 520px;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        
+        .input-form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label-text {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        
+        /* Input fields matching the gray styling bounds from your layout reference image */
+        .form-input-box {
+            width: 100%;
+            height: 40px;
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 0 12px;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input-box:focus {
+            border-color: #3b82f6;
+            background-color: #ffffff;
+        }
+        
+        /* Bright blue submission button matching the layout design reference button */
+        .modal-submit-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            height: 44px;
+            padding: 0 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+        
+        .modal-submit-btn:hover {
+            background-color: #2563eb;
+        }
+        
+        .modal-cancel-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            color: #64748b;
+            height: 44px;
+            padding: 0 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .modal-cancel-btn:hover {
+            background-color: #f8fafc;
+        }
+
+        
+    </style>
 </head>
 <body>
 
-    <!-- Единая навигационная шапка сайта -->
+    <!-- Unified Application Top Header Bar -->
     <div class="top-navbar">
         <div class="logo-text">ITS</div>
-        <div class="nav-actions-group">
-            <button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>
-            <button id="logoutBtn" class="logout-btn" onclick="triggerLogout()">Logout</button>
-        </div>
+        <button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>
+        <button id="logoutBtn" class="logout-btn" onclick="triggerLogout()">Logout</button>
+        <button class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
     </div>
 
-    <!-- 1. ИНТЕРФЕЙС ОБЫЧНОГО ПОЛЬЗОВАТЕЛЯ -->
+    <!-- 1. USER INTERFACE MODE PANEL -->
     <div id="userPanel" class="interface-panel active">
         <div class="search-wrapper">
             <div class="search-box-container">
                 <input type="text" id="userQueryInput" class="search-input" placeholder="Enter order ID or Customer name" onkeypress="handleSearchKeyPress(event)">
             </div>
             
+            <!-- Result Output Table directly rendered inside the consumer pipeline panel -->
             <table id="userResultsTable" style="display: none; margin-top: 40px;">
                 <thead>
                     <tr>
@@ -31,6 +159,7 @@
                         <th>CUSTOMER</th>
                         <th>AMOUNT ($)</th>
                         <th>DELIVERY DEADLINE</th>
+                        <th>STOCK STATUS</th>
                         <th>DELIVERY STATUS</th>
                     </tr>
                 </thead>
@@ -39,11 +168,11 @@
         </div>
     </div>
 
-    <!-- 2. АДМИН-ПАНЕЛЬ С УПРАВЛЕНИЕМ ЗАПИСЯМИ -->
+    <!-- 2. ADMIN INTERFACE MODE PANEL -->
     <div id="adminPanel" class="interface-panel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="margin: 0; color: #1a202c; font-size: 22px;">Admin Management Dashboard</h2>
-            <button class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
+            <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
+            <button class="login-btn" onclick="addNewOrder()">+ Sales order</button>
         </div>
         
         <table id="ordersTable">
@@ -53,6 +182,7 @@
                     <th>CUSTOMER</th>
                     <th>AMOUNT ($)</th>
                     <th>DELIVERY DEADLINE</th>
+                    <!--<th>STOCK STATUS</th>-->
                     <th>DELIVERY STATUS</th>
                 </tr>
             </thead>
@@ -60,30 +190,284 @@
         </table>
     </div>
 
-    <!-- Всплывающее окно добавления заказа (Modal Form) -->
+    <!-- Custom Interactive Form Modal Window Container Layout -->
     <div id="orderModalWindow" class="modal-overlay-container">
         <div class="modal-card-content">
-            <h3 style="margin-top: 0; color: #1a202c; font-size: 18px; margin-bottom: 20px;">Create New Order</h3>
+            <h3 style="margin-top: 0; color: #1a202c; font-size: 20px; font-weight: 700; margin-bottom: 24px;">Create New Order</h3>
+            
             <div class="input-form-group">
                 <label class="form-label-text">Customer Name:</label>
                 <input type="text" id="modalCustomerName" class="form-input-box" placeholder="e.g. Bulk Buyers Inc">
             </div>
+            
             <div class="input-form-group">
                 <label class="form-label-text">Purchase Amount ($):</label>
                 <input type="number" step="0.01" id="modalPurchaseAmount" class="form-input-box" placeholder="0.00">
             </div>
+            
             <div class="input-form-group">
                 <label class="form-label-text">Delivery Date (YYYY-MM-DD):</label>
                 <input type="date" id="modalDeliveryDate" class="form-input-box">
             </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px;">
+            
+            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
                 <button class="modal-cancel-btn" onclick="closeOrderModalWindow()">Cancel</button>
                 <button class="modal-submit-btn" onclick="submitModalOrderData()">New Order</button>
             </div>
         </div>
     </div>
+    
 
-    <!-- Подключаем внешний JavaScript файл с логикой приложения -->
-    <script src="app.js"></script>
+    <!-- Execution Script bindings -->
+    <script>
+        const API_URL = "https://inventory-backend-1-md7r.onrender.com";
+        let currentRole = "User"; // Standard default state rule parameter
+
+        // NEW: This function runs automatically every time the page loads or refreshes
+        function checkPersistentLogin() {
+            const savedRole = localStorage.getItem("userRole");
+            
+            if (savedRole === "Admin") {
+                // If the browser remembers you were an Admin, restore the Admin interface instantly
+                currentRole = "Admin";
+                document.getElementById("authBtn").style.display = "none";
+                document.getElementById("logoutBtn").style.display = "block";
+                document.getElementById("userPanel").classList.remove("active");
+                document.getElementById("adminPanel").classList.add("active");
+                loadAdminTableRecords();
+            } else {
+                // Otherwise, keep the standard clean User search view
+                triggerLogout();
+            }
+        }
+
+        // Handles conditional role navigation flows
+        function handleAuthAction() {
+            const userVal = prompt("Enter Admin Username:", "admin");
+            if (!userVal) return;
+            const passVal = prompt("Enter Admin Password:");
+            if (!passVal) return;
+
+            // Trigger secure authentication validation request targeting Python API
+            fetch(`${API_URL}/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: userVal, password: passVal })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Unauthorized credentials error");
+                return res.json();
+            })
+            .then(data => {
+                alert("Login Successful! Access granted to Admin Dashboard.");
+                currentRole = "Admin";
+
+                localStorage.setItem("userRole", "Admin");
+                
+                document.getElementById("authBtn").style.display = "none";
+                document.getElementById("logoutBtn").style.display = "block";
+                document.getElementById("userPanel").classList.remove("active");
+                document.getElementById("adminPanel").classList.add("active");
+                loadAdminTableRecords();
+            })
+            .catch(err => alert("Access Denied: Invalid Username or Password."));
+        }
+
+        function triggerLogout() {
+            currentRole = "User";
+
+            localStorage.removeItem("userRole");
+            
+            document.getElementById("authBtn").style.display = "block";
+            document.getElementById("logoutBtn").style.display = "none";
+            document.getElementById("adminPanel").classList.remove("active");
+            document.getElementById("userPanel").classList.add("active");
+            document.getElementById("userResultsTable").style.display = "none";
+            document.getElementById("userQueryInput").value = "";
+        }
+
+        // Modified: Ensure BOTH loadAdminTableRecords and checkPersistentLogin run smoothly
+        document.addEventListener("DOMContentLoaded", () => {
+            checkPersistentLogin(); // Natively restores session on page launch or reload actions
+        });
+
+        // Listener evaluating User interface Enter clicks
+        function handleSearchKeyPress(event) {
+            if (event.key === "Enter") {
+                const searchVal = document.getElementById("userQueryInput").value.trim();
+                if (!searchVal) return;
+
+                fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
+                .then(res => res.json())
+                .then(orders => {
+                    const tbody = document.querySelector("#userResultsTable tbody");
+                    tbody.innerHTML = "";
+                    
+                    if(orders.length === 0) {
+                        alert("No transaction records found matching your input parameters.");
+                        document.getElementById("userResultsTable").style.display = "none";
+                        return;
+                    }
+
+                    orders.forEach(order => {
+                        const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
+                        const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+                            <td>${order.customer}</td>
+                            <td>$${Number(order.amount).toFixed(2)}</td>
+                            <td>${order.deadline || "No Deadline"}</td>
+                            <td><div class="status ${stockClass}">${order.stock_status}</div></td>
+                            <td><div class="status ${deliveryClass}">${order.delivery_status}</div></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    document.getElementById("userResultsTable").style.display = "table";
+                });
+            }
+        }
+
+        // Pulls full operational tracking data for the admin management console panel view
+        function loadAdminTableRecords() {
+            fetch(`${API_URL}/orders`)
+            .then(res => res.json())
+            .then(orders => {
+                const tbody = document.querySelector("#ordersTable tbody");
+                tbody.innerHTML = "";
+                orders.forEach(order => {
+                    const currentStatus = order.delivery_status || "Accepted";
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+                        <td>${order.customer}</td>
+                        <td>$${Number(order.amount).toFixed(2)}</td>
+                        <td>${order.deadline || "No Deadline"}</td>
+                        <td>
+                            <div class="delivery-cell-container">
+                                <select class="status-dropdown" onchange="changeOrderDeliveryStatus('${order.order_number}', this.value)">
+                                    <option value="Accepted" ${currentStatus === "Accepted" ? "selected" : ""}>Accepted</option>
+                                    <option value="Delivering" ${currentStatus === "Delivering" ? "selected" : ""}>Delivering</option>
+                                    <option value="Shipped" ${currentStatus === "Shipped" ? "selected" : ""}>Shipped</option>
+                                </select>
+                                <button class="trash-delete-btn" title="Delete Row" onclick="deleteOrder('${order.order_number}')">
+                                    <svg width="14" height="16" viewBox="0 0 448 512" fill="currentColor"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            });
+        }
+
+
+        async function changeOrderDeliveryStatus(orderNumber, newStatus) {
+            try {
+                const response = await fetch(`${API_URL}/orders/${orderNumber}/status`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ delivery_status: newStatus })
+                });
+                if (!response.ok) throw new Error("Status update operation failed.");
+            } catch (err) {
+                console.error(err);
+                alert("Error saving status change: " + err.message);
+            }
+        }
+        
+
+        // Administrative WRITE Action: Adds a row
+        // async function addNewOrder() {
+        //     let customer = prompt("Enter Customer Name:", "New Wholesale Buyer");
+        //     if (!customer) return;
+        //     let amountInput = prompt("Enter Purchase Amount ($):", "250.00");
+        //     if (!amountInput) return;
+        //     let amount = parseFloat(amountInput);
+        //     let deadline = prompt("Enter Target Delivery Date (YYYY-MM-DD):", "2026-11-20");
+        //     if (!deadline) return;
+        //     let stockChoice = prompt("Stock State:1 - In stock 2 - Not available", "1");
+        //     let stock_status = (stockChoice === "2") ? "Not available" : "In stock";
+        //     let deliveryChoice = prompt("Delivery State: 1 - Not shipped 2 - Packed", "1");
+        //     let delivery_status = (deliveryChoice === "2") ? "Packed" : "Not shipped";
+
+        //     try {
+        //         const response = await fetch(`${API_URL}/orders`, {
+        //             method: "POST",
+        //             headers: { "Content-Type": "application/json" },
+        //             body: JSON.stringify({ customer, amount, deadline, stock_status, delivery_status })
+        //         });
+        //         if (!response.ok) throw new Error("Submission transaction rejected.");
+        //         alert("Order logged successfully inside cloud infrastructure database tables.");
+        //         loadAdminTableRecords();
+        //     } catch (err) { alert("Error saving order: " + err.message); }
+        // }
+
+        // // Administrative DELETE Action: Erases a row
+        // async function deleteOrder(orderNumber) {
+        //     if (!confirm(`Are you sure you want to permanently delete order entry ${orderNumber}?`)) return;
+        //     try {
+        //         const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
+        //         if (!response.ok) throw new Error("Deletion request error.");
+        //         alert(`Order ${orderNumber} deleted successfully.`);
+        //         loadAdminTableRecords();
+        //     } catch (err) { alert("Error deleting entry: " + err.message); }
+        // }
+
+        // Opens the modal box layout and pre-fills current date as target
+        function openOrderModalWindow() {
+            document.getElementById("modalCustomerName").value = "";
+            document.getElementById("modalPurchaseAmount").value = "";
+            // Pre-fill with a placeholder date sequence
+            document.getElementById("modalDeliveryDate").value = new Date().toISOString().split('T')[0];
+            
+            document.getElementById("orderModalWindow").classList.add("is-visible");
+        }
+        
+        // Closes the modal card layer
+        function closeOrderModalWindow() {
+            document.getElementById("orderModalWindow").classList.remove("is-visible");
+        }
+        
+        // Rewired Submission function collecting parameters straight from the modal DOM properties
+        async function submitModalOrderData() {
+            const customer = document.getElementById("modalCustomerName").value.trim();
+            const amountInput = document.getElementById("modalPurchaseAmount").value;
+            const deadline = document.getElementById("modalDeliveryDate").value;
+        
+            if (!customer || !amountInput || !deadline) {
+                alert("Please fill out all operational input fields correctly.");
+                return;
+            }
+        
+            const amount = parseFloat(amountInput);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Invalid input parameters: Please enter a valid payment balance.");
+                return;
+            }
+        
+            const delivery_status = "Accepted"; 
+            const stock_status = "In stock";
+        
+            try {
+                const response = await fetch(`${API_URL}/orders`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ customer, amount, deadline, stock_status, delivery_status })
+                });
+        
+                if (!response.ok) throw new Error("Submission transaction rejected by Cloud Database API.");
+                
+                alert("Order logged successfully inside cloud infrastructure database tables.");
+                closeOrderModalWindow(); // Close overlay layout
+                loadAdminTableRecords(); // Dynamically draw the updated row entries grid
+            } catch (err) { 
+                alert("Error saving transaction order: " + err.message); 
+            }
+        }
+
+        
+    </script>
 </body>
 </html>
+        
