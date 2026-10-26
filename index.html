@@ -245,6 +245,19 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModalWindow" class="modal-overlay-container">
+        <div class="modal-card-content">
+            <h3 id="deleteModalText" style="margin: 0; color: #1a202c; font-size: 20px; font-weight: 700; line-height: 1.4;"></h3>
+    
+            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
+                <button class="modal-submit-btn" onclick="confirmDeleteOrder()">Yes</button>
+                <button class="modal-cancel-btn" style="background-color: #555; border-color: #555; color: white;" onclick="closeDeleteModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
     
     <!-- Execution Script bindings -->
     <script>
@@ -484,14 +497,44 @@
         // }
 
         // Administrative DELETE Action: Erases a row
-        async function deleteOrder(orderNumber) {
-        if (!confirm(`Are you sure you want to permanently delete order entry ${orderNumber}?`)) return;
+        // async function deleteOrder(orderNumber) {
+        // if (!confirm(`Are you sure you want to permanently delete order entry ${orderNumber}?`)) return;
+        //     try {
+        //         const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
+        //         if (!response.ok) throw new Error("Deletion request error.");
+        //         alert(`Order ${orderNumber} deleted successfully.`);
+        //         loadAdminTableRecords();
+        //     } catch (err) { alert("Error deleting entry: " + err.message); }
+        // }
+
+        let orderPendingDelete = null;   // remembers which order the admin clicked
+
+        // Called by the trash icon: only opens the window, doesn't delete yet
+        function deleteOrder(orderNumber) {
+            orderPendingDelete = orderNumber;
+            document.getElementById("deleteModalText").textContent =
+                `Are you sure you want to permanently delete order entry ${orderNumber}?`;
+            document.getElementById("deleteModalWindow").classList.add("is-visible");
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById("deleteModalWindow").classList.remove("is-visible");
+            orderPendingDelete = null;
+        }
+        
+        // Called by the "Yes" button: does the actual delete
+        async function confirmDeleteOrder() {
+            if (!orderPendingDelete) return;
+            const orderNumber = orderPendingDelete;
+            closeDeleteModal();
+        
             try {
                 const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
                 if (!response.ok) throw new Error("Deletion request error.");
-                alert(`Order ${orderNumber} deleted successfully.`);
-                loadAdminTableRecords();
-            } catch (err) { alert("Error deleting entry: " + err.message); }
+                loadAdminTableRecords();   // the row disappears from the table
+            } catch (err) {
+                alert("Error deleting entry: " + err.message);
+            }
         }
 
         // Opens the modal box layout and pre-fills current date as target
