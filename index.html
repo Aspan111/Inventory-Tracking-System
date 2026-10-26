@@ -218,7 +218,8 @@
             </div>
         </div>
     </div>
-    
+
+    <audio id="orderSound" src="Sound.mp3" preload="auto"></audio>
 
     <!-- Execution Script bindings -->
     <script>
@@ -460,6 +461,10 @@
                 });
         
                 if (!response.ok) throw new Error("Submission transaction rejected by Cloud Database API.");
+
+                const sound = document.getElementById("orderSound");
+                sound.currentTime = 0;
+                sound.play().catch(() => {});
                 
                 alert("Order logged successfully inside cloud infrastructure database tables.");
                 closeOrderModalWindow(); // Close overlay layout
