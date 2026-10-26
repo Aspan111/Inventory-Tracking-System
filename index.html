@@ -463,6 +463,7 @@
                 if (!response.ok) throw new Error("Submission transaction rejected by Cloud Database API.");
 
                 const sound = document.getElementById("orderSound");
+                sound.volume = 0.5;
                 sound.currentTime = 0;
                 sound.play().catch(() => {});
                 
