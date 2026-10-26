@@ -24,6 +24,12 @@
         .search-input { flex-grow: 1; height: 34px; border: none; padding: 0; font-size: 16px; outline: none; color: #202124; }
         .search-input::placeholder { color: #9aa0a6; }
 
+        /* Loading spinner */
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 8px; }
+        .spinner-dark { border-color: rgba(0,0,0,0.15); border-top-color: #0043a4; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
+
         /* Management Table styling properties */
         table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #edf2f7; }
@@ -215,7 +221,8 @@
             
             <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
                 <button class="modal-cancel-btn" onclick="closeOrderModalWindow()">Cancel</button>
-                <button class="modal-submit-btn" onclick="submitModalOrderData()">New Order</button>
+                <!--<button class="modal-submit-btn" onclick="submitModalOrderData()">New Order</button>-->
+                <button id="orderSubmitBtn" class="modal-submit-btn" onclick="submitModalOrderData()">New Order</button>
             </div>
         </div>
     </div>
@@ -241,7 +248,8 @@
     
             <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
                 <button class="modal-cancel-btn" onclick="closeLoginModal()">Cancel</button>
-                <button class="modal-submit-btn" onclick="submitLogin()">Login</button>
+                <!--<button class="modal-submit-btn" onclick="submitLogin()">Login</button>-->
+                <button id="loginSubmitBtn" class="modal-submit-btn" onclick="submitLogin()">Login</button>
             </div>
         </div>
     </div>
@@ -253,7 +261,8 @@
             <h3 id="deleteModalText" style="margin: 0; color: #1a202c; font-size: 20px; font-weight: 700; line-height: 1.4;"></h3>
     
             <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
-                <button class="modal-submit-btn" onclick="confirmDeleteOrder()">Yes</button>
+                <!--<button class="modal-submit-btn" onclick="confirmDeleteOrder()">Yes</button>-->
+                <button id="deleteConfirmBtn" class="modal-submit-btn" onclick="confirmDeleteOrder()">Yes</button>
                 <button class="modal-cancel-btn" style="background-color: #555; border-color: #555; color: white;" onclick="closeDeleteModal()">Cancel</button>
             </div>
         </div>
@@ -315,6 +324,17 @@
         //     .catch(err => alert("Access Denied: Invalid Username or Password."));
         // }
 
+        function setButtonLoading(btn, isLoading, loadingText) {
+            if (isLoading) {
+                btn.dataset.originalText = btn.textContent;
+                btn.disabled = true;
+                btn.innerHTML = `<span class="spinner"></span>${loadingText}`;
+            } else {
+                btn.disabled = false;
+                btn.textContent = btn.dataset.originalText;
+            }
+        }
+
         function openLoginModal() {
             document.getElementById("loginUsername").value = "";
             document.getElementById("loginPassword").value = "";
@@ -335,11 +355,18 @@
             const userVal = document.getElementById("loginUsername").value.trim();
             const passVal = document.getElementById("loginPassword").value;
             const errorBox = document.getElementById("loginError");
+            const btn = document.getElementById("loginSubmitBtn");          // NEW
         
+            if (btn.disabled) return;                                       // NEW (blocks double submit, e.g. Enter key)
             if (!userVal || !passVal) {
                 errorBox.textContent = "Please enter your login and password.";
                 return;
             }
+
+            errorBox.textContent = "";                                      // NEW
+            setButtonLoading(btn, true, "Logging in...");                   // NEW
+
+            
         
             fetch(`${API_URL}/login`, {
                 method: "POST",
@@ -363,7 +390,8 @@
             })
             .catch(err => {
                 errorBox.textContent = "Invalid login or password.";
-            });
+            })
+            .finally(() => setButtonLoading(btn, false));                   // NEW
         }
 
         function triggerLogout() {
@@ -423,6 +451,10 @@
 
         // Pulls full operational tracking data for the admin management console panel view
         function loadAdminTableRecords() {
+            // koko
+            document.querySelector("#ordersTable tbody").innerHTML =
+                `<tr><td colspan="5" style="text-align:center; color:#64748b; padding:24px;"><span class="spinner spinner-dark"></span>Loading orders...</td></tr>`;
+            // koko
             fetch(`${API_URL}/orders`)
             .then(res => res.json())
             .then(orders => {
@@ -523,17 +555,37 @@
         }
         
         // Called by the "Yes" button: does the actual delete
+        // async function confirmDeleteOrder() {
+        //     if (!orderPendingDelete) return;
+        //     const orderNumber = orderPendingDelete;
+        //     closeDeleteModal();
+        
+        //     try {
+        //         const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
+        //         if (!response.ok) throw new Error("Deletion request error.");
+        //         loadAdminTableRecords();   // the row disappears from the table
+        //     } catch (err) {
+        //         alert("Error deleting entry: " + err.message);
+        //     }
+        // }
+
         async function confirmDeleteOrder() {
             if (!orderPendingDelete) return;
+            const btn = document.getElementById("deleteConfirmBtn");
+            if (btn.disabled) return;
             const orderNumber = orderPendingDelete;
-            closeDeleteModal();
         
+            setButtonLoading(btn, true, "Deleting...");
             try {
                 const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
                 if (!response.ok) throw new Error("Deletion request error.");
-                loadAdminTableRecords();   // the row disappears from the table
+                closeDeleteModal();
+                loadAdminTableRecords();
             } catch (err) {
+                closeDeleteModal();
                 alert("Error deleting entry: " + err.message);
+            } finally {
+                setButtonLoading(btn, false);
             }
         }
 
@@ -557,6 +609,10 @@
             const customer = document.getElementById("modalCustomerName").value.trim();
             const amountInput = document.getElementById("modalPurchaseAmount").value;
             const deadline = document.getElementById("modalDeliveryDate").value;
+
+            const btn = document.getElementById("orderSubmitBtn");          // NEW
+            if (btn.disabled) return;                                       // NEW
+            setButtonLoading(btn, true, "Saving...");                       // NEW
         
             if (!customer || !amountInput || !deadline) {
                 alert("Please fill out all operational input fields correctly.");
@@ -591,7 +647,8 @@
                 loadAdminTableRecords(); // Dynamically draw the updated row entries grid
             } catch (err) { 
                 alert("Error saving transaction order: " + err.message); 
-            }
+            } finally {                                                     // NEW
+                setButtonLoading(btn, false);                               // NEW 
         }
 
         
