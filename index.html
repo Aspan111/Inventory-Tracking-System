@@ -406,16 +406,16 @@
         //     } catch (err) { alert("Error saving order: " + err.message); }
         // }
 
-        // // Administrative DELETE Action: Erases a row
-        // async function deleteOrder(orderNumber) {
-        //     if (!confirm(`Are you sure you want to permanently delete order entry ${orderNumber}?`)) return;
-        //     try {
-        //         const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
-        //         if (!response.ok) throw new Error("Deletion request error.");
-        //         alert(`Order ${orderNumber} deleted successfully.`);
-        //         loadAdminTableRecords();
-        //     } catch (err) { alert("Error deleting entry: " + err.message); }
-        // }
+        // Administrative DELETE Action: Erases a row
+        async function deleteOrder(orderNumber) {
+        if (!confirm(`Are you sure you want to permanently delete order entry ${orderNumber}?`)) return;
+            try {
+                const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
+                if (!response.ok) throw new Error("Deletion request error.");
+                alert(`Order ${orderNumber} deleted successfully.`);
+                loadAdminTableRecords();
+            } catch (err) { alert("Error deleting entry: " + err.message); }
+        }
 
         // Opens the modal box layout and pre-fills current date as target
         function openOrderModalWindow() {
