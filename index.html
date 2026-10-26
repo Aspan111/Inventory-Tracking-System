@@ -8,7 +8,7 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f7f9fb; }
         
         /* Navigation Top Menu Bar Style */
-        .top-navbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; background-color: #ffffff; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .logo-text { font-size: 20px; font-weight: 700; color: #0043a4; }
         .login-btn, .logout-btn { background-color: #0043a4; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 14px; }
         .logout-btn { background-color: #ff4d4d; display: none; }
@@ -142,7 +142,7 @@
         <img src = "its-logo-hd.png" width = "200"> 
         <button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>
         <button id="logoutBtn" class="logout-btn" onclick="triggerLogout()">Logout</button>
-        <button id="salesOrderBtn" class="login-btn" style="visibility: hidden;" onclick="openOrderModalWindow()">+ Sales order</button>
+        <!--<button id="salesOrderBtn" class="login-btn" style="visibility: hidden;" onclick="openOrderModalWindow()">+ Sales order</button>-->
     </div>
 
     <!-- 1. USER INTERFACE MODE PANEL -->
@@ -234,7 +234,7 @@
                 currentRole = "Admin";
                 document.getElementById("authBtn").style.display = "none";
                 document.getElementById("logoutBtn").style.display = "block";
-                document.getElementById("salesOrderBtn").style.visibility = "visible";
+                //document.getElementById("salesOrderBtn").style.visibility = "visible";
                 document.getElementById("userPanel").classList.remove("active");
                 document.getElementById("adminPanel").classList.add("active");
                 loadAdminTableRecords();
