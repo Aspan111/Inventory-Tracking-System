@@ -143,6 +143,7 @@
         <button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>
         <button id="logoutBtn" class="logout-btn" onclick="triggerLogout()">Logout</button>
         <button class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
+        <button id="salesOrderBtn" class="login-btn" style="visibility: hidden;" onclick="openOrderModalWindow()">+ Sales order</button>
     </div>
 
     <!-- 1. USER INTERFACE MODE PANEL -->
@@ -234,6 +235,7 @@
                 currentRole = "Admin";
                 document.getElementById("authBtn").style.display = "none";
                 document.getElementById("logoutBtn").style.display = "block";
+                document.getElementById("salesOrderBtn").style.visibility = "visible";
                 document.getElementById("userPanel").classList.remove("active");
                 document.getElementById("adminPanel").classList.add("active");
                 loadAdminTableRecords();
