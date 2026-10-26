@@ -8,7 +8,7 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f7f9fb; }
         
         /* Navigation Top Menu Bar Style */
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .top-navbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; background-color: #ffffff; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .logo-text { font-size: 20px; font-weight: 700; color: #0043a4; }
         .login-btn, .logout-btn { background-color: #0043a4; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 14px; }
         .logout-btn { background-color: #ff4d4d; display: none; }
@@ -174,7 +174,7 @@
     <div id="adminPanel" class="interface-panel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
-            <button class="login-btn" onclick="addNewOrder()">+ Sales order</button>
+            <button class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
         </div>
         
         <table id="ordersTable">
