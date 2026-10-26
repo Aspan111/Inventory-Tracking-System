@@ -140,7 +140,8 @@
     <div class="top-navbar">
         <!--<div class="logo-text">ITS</div>-->
         <img src = "its-logo-hd.png" width = "200"> 
-        <button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>
+        <!--<button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>-->
+        <button id="authBtn" class="login-btn" onclick="openLoginModal()">Login (For Admin)</button>
         <button id="logoutBtn" class="logout-btn" onclick="triggerLogout()">Logout</button>
         <!--<button id="salesOrderBtn" class="login-btn" style="visibility: hidden;" onclick="openOrderModalWindow()">+ Sales order</button>-->
     </div>
@@ -221,6 +222,30 @@
 
     <audio id="orderSound" src="Sound.mp3" preload="auto"></audio>
 
+    <!-- Admin Login Modal -->
+    <div id="loginModalWindow" class="modal-overlay-container">
+        <div class="modal-card-content">
+            <h3 style="margin-top: 0; color: #1a202c; font-size: 20px; font-weight: 700; margin-bottom: 24px;">Admin Login</h3>
+    
+            <div class="input-form-group"> 
+                <label class="form-label-text">Login:</label>
+                <input type="text" id="loginUsername" class="form-input-box" autocomplete="username" onkeypress="handleLoginKeyPress(event)">
+            </div>
+    
+            <div class="input-form-group">
+                <label class="form-label-text">Password:</label>
+                <input type="password" id="loginPassword" class="form-input-box" autocomplete="current-password" onkeypress="handleLoginKeyPress(event)">
+            </div>
+    
+            <div id="loginError" style="color: #dc2626; font-size: 14px; min-height: 18px;"></div>
+    
+            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
+                <button class="modal-cancel-btn" onclick="closeLoginModal()">Cancel</button>
+                <button class="modal-submit-btn" onclick="submitLogin()">Login</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Execution Script bindings -->
     <script>
         const API_URL = "https://inventory-backend-1-md7r.onrender.com";
@@ -246,13 +271,63 @@
         }
 
         // Handles conditional role navigation flows
-        function handleAuthAction() {
-            const userVal = prompt("Enter Admin Username:", "admin");
-            if (!userVal) return;
-            const passVal = prompt("Enter Admin Password:");
-            if (!passVal) return;
+        // function handleAuthAction() {
+        //     const userVal = prompt("Enter Admin Username:", "admin");
+        //     if (!userVal) return;
+        //     const passVal = prompt("Enter Admin Password:");
+        //     if (!passVal) return;
 
-            // Trigger secure authentication validation request targeting Python API
+        //     // Trigger secure authentication validation request targeting Python API
+        //     fetch(`${API_URL}/login`, {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({ username: userVal, password: passVal })
+        //     })
+        //     .then(res => {
+        //         if (!res.ok) throw new Error("Unauthorized credentials error");
+        //         return res.json();
+        //     })
+        //     .then(data => {
+        //         alert("Login Successful! Access granted to Admin Dashboard.");
+        //         currentRole = "Admin";
+
+        //         localStorage.setItem("userRole", "Admin");
+                
+        //         document.getElementById("authBtn").style.display = "none";
+        //         document.getElementById("logoutBtn").style.display = "block";
+        //         document.getElementById("userPanel").classList.remove("active");
+        //         document.getElementById("adminPanel").classList.add("active");
+        //         loadAdminTableRecords();
+        //     })
+        //     .catch(err => alert("Access Denied: Invalid Username or Password."));
+        // }
+
+        function openLoginModal() {
+            document.getElementById("loginUsername").value = "";
+            document.getElementById("loginPassword").value = "";
+            document.getElementById("loginError").textContent = "";
+            document.getElementById("loginModalWindow").classList.add("is-visible");
+            document.getElementById("loginUsername").focus();
+        }
+        
+        function closeLoginModal() {
+            document.getElementById("loginModalWindow").classList.remove("is-visible");
+        }
+        
+        function handleLoginKeyPress(event) {
+            if (event.key === "Enter") submitLogin();
+        }
+        
+        function submitLogin() {
+            const userVal = document.getElementById("loginUsername").value.trim();
+            const passVal = document.getElementById("loginPassword").value;
+            const errorBox = document.getElementById("loginError");
+        
+            if (!userVal || !passVal) {
+                errorBox.textContent = "Please enter your login and password.";
+                return;
+            }
+        
             fetch(`${API_URL}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -263,18 +338,19 @@
                 return res.json();
             })
             .then(data => {
-                alert("Login Successful! Access granted to Admin Dashboard.");
                 currentRole = "Admin";
-
                 localStorage.setItem("userRole", "Admin");
-                
+        
+                closeLoginModal();
                 document.getElementById("authBtn").style.display = "none";
                 document.getElementById("logoutBtn").style.display = "block";
                 document.getElementById("userPanel").classList.remove("active");
                 document.getElementById("adminPanel").classList.add("active");
                 loadAdminTableRecords();
             })
-            .catch(err => alert("Access Denied: Invalid Username or Password."));
+            .catch(err => {
+                errorBox.textContent = "Invalid login or password.";
+            });
         }
 
         function triggerLogout() {
