@@ -24,12 +24,16 @@
         .search-input { flex-grow: 1; height: 34px; border: none; padding: 0; font-size: 16px; outline: none; color: #202124; }
         .search-input::placeholder { color: #9aa0a6; }
 
+
+        
         /* Loading spinner */
         .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 8px; }
         .spinner-dark { border-color: rgba(0,0,0,0.15); border-top-color: #0043a4; }
         @keyframes spin { to { transform: rotate(360deg); } }
         button:disabled { opacity: 0.7; cursor: not-allowed; }
 
+
+        
         /* Management Table styling properties */
         table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #edf2f7; }
@@ -649,7 +653,7 @@
                 alert("Error saving transaction order: " + err.message); 
             } finally {                                                     // NEW
                 setButtonLoading(btn, false);                               // NEW 
-        }
+            }
 
         
     </script>
