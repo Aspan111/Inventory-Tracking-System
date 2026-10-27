@@ -172,7 +172,7 @@
                         <th>CUSTOMER</th>
                         <th>AMOUNT ($)</th>
                         <th>DELIVERY DEADLINE</th>
-                        <th>STOCK STATUS</th>
+                        <!--<th>STOCK STATUS</th>-->
                         <th>DELIVERY STATUS</th>
                     </tr>
                 </thead>
@@ -417,40 +417,81 @@
         });
 
         // Listener evaluating User interface Enter clicks
-        function handleSearchKeyPress(event) {
-            if (event.key === "Enter") {
-                const searchVal = document.getElementById("userQueryInput").value.trim();
-                if (!searchVal) return;
+        // function handleSearchKeyPress(event) {
+        //     if (event.key === "Enter") {
+        //         const searchVal = document.getElementById("userQueryInput").value.trim();
+        //         if (!searchVal) return;
 
-                fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
-                .then(res => res.json())
-                .then(orders => {
-                    const tbody = document.querySelector("#userResultsTable tbody");
-                    tbody.innerHTML = "";
+        //         fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
+        //         .then(res => res.json())
+        //         .then(orders => {
+        //             const tbody = document.querySelector("#userResultsTable tbody");
+        //             tbody.innerHTML = "";
                     
-                    if(orders.length === 0) {
-                        alert("No transaction records found matching your input parameters.");
-                        document.getElementById("userResultsTable").style.display = "none";
-                        return;
-                    }
+        //             if(orders.length === 0) {
+        //                 alert("No transaction records found matching your input parameters.");
+        //                 document.getElementById("userResultsTable").style.display = "none";
+        //                 return;
+        //             }
 
-                    orders.forEach(order => {
-                        const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
-                        const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
-                        const row = document.createElement("tr");
-                        row.innerHTML = `
-                            <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
-                            <td>${order.customer}</td>
-                            <td>$${Number(order.amount).toFixed(2)}</td>
-                            <td>${order.deadline || "No Deadline"}</td>
-                            <td><div class="status ${stockClass}">${order.stock_status}</div></td>
-                            <td><div class="status ${deliveryClass}">${order.delivery_status}</div></td>
-                        `;
-                        tbody.appendChild(row);
-                    });
-                    document.getElementById("userResultsTable").style.display = "table";
+        //             orders.forEach(order => {
+        //                 const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
+        //                 const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
+        //                 const row = document.createElement("tr");
+        //                 row.innerHTML = `
+        //                     <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+        //                     <td>${order.customer}</td>
+        //                     <td>$${Number(order.amount).toFixed(2)}</td>
+        //                     <td>${order.deadline || "No Deadline"}</td>
+        //                     <td><div class="status ${stockClass}">${order.stock_status}</div></td>
+        //                     <td><div class="status ${deliveryClass}">${order.delivery_status}</div></td>
+        //                 `;
+        //                 tbody.appendChild(row);
+        //             });
+        //             document.getElementById("userResultsTable").style.display = "table";
+        //         });
+        //     }
+        // }
+
+        function handleSearchKeyPress(event) {
+            if (event.key !== "Enter") return;
+            const searchVal = document.getElementById("userQueryInput").value.trim();
+            if (!searchVal) return;
+        
+            fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
+            .then(res => {
+                if (!res.ok) throw new Error("Server error " + res.status);
+                return res.json();
+            })
+            .then(orders => {
+                const tbody = document.querySelector("#userResultsTable tbody");
+                tbody.innerHTML = "";
+        
+                if (!Array.isArray(orders) || orders.length === 0) {
+                    alert("No transaction records found matching your input parameters.");
+                    document.getElementById("userResultsTable").style.display = "none";
+                    return;
+                }
+        
+                orders.forEach(order => {
+                    const delivery = order.delivery_status || "Accepted";
+                    const deliveryClass = delivery.toLowerCase().replace(" ", "-");
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+                        <td>${order.customer}</td>
+                        <td>$${Number(order.amount).toFixed(2)}</td>
+                        <td>${order.deadline || "No Deadline"}</td>
+                        <td><div class="status ${deliveryClass}">${delivery}</div></td>
+                    `;
+                    tbody.appendChild(row);
                 });
-            }
+                document.getElementById("userResultsTable").style.display = "table";
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Search failed: " + err.message);
+            });
         }
 
         // Pulls full operational tracking data for the admin management console panel view
