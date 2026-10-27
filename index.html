@@ -141,6 +141,21 @@
             background-color: #f8fafc;
         }
 
+        /* Search button inside the bar */
+        .search-box-container { padding-right: 4px; }          /* button sits close to the right edge */
+        .search-btn {
+            align-self: stretch; margin: 4px 0; padding: 0 24px;
+            border: none; border-radius: 20px; cursor: pointer;
+            background: linear-gradient(135deg, #2f6fed, #0b4fc2); color: #fff;
+            font-family: inherit; font-size: 14px; font-weight: 500;
+            transition: transform .15s, box-shadow .15s;
+        }
+        .search-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(11,79,194,.3); }
+        
+        /* Spinner (skip these 3 lines if you already added them) */
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
         
     </style>
 </head>
@@ -161,6 +176,10 @@
         <div class="search-wrapper">
             <img src = "Image_Main_Transp.png" width = "442"> 
             <div class="search-box-container">
+                  <div class="search-box-container">
+                      <input type="text" id="userQueryInput" class="search-input" placeholder="Enter order ID or Customer name" onkeypress="handleSearchKeyPress(event)">
+                      <button id="searchBtn" class="search-btn" onclick="performSearch()">Search</button>
+                  </div>
                 <input type="text" id="userQueryInput" class="search-input" placeholder="Enter order ID or Customer name" onkeypress="handleSearchKeyPress(event)">
             </div>
             
@@ -416,47 +435,57 @@
             checkPersistentLogin(); // Natively restores session on page launch or reload actions
         });
 
-        // Listener evaluating User interface Enter clicks
         // function handleSearchKeyPress(event) {
-        //     if (event.key === "Enter") {
-        //         const searchVal = document.getElementById("userQueryInput").value.trim();
-        //         if (!searchVal) return;
-
-        //         fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
-        //         .then(res => res.json())
-        //         .then(orders => {
-        //             const tbody = document.querySelector("#userResultsTable tbody");
-        //             tbody.innerHTML = "";
-                    
-        //             if(orders.length === 0) {
-        //                 alert("No transaction records found matching your input parameters.");
-        //                 document.getElementById("userResultsTable").style.display = "none";
-        //                 return;
-        //             }
-
-        //             orders.forEach(order => {
-        //                 const stockClass = order.stock_status.toLowerCase().replace(" ", "-");
-        //                 const deliveryClass = order.delivery_status.toLowerCase().replace(" ", "-");
-        //                 const row = document.createElement("tr");
-        //                 row.innerHTML = `
-        //                     <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
-        //                     <td>${order.customer}</td>
-        //                     <td>$${Number(order.amount).toFixed(2)}</td>
-        //                     <td>${order.deadline || "No Deadline"}</td>
-        //                     <td><div class="status ${stockClass}">${order.stock_status}</div></td>
-        //                     <td><div class="status ${deliveryClass}">${order.delivery_status}</div></td>
-        //                 `;
-        //                 tbody.appendChild(row);
-        //             });
-        //             document.getElementById("userResultsTable").style.display = "table";
+        //     if (event.key !== "Enter") return;
+        //     const searchVal = document.getElementById("userQueryInput").value.trim();
+        //     if (!searchVal) return;
+        
+        //     fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
+        //     .then(res => {
+        //         if (!res.ok) throw new Error("Server error " + res.status);
+        //         return res.json();
+        //     })
+        //     .then(orders => {
+        //         const tbody = document.querySelector("#userResultsTable tbody");
+        //         tbody.innerHTML = "";
+        
+        //         if (!Array.isArray(orders) || orders.length === 0) {
+        //             alert("No transaction records found matching your input parameters.");
+        //             document.getElementById("userResultsTable").style.display = "none";
+        //             return;
+        //         }
+        
+        //         orders.forEach(order => {
+        //             const delivery = order.delivery_status || "Accepted";
+        //             const deliveryClass = delivery.toLowerCase().replace(" ", "-");
+        //             const row = document.createElement("tr");
+        //             row.innerHTML = `
+        //                 <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
+        //                 <td>${order.customer}</td>
+        //                 <td>$${Number(order.amount).toFixed(2)}</td>
+        //                 <td>${order.deadline || "No Deadline"}</td>
+        //                 <td><div class="status ${deliveryClass}">${delivery}</div></td>
+        //             `;
+        //             tbody.appendChild(row);
         //         });
-        //     }
+        //         document.getElementById("userResultsTable").style.display = "table";
+        //     })
+        //     .catch(err => {
+        //         console.error(err);
+        //         alert("Search failed: " + err.message);
+        //     });
         // }
 
         function handleSearchKeyPress(event) {
-            if (event.key !== "Enter") return;
+            if (event.key === "Enter") performSearch();
+        }
+        
+        function performSearch() {
             const searchVal = document.getElementById("userQueryInput").value.trim();
-            if (!searchVal) return;
+            const btn = document.getElementById("searchBtn");
+            if (!searchVal || btn.disabled) return;
+        
+            setButtonLoading(btn, true, "Searching...");
         
             fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
             .then(res => {
@@ -491,9 +520,10 @@
             .catch(err => {
                 console.error(err);
                 alert("Search failed: " + err.message);
-            });
+            })
+            .finally(() => setButtonLoading(btn, false));
         }
-
+        
         // Pulls full operational tracking data for the admin management console panel view
         function loadAdminTableRecords() {
             // koko
