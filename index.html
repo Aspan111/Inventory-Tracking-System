@@ -41,7 +41,8 @@
         
         /* Badges & Actions styles */
         .status { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-        .status.in-stock { background-color: #def7ec; color: #03543f; }
+        /*.status.in-stock { background-color: #def7ec; color: #03543f; }*/
+        .status.low-stock { background-color: #fff3d6; color: #a16207; }
         .status.not-available { background-color: #fde8e8; color: #9b1c1c; }
         .status.packed { background-color: #e1effe; color: #1e429f; }
         .status.not-shipped { background-color: #fef08a; color: #713f12; }
@@ -202,6 +203,36 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
             <button class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
+        </div>
+
+        <!-- TAB 1: your existing content, moved inside this div -->
+        <div id="ordersSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
+                <button class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
+            </div>
+            <table id="ordersTable">
+                <!-- keep your existing thead / tbody exactly as they are -->
+            </table>
+        </div>
+    
+        <!-- TAB 2: new -->
+        <div id="inventorySection" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #1a202c;">Inventory</h2>
+            </div>
+            <table id="inventoryTable">
+                <thead>
+                    <tr>
+                        <th>INVENTORY ID</th>
+                        <th>NAME</th>
+                        <th>QUANTITY</th>
+                        <th>UNIT PRICE ($)</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
         
         <table id="ordersTable">
@@ -723,6 +754,50 @@
                 setButtonLoading(btn, false);                               // NEW 
             }
         }
+
+        function showAdminTab(tab) {
+        const isOrders = tab === "orders";
+        document.getElementById("ordersSection").style.display = isOrders ? "block" : "none";
+        document.getElementById("inventorySection").style.display = isOrders ? "none" : "block";
+        document.getElementById("tabOrders").classList.toggle("active", isOrders);
+        document.getElementById("tabInventory").classList.toggle("active", !isOrders);
+        if (isOrders) loadAdminTableRecords(); else loadInventory();
+    }
+    
+    function loadInventory() {
+        const tbody = document.querySelector("#inventoryTable tbody");
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#64748b; padding:24px;">Loading inventory...</td></tr>`;
+    
+        fetch(`${API_URL}/inventory`)
+        .then(res => {
+            if (!res.ok) throw new Error("Server error " + res.status);
+            return res.json();
+        })
+        .then(items => {
+            tbody.innerHTML = "";
+            if (!Array.isArray(items) || items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:24px;">No inventory items found.</td></tr>`;
+                return;
+            }
+            items.forEach(item => {
+                const statusClass = item.status === "In stock" ? "in-stock"
+                                  : item.status === "Low stock" ? "low-stock" : "not-available";
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td style="color: #0043a4; font-weight: 600;">${item.inventory_id}</td>
+                    <td></td>
+                    <td>${item.quantity}</td>
+                    <td>$${Number(item.unit_price).toFixed(2)}</td>
+                    <td><div class="status ${statusClass}">${item.status}</div></td>
+                `;
+                row.children[1].textContent = item.name;     // safe against odd characters
+                tbody.appendChild(row);
+            });
+        })
+        .catch(err => {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#dc2626; padding:24px;">Could not load inventory: ${err.message}</td></tr>`;
+        });
+    }
 
         
     </script>
