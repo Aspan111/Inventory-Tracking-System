@@ -213,7 +213,10 @@
         <!-- Title + the only "+ Sales order" button -->
         <div class="admin-header">
             <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
-            <button id="salesOrderBtn" class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
+            <div>
+                <button id="salesOrderBtn" class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
+                <button id="inventoryBtn" class="login-btn" style="display: none;" onclick="openItemModal()">+ Inventory Item</button>
+            </div>
         </div>
     
         <!-- Switch buttons -->
@@ -325,6 +328,48 @@
             </div>
         </div>
     </div>
+
+
+    
+    <!-- New Inventory Item window -->
+    <div id="itemModalWindow" class="modal-overlay-container">
+        <div class="modal-card-content">
+            <div class="input-form-group">
+                <label class="form-label-text">Item Name:</label>
+                <input type="text" id="modalItemName" class="form-input-box">
+            </div>
+            <div class="input-form-group">
+                <label class="form-label-text">Item Category:</label>
+                <input type="text" id="modalItemCategory" class="form-input-box">
+            </div>
+            <div class="input-form-group">
+                <label class="form-label-text">Quantity:</label>
+                <input type="number" id="modalItemQuantity" class="form-input-box" min="0" step="1">
+            </div>
+            <div class="input-form-group">
+                <label class="form-label-text">Price ($):</label>
+                <input type="number" id="modalItemPrice" class="form-input-box" min="0" step="0.01">
+            </div>
+            <div id="itemError" style="color: #dc2626; font-size: 14px; min-height: 18px;"></div>
+            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                <button class="modal-cancel-btn" onclick="closeItemModal()">Cancel</button>
+                <button id="itemSubmitBtn" class="modal-submit-btn" onclick="submitItemData()">New Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete inventory item confirmation -->
+    <div id="deleteItemModalWindow" class="modal-overlay-container">
+        <div class="modal-card-content">
+            <h3 id="deleteItemText" style="margin: 0; color: #1a202c; font-size: 20px; line-height: 1.4;"></h3>
+            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
+                <button id="deleteItemConfirmBtn" class="modal-submit-btn" onclick="confirmDeleteItem()">Yes</button>
+                <button class="modal-cancel-btn" style="background-color: #555; border-color: #555; color: white;" onclick="closeDeleteItemModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    
     
     <!-- Execution Script bindings -->
     <script>
@@ -770,13 +815,14 @@
         document.getElementById("tabOrders").classList.toggle("active", isOrders);
         document.getElementById("tabInventory").classList.toggle("active", !isOrders);
         document.getElementById("salesOrderBtn").style.display = isOrders ? "" : "none";
+        document.getElementById("inventoryBtn").style.display = isOrders ? "none" : "";
     
         if (isOrders) loadAdminTableRecords(); else loadInventory();
     }
     
     function loadInventory() {
         const tbody = document.querySelector("#inventoryTable tbody");
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#64748b; padding:24px;">Loading inventory...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; padding:24px;">Loading inventory...</td></tr>`;
     
         fetch(`${API_URL}/inventory`)
         .then(res => {
@@ -786,28 +832,119 @@
         .then(items => {
             tbody.innerHTML = "";
             if (!Array.isArray(items) || items.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:24px;">No inventory items found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px;">No inventory items found.</td></tr>`;
                 return;
             }
             items.forEach(item => {
-                const statusClass = item.status === "In stock" ? "in-stock"
+                const statusClass = (item.status === "Stock" || item.status === "In stock") ? "in-stock"
                                   : item.status === "Low stock" ? "low-stock" : "not-available";
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td style="color: #0043a4; font-weight: 600;">${item.inventory_id}</td>
                     <td></td>
+                    <td></td>
                     <td>${item.quantity}</td>
                     <td>$${Number(item.unit_price).toFixed(2)}</td>
-                    <td><div class="status ${statusClass}">${item.status}</div></td>
+                    <td>
+                        <div class="delivery-cell-container">
+                            <div class="status ${statusClass}">${item.status}</div>
+                            <button class="trash-delete-btn" title="Delete Row" onclick="deleteInventoryItem(${item.item_id}, '${item.inventory_id}')">
+                                <svg width="14" height="16" viewBox="0 0 448 512" fill="currentColor"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+                            </button>
+                        </div>
+                    </td>
                 `;
-                row.children[1].textContent = item.name;     // safe against odd characters
+                row.children[1].textContent = item.name;
                 row.children[2].textContent = item.category;
                 tbody.appendChild(row);
             });
         })
         .catch(err => {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#dc2626; padding:24px;">Could not load inventory: ${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#dc2626; padding:24px;">Could not load inventory: ${err.message}</td></tr>`;
         });
+    }
+    
+    // ---------- Add item ----------
+    function openItemModal() {
+        ["modalItemName", "modalItemCategory", "modalItemQuantity", "modalItemPrice"]
+            .forEach(id => document.getElementById(id).value = "");
+        document.getElementById("itemError").textContent = "";
+        document.getElementById("itemModalWindow").classList.add("is-visible");
+        document.getElementById("modalItemName").focus();
+    }
+    
+    function closeItemModal() {
+        document.getElementById("itemModalWindow").classList.remove("is-visible");
+    }
+    
+    async function submitItemData() {
+        const name = document.getElementById("modalItemName").value.trim();
+        const category = document.getElementById("modalItemCategory").value.trim();
+        const quantity = parseInt(document.getElementById("modalItemQuantity").value, 10);
+        const unit_price = parseFloat(document.getElementById("modalItemPrice").value);
+        const errorBox = document.getElementById("itemError");
+        const btn = document.getElementById("itemSubmitBtn");
+    
+        if (btn.disabled) return;
+        if (!name) { errorBox.textContent = "Please enter the item name."; return; }
+        if (isNaN(quantity) || quantity < 0) { errorBox.textContent = "Quantity must be 0 or more."; return; }
+        if (isNaN(unit_price) || unit_price < 0) { errorBox.textContent = "Please enter a valid price."; return; }
+    
+        errorBox.textContent = "";
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+        try {
+            const response = await fetch(`${API_URL}/inventory`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ item_name: name, category, quantity, unit_price })
+            });
+            if (!response.ok) throw new Error("Server error " + response.status);
+            closeItemModal();
+            loadInventory();
+        } catch (err) {
+            errorBox.textContent = "Could not save the item: " + err.message;
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "New Item";
+        }
+    }
+    
+    // ---------- Delete item ----------
+    let itemPendingDelete = null;
+    
+    function deleteInventoryItem(itemId, code) {
+        itemPendingDelete = itemId;
+        document.getElementById("deleteItemText").textContent =
+            `Are you sure you want to permanently delete inventory item ${code}?`;
+        document.getElementById("deleteItemModalWindow").classList.add("is-visible");
+    }
+    
+    function closeDeleteItemModal() {
+        document.getElementById("deleteItemModalWindow").classList.remove("is-visible");
+        itemPendingDelete = null;
+    }
+    
+    async function confirmDeleteItem() {
+        if (itemPendingDelete === null) return;
+        const btn = document.getElementById("deleteItemConfirmBtn");
+        if (btn.disabled) return;
+        const itemId = itemPendingDelete;
+    
+        btn.disabled = true;
+        btn.textContent = "Deleting...";
+        try {
+            const response = await fetch(`${API_URL}/inventory/${itemId}`, { method: "DELETE" });
+            if (!response.ok) throw new Error("Server error " + response.status);
+            closeDeleteItemModal();
+            loadInventory();
+        } catch (err) {
+            closeDeleteItemModal();
+            alert("Error deleting item: " + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "Yes";
+        }
     }
 
         
