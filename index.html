@@ -24,6 +24,13 @@
         .search-input { flex-grow: 1; height: 34px; border: none; padding: 0; font-size: 16px; outline: none; color: #202124; }
         .search-input::placeholder { color: #9aa0a6; }
 
+        
+        /* Orders / Inventory toggle buttons */
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .admin-tabs { display: inline-flex; gap: 6px; padding: 4px; background: #eaeff6; border-radius: 12px; margin-bottom: 20px; }
+        .admin-tab { border: none; background: transparent; padding: 9px 24px; border-radius: 9px; font-family: inherit; font-size: 14px; font-weight: 500; color: #64748b; cursor: pointer; transition: background .15s, color .15s, box-shadow .15s; }
+        .admin-tab:hover { color: #0b4fc2; }
+        .admin-tab.active { background: linear-gradient(135deg, #2f6fed, #0b4fc2); color: #fff; box-shadow: 0 2px 8px rgba(11,79,194,.25); }
 
         
         /* Loading spinner */
@@ -198,34 +205,47 @@
         </div>
     </div>
 
+
+    
     <!-- 2. ADMIN INTERFACE MODE PANEL -->
     <div id="adminPanel" class="interface-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
-            <button class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
-        </div>
 
-        <!-- TAB 1: your existing content, moved inside this div -->
+        <!-- Title + the only "+ Sales order" button -->
+        <div class="admin-header">
+            <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
+            <button id="salesOrderBtn" class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
+        </div>
+    
+        <!-- Switch buttons -->
+        <div class="admin-tabs">
+            <button id="tabOrders" class="admin-tab active" onclick="showAdminTab('orders')">Orders</button>
+            <button id="tabInventory" class="admin-tab" onclick="showAdminTab('inventory')">Inventory</button>
+        </div>
+    
+        <!-- Orders table -->
         <div id="ordersSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
-                <button class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
-            </div>
             <table id="ordersTable">
-                <!-- keep your existing thead / tbody exactly as they are -->
+                <thead>
+                    <tr>
+                        <th>ORDER #</th>
+                        <th>CUSTOMER</th>
+                        <th>AMOUNT ($)</th>
+                        <th>DELIVERY DEADLINE</th>
+                        <th>DELIVERY STATUS</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
             </table>
         </div>
     
-        <!-- TAB 2: new -->
+        <!-- Inventory table -->
         <div id="inventorySection" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0; color: #1a202c;">Inventory</h2>
-            </div>
             <table id="inventoryTable">
                 <thead>
                     <tr>
                         <th>INVENTORY ID</th>
                         <th>NAME</th>
+                        <th>CATEGORY</th>
                         <th>QUANTITY</th>
                         <th>UNIT PRICE ($)</th>
                         <th>STATUS</th>
@@ -234,22 +254,9 @@
                 <tbody></tbody>
             </table>
         </div>
-        
-        <table id="ordersTable">
-            <thead>
-                <tr>
-                    <th>ORDER #</th>
-                    <th>CUSTOMER</th>
-                    <th>AMOUNT ($)</th>
-                    <th>DELIVERY DEADLINE</th>
-                    <!--<th>STOCK STATUS</th>-->
-                    <th>DELIVERY STATUS</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
     </div>
 
+    
     <!-- Custom Interactive Form Modal Window Container Layout -->
     <div id="orderModalWindow" class="modal-overlay-container">
         <div class="modal-card-content">
@@ -762,6 +769,8 @@
         document.getElementById("inventorySection").style.display = isOrders ? "none" : "block";
         document.getElementById("tabOrders").classList.toggle("active", isOrders);
         document.getElementById("tabInventory").classList.toggle("active", !isOrders);
+        document.getElementById("salesOrderBtn").style.display = isOrders ? "" : "none";
+    
         if (isOrders) loadAdminTableRecords(); else loadInventory();
     }
     
