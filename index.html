@@ -433,11 +433,12 @@
                 localStorage.setItem("userRole", "Admin");
         
                 closeLoginModal();
+                showAdminTab("orders");
                 document.getElementById("authBtn").style.display = "none";
                 document.getElementById("logoutBtn").style.display = "block";
                 document.getElementById("userPanel").classList.remove("active");
                 document.getElementById("adminPanel").classList.add("active");
-                loadAdminTableRecords();
+                //loadAdminTableRecords();
             })
             .catch(err => {
                 errorBox.textContent = "Invalid login or password.";
@@ -755,7 +756,7 @@
             }
         }
 
-        function showAdminTab(tab) {
+    function showAdminTab(tab) {
         const isOrders = tab === "orders";
         document.getElementById("ordersSection").style.display = isOrders ? "block" : "none";
         document.getElementById("inventorySection").style.display = isOrders ? "none" : "block";
@@ -791,6 +792,7 @@
                     <td><div class="status ${statusClass}">${item.status}</div></td>
                 `;
                 row.children[1].textContent = item.name;     // safe against odd characters
+                row.children[2].textContent = item.category;
                 tbody.appendChild(row);
             });
         })
