@@ -48,7 +48,7 @@
         
         /* Badges & Actions styles */
         .status { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-        /*.status.in-stock { background-color: #def7ec; color: #03543f; }*/
+        .status.in-stock { background-color: #def7ec; color: #03543f; }
         .status.low-stock { background-color: #fff3d6; color: #a16207; }
         .status.not-available { background-color: #fde8e8; color: #9b1c1c; }
         .status.packed { background-color: #e1effe; color: #1e429f; }
@@ -766,9 +766,8 @@
             const amountInput = document.getElementById("modalPurchaseAmount").value;
             const deadline = document.getElementById("modalDeliveryDate").value;
 
-            const btn = document.getElementById("orderSubmitBtn");          // NEW
-            if (btn.disabled) return;                                       // NEW
-            setButtonLoading(btn, true, "Saving...");                       // NEW
+            const btn = document.getElementById("orderSubmitBtn");
+            if (btn.disabled) return;
         
             if (!customer || !amountInput || !deadline) {
                 alert("Please fill out all operational input fields correctly.");
@@ -783,6 +782,8 @@
         
             const delivery_status = "Accepted"; 
             const stock_status = "In stock";
+
+            setButtonLoading(btn, true, "Saving...");   // start spinner only after validation passed
         
             try {
                 const response = await fetch(`${API_URL}/orders`, {
@@ -836,16 +837,14 @@
                 return;
             }
             
-            const itemStatus = item.status || "Stock";
-            const statusClass = (itemStatus === "Stock" || itemStatus === "In stock") ? "in-stock"
-                              : itemStatus === "Low stock" ? "low-stock" : "not-available";
-            
             items.forEach(item => {
-                const statusClass = (item.status === "Stock" || item.status === "In stock") ? "in-stock"
-                                  : item.status === "Low stock" ? "low-stock" : "not-available";
+                const itemStatus = item.status || "Stock";
+                const statusClass = (itemStatus === "Stock" || itemStatus === "In stock") ? "in-stock"
+                                  : itemStatus === "Low stock" ? "low-stock" : "not-available";
+                const itemCode = item.inventory_id ?? "INV-" + String(item.item_id).padStart(3, "0");
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td style="color: #0043a4; font-weight: 600;">${item.inventory_id ?? "INV-" + String(item.item_id).padStart(3, "0")}</td>
+                    <td style="color: #0043a4; font-weight: 600;">${itemCode}</td>
                     <td></td>
                     <td></td>
                     <td>${item.quantity}</td>
@@ -853,7 +852,7 @@
                     <td>
                         <div class="delivery-cell-container">
                             <div class="status ${statusClass}">${itemStatus}</div>
-                            <button class="trash-delete-btn" title="Delete Row" onclick="deleteInventoryItem(${item.item_id}, '${item.inventory_id}')">
+                            <button class="trash-delete-btn" title="Delete Row" onclick="deleteInventoryItem(${item.item_id}, '${itemCode}')">
                                 <svg width="14" height="16" viewBox="0 0 448 512" fill="currentColor"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
                             </button>
                         </div>
