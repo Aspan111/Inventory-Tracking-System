@@ -306,8 +306,25 @@ td.id{font-weight:700;color:var(--orange-ink)}
 .history-box{border-top:1.5px dashed #ECECEC;padding-top:18px;display:none}
 .history-box.show{display:block}
 .history-box h4{margin:0 0 12px;font-size:15px;font-weight:600}
-.low-stock-banner{display:none;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 20px;border-radius:18px;background:var(--red-bg);color:var(--red);font-weight:600}
+.low-stock-banner{display:none;align-items:flex-start;gap:16px;padding:18px 20px;border-radius:20px;background:#FFF6F0;border:1.5px solid #FFD9C2}
 .low-stock-banner.show{display:flex}
+.ls-icon{flex:0 0 auto;width:40px;height:40px;border-radius:12px;background:var(--orange);color:#fff;display:inline-flex;align-items:center;justify-content:center}
+.ls-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.ls-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.ls-head b{font-size:17px;font-weight:600;color:var(--ink)}
+.ls-head span{font-size:14px;color:var(--grey)}
+.ls-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ls-chip{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:5px 6px 5px 12px;border-radius:999px;background:#fff;border:1.5px solid #F1E2D8;font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap}
+.ls-chip .nm{overflow:hidden;text-overflow:ellipsis}
+.ls-chip .q{min-width:24px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;text-align:center}
+.ls-chip.out .q{background:var(--red-bg);color:var(--red)}
+.ls-chip.low .q{background:#FFF3D6;color:#8A5300}
+.ls-more{padding:5px 12px;border-radius:999px;border:1.5px dashed #E8C9B5;background:transparent;font-size:13px;font-weight:600;color:var(--orange-ink);cursor:pointer}
+.ls-btn{flex:0 0 auto;align-self:center}
+@media (max-width:640px){.low-stock-banner{flex-wrap:wrap}.ls-btn{width:100%}}
+[data-theme="dark"] .low-stock-banner{background:#1E1610;border-color:#4A2E1C}
+[data-theme="dark"] .ls-chip{background:#161616;border-color:#3A2A20;color:#F2F2F2}
+[data-theme="dark"] .ls-head b{color:#F2F2F2}
 th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
 th.sortable:hover{color:var(--ink)}
 th.sortable .arrow{display:inline-block;width:10px;margin-left:4px;color:var(--orange)}
@@ -567,8 +584,12 @@ th.sortable .arrow{display:inline-block;width:10px;margin-left:4px;color:var(--o
     </div>
 
     <div class="low-stock-banner" id="lowStockBanner" role="status">
-      <span id="lowStockText"></span>
-      <button class="btn btn-sm btn-ghost" type="button" onclick="showAdminTab('inventory')">Open inventory</button>
+      <span class="ls-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 3L2 20h20L12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4M12 17.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <div class="ls-body">
+        <div class="ls-head"><b id="lowStockTitle"></b><span id="lowStockSub"></span></div>
+        <div class="ls-chips" id="lowStockChips"></div>
+      </div>
+      <button class="btn btn-sm btn-ghost ls-btn" type="button" onclick="showAdminTab('inventory')">Open inventory →</button>
     </div>
 
     <div class="kpis">
@@ -1534,12 +1555,25 @@ async function loadInventoryCache() {
   updateLowStockBanner();
   return inventoryCache;
 }
+let lowStockExpanded = false;
 function updateLowStockBanner() {
-  const low = inventoryCache.filter(i => Number(i.quantity || 0) < LOW_STOCK_LIMIT);
+  const low = inventoryCache.filter(i => Number(i.quantity || 0) < LOW_STOCK_LIMIT)
+    .sort((a, b) => Number(a.quantity || 0) - Number(b.quantity || 0) || String(a.name || a.item_name).localeCompare(String(b.name || b.item_name)));
   const el = document.getElementById("lowStockBanner");
   el.classList.toggle("show", low.length > 0);
-  if (low.length) document.getElementById("lowStockText").textContent =
-    `⚠ Low stock: ${low.map(i => `${i.name || i.item_name} (${i.quantity})`).join(", ")}`;
+  if (!low.length) return;
+  const out = low.filter(i => Number(i.quantity || 0) <= 0).length;
+  document.getElementById("lowStockTitle").textContent = `${low.length} ${low.length === 1 ? "item needs" : "items need"} restocking`;
+  document.getElementById("lowStockSub").textContent = [out ? `${out} out of stock` : "", low.length - out ? `${low.length - out} running low` : ""].filter(Boolean).join(" · ");
+  const LIMIT = 6;
+  const shown = lowStockExpanded ? low : low.slice(0, LIMIT);
+  let html = shown.map(i => {
+    const q = Number(i.quantity || 0);
+    const name = i.name || i.item_name || "";
+    return `<span class="ls-chip ${q <= 0 ? "out" : "low"}" title="${esc(name)}"><span class="nm">${esc(name)}</span><span class="q">${q <= 0 ? "0" : q}</span></span>`;
+  }).join("");
+  if (low.length > LIMIT) html += `<button type="button" class="ls-more" onclick="lowStockExpanded=!lowStockExpanded; updateLowStockBanner()">${lowStockExpanded ? "Show less" : `+${low.length - LIMIT} more`}</button>`;
+  document.getElementById("lowStockChips").innerHTML = html;
 }
 function itemStatus(item) {
   const q = Number(item.quantity || 0);
