@@ -798,7 +798,7 @@ mark.hl{background:var(--orange-soft);color:inherit;border-radius:3px;padding:0 
 /* ====================== CONFIG ====================== */
 const API_URL = "https://inventory-backend-1-md7r.onrender.com";
 // Paste a YouTube embed link here when the tutorial video is ready, e.g. "https://www.youtube.com/embed/VIDEO_ID"
-const TUTORIAL_VIDEO_URL = "";
+const TUTORIAL_VIDEO_URL = "tutorial.mp4"; // local mp4 or YouTube embed URL
 // Contact details shown in the Contacts section. Leave a value empty to hide that card.
 const CONTACT = {
   phone: "",
@@ -1265,7 +1265,13 @@ function setChapter(i) {
 }
 function playTutorial() {
   if (!TUTORIAL_VIDEO_URL) { showToast(t("tut.soon")); return; }
-  document.getElementById("player").innerHTML = `<iframe src="${esc(TUTORIAL_VIDEO_URL)}?autoplay=1" title="ITS video tutorial" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  const p = document.getElementById("player");
+  if (/\.(mp4|webm)(\?|$)/i.test(TUTORIAL_VIDEO_URL)) {
+    p.innerHTML = `<video src="${esc(TUTORIAL_VIDEO_URL)}" controls autoplay playsinline preload="auto" title="ITS video tutorial"></video>`;
+    const v = p.querySelector("video"); if (v) { v.play().catch(() => {}); }
+  } else {
+    p.innerHTML = `<iframe src="${esc(TUTORIAL_VIDEO_URL)}?autoplay=1" title="ITS video tutorial" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  }
 }
 function showGuide(which) {
   document.getElementById("tabCustomer").classList.toggle("active", which === "customer");
