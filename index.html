@@ -32,9 +32,9 @@ img,svg{display:block}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
 .brand-name{font-size:26px;font-weight:800;letter-spacing:.5px}
 .brand-name span{color:var(--orange)}
-.brand-tag{font-size:12px;color:var(--grey);border-left:1.5px solid var(--line);padding-left:10px;line-height:1.2}
+.brand-tag{display:none}
 .main-nav{display:flex;flex-wrap:wrap;gap:4px;font-size:15px;font-weight:500}
-.main-nav a{white-space:nowrap;display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:10px;text-decoration:none}
+.main-nav a{white-space:nowrap;display:inline-flex;align-items:center;min-height:40px;padding:0 11px;border-radius:10px;text-decoration:none}
 .main-nav a:hover{background:var(--bg-soft)}
 .header-actions{display:flex;align-items:center;gap:10px}
 .admin-badge{display:none;align-items:center;gap:8px;font-size:14px;color:var(--grey)}
@@ -271,6 +271,7 @@ td.id{font-weight:700;color:var(--orange-ink)}
 .toast.error{background:var(--red)}
 .toast .dot{color:#FF8A4C}
 
+@media (max-width:1180px){.main-nav{order:3;width:100%;justify-content:center}}
 @media (max-width:820px){
   .container{padding:0 18px}
   .main-nav{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;margin:0 -6px}
@@ -288,6 +289,81 @@ td.id{font-weight:700;color:var(--orange-ink)}
   .cta{padding:28px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* ---------- v2 additions ---------- */
+.lang-switch{display:inline-flex;padding:4px;border-radius:12px;background:#F4F4F4;gap:2px}
+.lang-switch button{min-width:38px;min-height:34px;border:0;border-radius:9px;background:transparent;font-size:13px;font-weight:700;color:var(--grey);cursor:pointer}
+.lang-switch button.active{background:var(--ink);color:#fff}
+.theme-btn{width:44px;height:44px;border-radius:12px;border:1.5px solid #CFCFCF;background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.card-actions{display:flex;flex-wrap:wrap;gap:8px}
+.card-actions .btn{min-height:40px;padding:0 14px;font-size:14px}
+.timeline{display:flex;flex-direction:column;gap:0;margin:0;padding:0;list-style:none}
+.timeline li{position:relative;display:flex;gap:14px;padding:0 0 16px 0}
+.timeline li:last-child{padding-bottom:0}
+.timeline .dot{flex:0 0 auto;width:14px;height:14px;border-radius:999px;background:var(--orange);margin-top:4px;box-shadow:0 0 0 4px var(--orange-soft)}
+.timeline li:not(:last-child)::before{content:"";position:absolute;left:6px;top:20px;bottom:0;width:2px;background:#F0D7C8}
+.timeline b{font-size:15px;font-weight:600}
+.timeline span{font-size:14px;color:var(--grey)}
+.history-box{border-top:1.5px dashed #ECECEC;padding-top:18px;display:none}
+.history-box.show{display:block}
+.history-box h4{margin:0 0 12px;font-size:15px;font-weight:600}
+.low-stock-banner{display:none;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 20px;border-radius:18px;background:var(--red-bg);color:var(--red);font-weight:600}
+.low-stock-banner.show{display:flex}
+th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+th.sortable:hover{color:var(--ink)}
+th.sortable .arrow{display:inline-block;width:10px;margin-left:4px;color:var(--orange)}
+.table-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-top:1.5px solid #ECECEC;font-size:14px;color:var(--grey)}
+.pager{display:flex;align-items:center;gap:6px}
+.pager button{min-width:38px;min-height:38px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-weight:600;cursor:pointer}
+.pager button.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.pager button:disabled{opacity:.4;cursor:default}
+.row-actions{display:flex;gap:6px}
+.icon-btn.edit:hover{background:var(--orange-soft);color:var(--orange-ink)}
+.item-sub{display:block;font-size:12px;color:var(--grey);margin-top:2px}
+.form-hint{font-size:13px;color:var(--grey)}
+.contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:32px}
+.contact-card{border-radius:24px;background:var(--bg-soft);padding:24px;display:flex;flex-direction:column;gap:8px}
+.contact-card .ic{width:44px;height:44px;border-radius:12px;background:var(--ink);display:inline-flex;align-items:center;justify-content:center;margin-bottom:6px}
+.contact-card b{font-size:18px;font-weight:600}
+.contact-card span,.contact-card a{font-size:15px;color:var(--grey)}
+.contact-card a:hover{color:var(--orange-ink)}
+
+/* ---------- Dark theme ---------- */
+[data-theme="dark"] body{background:#0E0E0E;color:#F2F2F2}
+[data-theme="dark"]{--line:#2A2A2A;--bg-soft:#1A1A1A;--grey:#A8A8A8;--grey-2:#7A7A7A;--ink-2:#1C1C1C;--ink-3:#262626;--orange-soft:#3A2416;--orange-ink:#FFB088;--green-bg:#123322;--green:#7FD8A4;--red-bg:#3A1A18;--red:#FF9C94}
+[data-theme="dark"] .site-header{background:rgba(14,14,14,.94);border-color:#2A2A2A}
+[data-theme="dark"] .brand,[data-theme="dark"] .main-nav a,[data-theme="dark"] .hero h1{color:#F2F2F2}
+[data-theme="dark"] .main-nav a:hover{background:#1A1A1A}
+[data-theme="dark"] .btn-outline{background:transparent;border-color:#F2F2F2;color:#F2F2F2}
+[data-theme="dark"] .btn-ghost,[data-theme="dark"] .theme-btn,[data-theme="dark"] .chip-btn,[data-theme="dark"] .filter,[data-theme="dark"] .pager button{background:#161616;border-color:#333;color:#F2F2F2}
+[data-theme="dark"] .lang-switch,[data-theme="dark"] .tabs,[data-theme="dark"] .admin-tabs{background:#1A1A1A}
+[data-theme="dark"] .lang-switch button.active,[data-theme="dark"] .tab.active,[data-theme="dark"] .admin-tab.active,[data-theme="dark"] .pager button.active,[data-theme="dark"] .btn-dark,[data-theme="dark"] .search-btn{background:#F2F2F2;color:#141414}
+[data-theme="dark"] .search-field,[data-theme="dark"] .table-search,[data-theme="dark"] .form-input-box{background:#161616;border-color:#333;color:#F2F2F2}
+[data-theme="dark"] .search-input,[data-theme="dark"] .table-search input{color:#F2F2F2}
+[data-theme="dark"] .order-card,[data-theme="dark"] .table-card,[data-theme="dark"] .modal-card-content,[data-theme="dark"] .stats-modal,[data-theme="dark"] .chapter,[data-theme="dark"] .faq details,[data-theme="dark"] .kpi:not(.orange):not(.dark){background:#161616;border-color:#2A2A2A;color:#F2F2F2}
+[data-theme="dark"] .faq details[open]{background:#21170F;border-color:#4A2E1C}
+[data-theme="dark"] .faq summary::after,[data-theme="dark"] .chapter .num,[data-theme="dark"] .icon-btn{background:#262626;color:#F2F2F2}
+[data-theme="dark"] .chapter.active{background:#F2F2F2;color:#141414}
+[data-theme="dark"] th,[data-theme="dark"] .stats-menu{background:#1A1A1A;border-color:#2A2A2A}
+[data-theme="dark"] td{border-color:#222}
+[data-theme="dark"] tbody tr:hover td{background:#1D1611}
+[data-theme="dark"] .quick{background:#161616;color:#F2F2F2}
+[data-theme="dark"] .quick input{background:#222;color:#F2F2F2}
+[data-theme="dark"] .step .s-chip{background:#262626;color:#F2F2F2}
+[data-theme="dark"] .step.orange .s-chip{background:#fff;color:#141414}
+[data-theme="dark"] .dark,[data-theme="dark"] .cta{background:#161616}
+[data-theme="dark"] .art-card{background:#0E0E0E}
+[data-theme="dark"] .stats-item{color:#F2F2F2}
+[data-theme="dark"] .stats-item:hover{background:#222}
+[data-theme="dark"] .stats-item.active{background:#F2F2F2;color:#141414}
+[data-theme="dark"] .status-dropdown{background-color:#262626;color:#F2F2F2}
+[data-theme="dark"] .status-dropdown.pill-accepted{background-color:var(--orange-soft);color:var(--orange-ink)}
+[data-theme="dark"] .status-dropdown.pill-shipped{background-color:var(--green-bg);color:var(--green)}
+[data-theme="dark"] .status-dropdown.pill-delivering{background-color:#F2F2F2;color:#141414}
+[data-theme="dark"] .pill-delivering{background:#F2F2F2;color:#141414}
+[data-theme="dark"] .box-icon{background:#262626}
+[data-theme="dark"] .site-footer{border-color:#2A2A2A}
+[data-theme="dark"] .timeline li:not(:last-child)::before{background:#4A2E1C}
+@media print{.site-header,.toast{display:none!important}}
 </style>
 </head>
 <body>
@@ -296,23 +372,32 @@ td.id{font-weight:700;color:var(--orange-ink)}
 <header class="site-header">
   <div class="container header-row">
     <a class="brand" href="#" onclick="goHome(event)" aria-label="ITS home">
-      <svg aria-hidden="true" width="40" height="32" viewBox="0 0 40 32"><rect x="0" y="0" width="16" height="32" rx="5" fill="#141414"/><path d="M20 0 H34 A6 6 0 0 1 40 6 V10 H26 A6 6 0 0 1 20 4 Z" fill="#FF6B1A"/><rect x="20" y="13" width="20" height="19" rx="5" fill="#141414"/></svg>
+      <svg aria-hidden="true" width="40" height="32" viewBox="0 0 40 32"><rect x="0" y="0" width="16" height="32" rx="5" fill="currentColor"/><path d="M20 0 H34 A6 6 0 0 1 40 6 V10 H26 A6 6 0 0 1 20 4 Z" fill="#FF6B1A"/><rect x="20" y="13" width="20" height="19" rx="5" fill="currentColor"/></svg>
       <span class="brand-name">ITS<span>.</span></span>
       <span class="brand-tag">Inventory<br>Tracking System</span>
     </a>
     <nav class="main-nav" id="userNav" aria-label="Main">
-      <a href="#track">Track Order</a>
-      <a href="#journey">How It Works</a>
-      <a href="#tutorial">Tutorial</a>
-      <a href="#faq">FAQ</a>
+      <a href="#track" data-i18n="nav.track">Track Order</a>
+      <a href="#journey" data-i18n="nav.how">How It Works</a>
+      <a href="#tutorial" data-i18n="nav.tutorial">Tutorial</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+      <a href="#contacts" data-i18n="nav.contacts">Contacts</a>
     </nav>
     <div class="header-actions">
+      <div class="lang-switch" id="langSwitch" role="group" aria-label="Language">
+        <button type="button" data-lang="en" onclick="setLang('en')">EN</button>
+        <button type="button" data-lang="ru" onclick="setLang('ru')">RU</button>
+        <button type="button" data-lang="kk" onclick="setLang('kk')">KZ</button>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Switch dark mode">
+        <svg id="themeIcon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </button>
       <span class="admin-badge" id="adminBadge"><span class="avatar" aria-hidden="true">A</span>Admin</span>
       <button id="authBtn" class="btn btn-outline" onclick="openLoginModal()">
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Log in
+        <span data-i18n="btn.login">Log in</span>
       </button>
-      <a id="trackTopBtn" class="btn btn-orange" href="#track" onclick="focusSearch()">Track order</a>
+      <a id="trackTopBtn" class="btn btn-orange" href="#track" onclick="focusSearch()" data-i18n="btn.track">Track order</a>
       <button id="logoutBtn" class="btn btn-ghost" style="display:none" onclick="triggerLogout()">Log out</button>
     </div>
   </div>
@@ -322,24 +407,24 @@ td.id{font-weight:700;color:var(--orange-ink)}
 <main id="userPanel" class="interface-panel active">
 
   <section id="track" class="container hero">
-    <h1>Tracking Your Orders<br>
-      <span class="accent"><span class="globe" aria-hidden="true"><svg width="56%" height="56%" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#FF6B1A" stroke-width="2"/><path d="M3 12H21M12 3C8 7 8 17 12 21M12 3C16 7 16 17 12 21" fill="none" stroke="#FF6B1A" stroke-width="2"/></svg></span>In Real Time</span>
+    <h1><span data-i18n="hero.title1">Tracking Your Orders</span><br>
+      <span class="accent"><span class="globe" aria-hidden="true"><svg width="56%" height="56%" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#FF6B1A" stroke-width="2"/><path d="M3 12H21M12 3C8 7 8 17 12 21M12 3C16 7 16 17 12 21" fill="none" stroke="#FF6B1A" stroke-width="2"/></svg></span><span data-i18n="hero.title2">In Real Time</span></span>
     </h1>
-    <p class="lead">Find any order by its number or your company name. See where it is, without calling the shop.</p>
+    <p class="lead" data-i18n="hero.lead">Find any order by its number or your company name. See where it is, without calling the shop.</p>
 
     <form class="search-form" onsubmit="event.preventDefault(); performSearch();" role="search">
       <label class="search-field" for="userQueryInput">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M12 21s-7-7-7-11.5a7 7 0 0 1 14 0C19 14 12 21 12 21z" fill="none" stroke="#5C5C5C" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="#5C5C5C" stroke-width="2"/></svg>
-        <span class="sr-only">Order ID or customer name</span>
-        <input type="text" id="userQueryInput" class="search-input" placeholder="Enter order ID (SO-001) or customer name" autocomplete="off">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M12 21s-7-7-7-11.5a7 7 0 0 1 14 0C19 14 12 21 12 21z" fill="none" stroke="#8C8C8C" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="#8C8C8C" stroke-width="2"/></svg>
+        <span class="sr-only" data-i18n="search.label">Order ID or customer name</span>
+        <input type="text" id="userQueryInput" class="search-input" data-i18n-ph="search.ph" placeholder="Enter order ID (SO-001) or customer name" autocomplete="off">
       </label>
       <button id="searchBtn" class="search-btn" type="submit" aria-label="Search">
-        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#fff" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
-        <span class="label">Search</span>
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span class="label" data-i18n="search.btn">Search</span>
       </button>
     </form>
     <div class="try-row">
-      <span>Try:</span>
+      <span data-i18n="search.try">Try:</span>
       <button class="chip-btn" type="button" onclick="quickSearch('SO-034')">SO-034</button>
       <button class="chip-btn" type="button" onclick="quickSearch('Premium Goods')">Premium Goods</button>
     </div>
@@ -356,16 +441,16 @@ td.id{font-weight:700;color:var(--orange-ink)}
         <div>
           <div class="art-card"><svg aria-hidden="true" viewBox="0 0 480 420" style="width: 100%; height: 100%"><polygon points="184,190.0 240,162.0 296,190.0 240,218.0" fill="#4A4A4A"></polygon><polygon points="184,190.0 240,218.0 240,274.0 184,246.0" fill="#1A1A1A"></polygon><polygon points="240,218.0 296,190.0 296,246.0 240,274.0" fill="#2B2B2B"></polygon><polygon points="128,218.0 184,190.0 240,218.0 184,246.0" fill="#4A4A4A"></polygon><polygon points="128,218.0 184,246.0 184,302.0 128,274.0" fill="#1A1A1A"></polygon><polygon points="184,246.0 240,218.0 240,274.0 184,302.0" fill="#2B2B2B"></polygon><polygon points="240,218.0 296,190.0 352,218.0 296,246.0" fill="#4A4A4A"></polygon><polygon points="240,218.0 296,246.0 296,302.0 240,274.0" fill="#1A1A1A"></polygon><polygon points="296,246.0 352,218.0 352,274.0 296,302.0" fill="#2B2B2B"></polygon><polygon points="72,246.0 128,218.0 184,246.0 128,274.0" fill="#FF8A4C"></polygon><polygon points="72,246.0 128,274.0 128,330.0 72,302.0" fill="#D9500A"></polygon><polygon points="128,274.0 184,246.0 184,302.0 128,330.0" fill="#FF6B1A"></polygon><polygon points="184,246.0 240,218.0 296,246.0 240,274.0" fill="#4A4A4A"></polygon><polygon points="184,246.0 240,274.0 240,330.0 184,302.0" fill="#1A1A1A"></polygon><polygon points="240,274.0 296,246.0 296,302.0 240,330.0" fill="#2B2B2B"></polygon><polygon points="296,246.0 352,218.0 408,246.0 352,274.0" fill="#FF8A4C"></polygon><polygon points="296,246.0 352,274.0 352,330.0 296,302.0" fill="#D9500A"></polygon><polygon points="352,274.0 408,246.0 408,302.0 352,330.0" fill="#FF6B1A"></polygon><polygon points="128,274.0 184,246.0 240,274.0 184,302.0" fill="#4A4A4A"></polygon><polygon points="128,274.0 184,302.0 184,358.0 128,330.0" fill="#1A1A1A"></polygon><polygon points="184,302.0 240,274.0 240,330.0 184,358.0" fill="#2B2B2B"></polygon><polygon points="240,274.0 296,246.0 352,274.0 296,302.0" fill="#4A4A4A"></polygon><polygon points="240,274.0 296,302.0 296,358.0 240,330.0" fill="#1A1A1A"></polygon><polygon points="296,302.0 352,274.0 352,330.0 296,358.0" fill="#2B2B2B"></polygon><polygon points="184,302.0 240,274.0 296,302.0 240,330.0" fill="#FF8A4C"></polygon><polygon points="184,302.0 240,330.0 240,386.0 184,358.0" fill="#D9500A"></polygon><polygon points="240,330.0 296,302.0 296,358.0 240,386.0" fill="#FF6B1A"></polygon><polygon points="184,134.0 240,106.0 296,134.0 240,162.0" fill="#4A4A4A"></polygon><polygon points="184,134.0 240,162.0 240,218.0 184,190.0" fill="#1A1A1A"></polygon><polygon points="240,162.0 296,134.0 296,190.0 240,218.0" fill="#2B2B2B"></polygon><polygon points="128,162.0 184,134.0 240,162.0 184,190.0" fill="#4A4A4A"></polygon><polygon points="128,162.0 184,190.0 184,246.0 128,218.0" fill="#1A1A1A"></polygon><polygon points="184,190.0 240,162.0 240,218.0 184,246.0" fill="#2B2B2B"></polygon><polygon points="240,162.0 296,134.0 352,162.0 296,190.0" fill="#FF8A4C"></polygon><polygon points="240,162.0 296,190.0 296,246.0 240,218.0" fill="#D9500A"></polygon><polygon points="296,190.0 352,162.0 352,218.0 296,246.0" fill="#FF6B1A"></polygon><polygon points="184,190.0 240,162.0 296,190.0 240,218.0" fill="#FF8A4C"></polygon><polygon points="184,190.0 240,218.0 240,274.0 184,246.0" fill="#D9500A"></polygon><polygon points="240,218.0 296,190.0 296,246.0 240,274.0" fill="#FF6B1A"></polygon><polygon points="184,78.0 240,50.0 296,78.0 240,106.0" fill="#FF8A4C"></polygon><polygon points="184,78.0 240,106.0 240,162.0 184,134.0" fill="#D9500A"></polygon><polygon points="240,106.0 296,78.0 296,134.0 240,162.0" fill="#FF6B1A"></polygon></svg></div>
           <div class="mini-row">
-            <div class="mini"><b>3</b><span>statuses, one simple route</span></div>
+            <div class="mini"><b>3</b><span data-i18n="mini.three">statuses, one simple route</span></div>
             <div class="mini-star" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 100 100"><g stroke="#FF6B1A" stroke-width="14" stroke-linecap="round"><line x1="50" y1="10" x2="50" y2="90"/><line x1="15" y1="30" x2="85" y2="70"/><line x1="85" y1="30" x2="15" y2="70"/></g></svg></div>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:22px">
-          <h2 class="section-title"><span class="o">No calls.</span> Order Tracking For Small Shops</h2>
-          <p class="muted-text">ITS keeps orders, customers, items and stock in one cloud database. Customers check their order themselves; the shop updates it in one click.</p>
+          <h2 class="section-title" data-i18n-html="dark.title"><span class="o">No calls.</span> Order Tracking For Small Shops</h2>
+          <p class="muted-text" data-i18n="dark.p">ITS keeps orders, customers, items and stock in one cloud database. Customers check their order themselves; the shop updates it in one click.</p>
           <div style="display:flex;flex-wrap:wrap;gap:12px">
-            <a class="btn btn-orange" href="#track" onclick="focusSearch()">Track an order</a>
-            <button class="btn btn-ghost-dark" type="button" onclick="openLoginModal()">Admin login</button>
+            <a class="btn btn-orange" href="#track" onclick="focusSearch()" data-i18n="dark.btn1">Track an order</a>
+            <button class="btn btn-ghost-dark" type="button" onclick="openLoginModal()" data-i18n="dark.btn2">Admin login</button>
           </div>
         </div>
       </div>
@@ -374,40 +459,40 @@ td.id{font-weight:700;color:var(--orange-ink)}
 
   <section id="journey" class="container section">
     <div class="center">
-      <h2 class="section-title">The Journey Of<br>Every Order</h2>
+      <h2 class="section-title" data-i18n-html="journey.title">The Journey Of<br>Every Order</h2>
     </div>
     <div class="journey">
       <div class="j-card">
         <svg aria-hidden="true" width="120" height="120" viewBox="0 0 64 64"><path d="M6 28L32 12L58 28V56H6Z" fill="none" stroke="#FF6B1A" stroke-width="3" stroke-linejoin="round"/><rect x="20" y="36" width="10" height="10" fill="#FF6B1A"/><rect x="32" y="36" width="10" height="10" fill="#fff"/><rect x="26" y="25" width="10" height="10" fill="#FF6B1A"/></svg>
-        <div class="j-foot"><span><small>Step 1</small><b>Accepted</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
+        <div class="j-foot"><span><small data-i18n="journey.s1">Step 1</small><b data-i18n="st.Accepted">Accepted</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
       </div>
       <div class="j-card orange">
         <svg aria-hidden="true" width="140" height="120" viewBox="0 0 72 56"><path d="M4 12H42V40H4ZM42 22H56L66 32V40H42" fill="none" stroke="#141414" stroke-width="3" stroke-linejoin="round"/><circle cx="16" cy="44" r="6" fill="#141414"/><circle cx="54" cy="44" r="6" fill="#141414"/></svg>
-        <div class="j-foot"><span><small>Step 2</small><b>Delivering</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
+        <div class="j-foot"><span><small data-i18n="journey.s2">Step 2</small><b data-i18n="st.Delivering">Delivering</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
       </div>
       <div class="j-card">
         <svg aria-hidden="true" width="120" height="120" viewBox="0 0 64 64"><rect x="14" y="6" width="36" height="52" rx="3" fill="none" stroke="#FF6B1A" stroke-width="3"/><circle cx="42" cy="32" r="2.5" fill="#fff"/><path d="M22 20L28 26L40 14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="j-foot"><span><small>Step 3</small><b>Shipped</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
+        <div class="j-foot"><span><small data-i18n="journey.s3">Step 3</small><b data-i18n="st.Shipped">Shipped</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
       </div>
     </div>
   </section>
 
   <section id="tutorial" class="container section">
     <div class="center">
-      <span class="tag">Tutorial</span>
-      <h2 class="section-title">Learn ITS <span class="o">Step By Step</span></h2>
-      <p style="margin:0;max-width:560px;font-size:17px;line-height:1.6;color:var(--grey)">Watch the video or follow the guides. Customers need one minute; admins, a few more.</p>
+      <span class="tag" data-i18n="tut.tag">Tutorial</span>
+      <h2 class="section-title" data-i18n-html="tut.title">Learn ITS <span class="o">Step By Step</span></h2>
+      <p style="margin:0;max-width:560px;font-size:17px;line-height:1.6;color:var(--grey)" data-i18n="tut.lead">Watch the video or follow the guides. Customers need one minute; admins, a few more.</p>
     </div>
     <div class="tutorial-grid">
       <div class="player" id="player">
-        <div class="player-ui" id="playerUi">
+        <div class="player-ui">
           <div class="player-glow" aria-hidden="true"></div>
-          <div class="player-top"><span id="chapterBadge">Chapter 1 of 4</span><span>ITS video tutorial</span></div>
+          <div class="player-top"><span id="chapterBadge">1 / 4</span><span data-i18n="tut.video">ITS video tutorial</span></div>
           <div class="player-mid">
             <button class="play-btn" id="playBtn" type="button" onclick="playTutorial()" aria-label="Play video">
               <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24"><path d="M8 5L19 12L8 19Z" fill="#fff"/></svg>
             </button>
-            <strong id="chapterTitle">Find your order</strong>
+            <strong id="chapterTitle"></strong>
           </div>
           <div class="player-bottom">
             <div class="progress" id="chapterProgress"><span class="on"></span><span></span><span></span><span></span></div>
@@ -419,44 +504,46 @@ td.id{font-weight:700;color:var(--orange-ink)}
     </div>
 
     <div class="center" style="margin-top:72px">
-      <h3 class="section-title" style="font-size:clamp(28px,3vw,38px)">Step-By-Step Guides</h3>
+      <h3 class="section-title" style="font-size:clamp(28px,3vw,38px)" data-i18n="tut.guides">Step-By-Step Guides</h3>
       <div class="tabs" role="tablist" aria-label="Guide">
-        <button class="tab active" role="tab" aria-selected="true" id="tabCustomer" onclick="showGuide('customer')">For customers</button>
-        <button class="tab" role="tab" aria-selected="false" id="tabAdmin" onclick="showGuide('admin')">For admins</button>
+        <button class="tab active" role="tab" aria-selected="true" id="tabCustomer" onclick="showGuide('customer')" data-i18n="tut.forCustomers">For customers</button>
+        <button class="tab" role="tab" aria-selected="false" id="tabAdmin" onclick="showGuide('admin')" data-i18n="tut.forAdmins">For admins</button>
       </div>
     </div>
     <div class="steps" id="guideSteps"></div>
   </section>
 
   <section id="faq" class="container section">
-    <div class="center"><h2 class="section-title">Questions <span class="o">&amp; Answers</span></h2></div>
-    <div class="faq">
-      <details open><summary>Do I need an account to track my order?</summary><p>No. Customers only need the order number or company name. Accounts are for shop admins.</p></details>
-      <details><summary>Where do I find my order number?</summary><p>It is on your receipt or invoice and looks like SO-001.</p></details>
-      <details><summary>What do the three statuses mean?</summary><p>Accepted: the shop has your order. Delivering: it is on the way. Shipped: it was delivered.</p></details>
-      <details><summary>My order is past its deadline. What now?</summary><p>Contact the shop with your order number. Late orders are highlighted for the admin too.</p></details>
-      <details><summary>Can other people see my details?</summary><p>The public search shows only order number, customer, amount, deadline and status. Passwords are hashed and all traffic is encrypted.</p></details>
+    <div class="center"><h2 class="section-title" data-i18n-html="faq.title">Questions <span class="o">&amp; Answers</span></h2></div>
+    <div class="faq" id="faqList"></div>
+  </section>
+
+  <section id="contacts" class="container section">
+    <div class="center">
+      <span class="tag" data-i18n="contacts.tag">Contacts</span>
+      <h2 class="section-title" data-i18n-html="contacts.title">Get In <span class="o">Touch</span></h2>
     </div>
+    <div class="contacts" id="contactCards"></div>
   </section>
 
   <section class="container section">
     <div class="cta">
       <div style="flex:999 1 380px;display:flex;flex-direction:column;gap:14px">
-        <h2 class="section-title">Track Your Order<br>In Seconds</h2>
-        <p class="muted-text" style="font-size:16px">Type your order number and press Track now.</p>
+        <h2 class="section-title" data-i18n-html="cta.title">Track Your Order<br>In Seconds</h2>
+        <p class="muted-text" style="font-size:16px" data-i18n="cta.p">Type your order number and press Track now.</p>
       </div>
       <form class="quick" onsubmit="event.preventDefault(); quickSearch(document.getElementById('quickInput').value);">
-        <b>Quickly Track Your Order</b>
-        <label for="quickInput" class="sr-only">Order ID or customer name</label>
-        <input id="quickInput" type="text" placeholder="Enter your order ID" autocomplete="off">
-        <button class="btn btn-orange" type="submit">Track now</button>
+        <b data-i18n="quick.title">Quickly Track Your Order</b>
+        <label for="quickInput" class="sr-only" data-i18n="search.label">Order ID or customer name</label>
+        <input id="quickInput" type="text" data-i18n-ph="quick.ph" placeholder="Enter your order ID" autocomplete="off">
+        <button class="btn btn-orange" type="submit" data-i18n="quick.btn">Track now</button>
       </form>
     </div>
   </section>
 
   <footer class="site-footer">
     <div class="container footer-row">
-      <span><b style="color:var(--ink)">ITS<span style="color:var(--orange)">.</span></b> · Team ITS · ICT Final Project 2026</span>
+      <span><b>ITS<span style="color:var(--orange)">.</span></b> · Team ITS · ICT Final Project 2026</span>
       <span>Kenzhebek Aspandiyar · Kaziev Alinur · Mukhatay Askar</span>
     </div>
   </footer>
@@ -475,12 +562,21 @@ td.id{font-weight:700;color:var(--orange-ink)}
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           Statistics
         </button>
+        <button class="btn btn-ghost" type="button" id="exportBtn" onclick="exportCsv()">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Export CSV
+        </button>
         <button id="salesOrderBtn" class="btn btn-orange" type="button" onclick="openOrderModalWindow()">+ Sales order</button>
         <button id="inventoryBtn" class="btn btn-orange" type="button" style="display:none" onclick="openItemModal()">+ Inventory item</button>
       </div>
     </div>
 
-    <div class="kpis" id="kpis">
+    <div class="low-stock-banner" id="lowStockBanner" role="status">
+      <span id="lowStockText"></span>
+      <button class="btn btn-sm btn-ghost" type="button" onclick="showAdminTab('inventory')">Open inventory</button>
+    </div>
+
+    <div class="kpis">
       <div class="kpi"><span>All orders</span><b id="kpiTotal">–</b></div>
       <div class="kpi"><span>In progress</span><b id="kpiOpen">–</b></div>
       <div class="kpi orange"><span>Value in progress</span><b id="kpiValue">–</b></div>
@@ -498,23 +594,31 @@ td.id{font-weight:700;color:var(--orange-ink)}
         <button class="filter" data-f="Delivering" onclick="setFilter('Delivering')">Delivering</button>
         <button class="filter" data-f="Shipped" onclick="setFilter('Shipped')">Shipped</button>
         <button class="filter" data-f="Late" onclick="setFilter('Late')">Past deadline</button>
-        <label class="table-search"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#5C5C5C" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="#5C5C5C" stroke-width="2.2" stroke-linecap="round"/></svg><span class="sr-only">Filter orders</span><input id="adminFilterInput" type="text" placeholder="Filter by ID or customer" oninput="renderOrders()"></label>
+        <label class="table-search"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#8C8C8C" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="#8C8C8C" stroke-width="2.2" stroke-linecap="round"/></svg><span class="sr-only">Filter orders</span><input id="adminFilterInput" type="text" placeholder="Filter by ID or customer" oninput="orderPage=1; renderOrders()"></label>
       </div>
     </div>
 
     <div id="ordersSection" class="table-card">
       <div class="table-scroll">
         <table id="ordersTable">
-          <thead><tr><th>ORDER #</th><th>CUSTOMER</th><th>AMOUNT ($)</th><th>DELIVERY DEADLINE</th><th>DELIVERY STATUS</th></tr></thead>
+          <thead><tr>
+            <th class="sortable" data-sort="order_number" onclick="setSort('order_number')">ORDER #<span class="arrow"></span></th>
+            <th class="sortable" data-sort="customer" onclick="setSort('customer')">CUSTOMER<span class="arrow"></span></th>
+            <th class="sortable" data-sort="amount" onclick="setSort('amount')">AMOUNT ($)<span class="arrow"></span></th>
+            <th class="sortable" data-sort="deadline" onclick="setSort('deadline')">DELIVERY DEADLINE<span class="arrow"></span></th>
+            <th class="sortable" data-sort="delivery_status" onclick="setSort('delivery_status')">DELIVERY STATUS<span class="arrow"></span></th>
+            <th><span class="sr-only">Actions</span></th>
+          </tr></thead>
           <tbody></tbody>
         </table>
       </div>
+      <div class="table-foot"><span id="orderCount"></span><div class="pager" id="orderPager"></div></div>
     </div>
 
     <div id="inventorySection" class="table-card" style="display:none">
       <div class="table-scroll">
         <table id="inventoryTable">
-          <thead><tr><th>INVENTORY ID</th><th>NAME</th><th>CATEGORY</th><th>QUANTITY</th><th>UNIT PRICE ($)</th><th>STATUS</th></tr></thead>
+          <thead><tr><th>INVENTORY ID</th><th>NAME</th><th>CATEGORY</th><th>QUANTITY</th><th>UNIT PRICE ($)</th><th>STATUS</th><th><span class="sr-only">Actions</span></th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -525,22 +629,22 @@ td.id{font-weight:700;color:var(--orange-ink)}
 <!-- ================= MODALS ================= -->
 <div id="loginModalWindow" class="modal-overlay-container" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
   <div class="modal-card-content">
-    <span class="tag" style="margin-bottom:12px">Admin only</span>
-    <h3 id="loginTitle">Welcome back</h3>
-    <p class="sub">Log in to manage orders and inventory.</p>
+    <span class="tag" style="margin-bottom:12px" data-i18n="login.tag">Admin only</span>
+    <h3 id="loginTitle" data-i18n="login.title">Welcome back</h3>
+    <p class="sub" data-i18n="login.sub">Log in to manage orders and inventory.</p>
     <form onsubmit="event.preventDefault(); submitLogin();">
       <div class="input-form-group">
-        <label class="form-label-text" for="loginUsername">Login</label>
+        <label class="form-label-text" for="loginUsername" data-i18n="login.user">Login</label>
         <input type="text" id="loginUsername" class="form-input-box" autocomplete="username">
       </div>
       <div class="input-form-group">
-        <label class="form-label-text" for="loginPassword">Password</label>
+        <label class="form-label-text" for="loginPassword" data-i18n="login.pass">Password</label>
         <input type="password" id="loginPassword" class="form-input-box" autocomplete="current-password">
       </div>
       <div id="loginError" class="form-error" role="alert"></div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-ghost" onclick="closeLoginModal()">Cancel</button>
-        <button type="submit" id="loginSubmitBtn" class="btn btn-orange">Log in</button>
+        <button type="button" class="btn btn-ghost" onclick="closeLoginModal()" data-i18n="btn.cancel">Cancel</button>
+        <button type="submit" id="loginSubmitBtn" class="btn btn-orange" data-i18n="btn.login">Log in</button>
       </div>
     </form>
   </div>
@@ -548,13 +652,24 @@ td.id{font-weight:700;color:var(--orange-ink)}
 
 <div id="orderModalWindow" class="modal-overlay-container" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
   <div class="modal-card-content">
-    <span class="tag" style="margin-bottom:12px">Starts as Accepted</span>
+    <span class="tag" style="margin-bottom:12px" id="orderTag">Starts as Accepted</span>
     <h3 id="orderTitle">New sales order</h3>
-    <p class="sub">The customer can find it right after you save.</p>
+    <p class="sub" id="orderSub">The customer can find it right after you save.</p>
     <form onsubmit="event.preventDefault(); submitModalOrderData();">
       <div class="input-form-group">
         <label class="form-label-text" for="modalCustomerName">Customer name</label>
-        <input type="text" id="modalCustomerName" class="form-input-box" placeholder="e.g. Bulk Buyers Inc">
+        <input type="text" id="modalCustomerName" class="form-input-box" placeholder="e.g. Bulk Buyers Inc" list="customerList">
+        <datalist id="customerList"></datalist>
+      </div>
+      <div class="form-row">
+        <div class="input-form-group" style="flex:2 1 220px">
+          <label class="form-label-text" for="modalItem">Item from inventory <span class="form-hint">(optional)</span></label>
+          <select id="modalItem" class="form-input-box" onchange="recalcAmount()"></select>
+        </div>
+        <div class="input-form-group" style="flex:1 1 110px">
+          <label class="form-label-text" for="modalQuantity">Quantity</label>
+          <input type="number" id="modalQuantity" class="form-input-box" min="1" step="1" value="1" oninput="recalcAmount()">
+        </div>
       </div>
       <div class="form-row">
         <div class="input-form-group">
@@ -566,6 +681,11 @@ td.id{font-weight:700;color:var(--orange-ink)}
           <input type="date" id="modalDeliveryDate" class="form-input-box">
         </div>
       </div>
+      <div class="input-form-group" id="modalStatusGroup" style="display:none">
+        <label class="form-label-text" for="modalStatus">Delivery status</label>
+        <select id="modalStatus" class="form-input-box"></select>
+      </div>
+      <p class="form-hint" id="stockHint" style="margin:0 0 6px"></p>
       <div id="orderError" class="form-error" role="alert"></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" onclick="closeOrderModalWindow()">Cancel</button>
@@ -578,7 +698,7 @@ td.id{font-weight:700;color:var(--orange-ink)}
 <div id="deleteModalWindow" class="modal-overlay-container" role="alertdialog" aria-modal="true" aria-labelledby="deleteModalText">
   <div class="modal-card-content">
     <h3 id="deleteModalText"></h3>
-    <p class="sub">The customer will no longer find this order. This cannot be undone.</p>
+    <p class="sub">The customer will no longer find this order. Linked stock goes back to inventory. This cannot be undone.</p>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeDeleteModal()">Keep order</button>
       <button id="deleteConfirmBtn" class="btn btn-dark" onclick="confirmDeleteOrder()">Delete</button>
@@ -589,7 +709,7 @@ td.id{font-weight:700;color:var(--orange-ink)}
 <div id="itemModalWindow" class="modal-overlay-container" role="dialog" aria-modal="true" aria-labelledby="itemTitle">
   <div class="modal-card-content">
     <h3 id="itemTitle">New inventory item</h3>
-    <p class="sub">Add a product to the stock list.</p>
+    <p class="sub" id="itemSub">Add a product to the stock list.</p>
     <form onsubmit="event.preventDefault(); submitItemData();">
       <div class="input-form-group"><label class="form-label-text" for="modalItemName">Item name</label><input type="text" id="modalItemName" class="form-input-box"></div>
       <div class="input-form-group"><label class="form-label-text" for="modalItemCategory">Category</label><input type="text" id="modalItemCategory" class="form-input-box"></div>
@@ -641,10 +761,191 @@ td.id{font-weight:700;color:var(--orange-ink)}
 const API_URL = "https://inventory-backend-1-md7r.onrender.com";
 // Paste a YouTube embed link here when the tutorial video is ready, e.g. "https://www.youtube.com/embed/VIDEO_ID"
 const TUTORIAL_VIDEO_URL = "";
+// Contact details shown in the Contacts section. Leave a value empty to hide that card.
+const CONTACT = {
+  phone: "",
+  email: "",
+  address: "",
+  instagram: "",
+  github: "https://github.com/aspan111/Inventory-Tracking-System"
+};
+const PAGE_SIZE = 15;
+const LOW_STOCK_LIMIT = 5;
 
 let currentRole = "User";
 let ordersCache = [];
+let inventoryCache = [];
 let orderFilter = "All";
+let sortKey = "order_number", sortDir = -1, orderPage = 1;
+let lang = "en";
+
+/* ====================== TRANSLATIONS (customer side) ====================== */
+const I18N = {
+  en: {
+    "nav.track": "Track Order", "nav.how": "How It Works", "nav.tutorial": "Tutorial", "nav.faq": "FAQ", "nav.contacts": "Contacts",
+    "btn.login": "Log in", "btn.track": "Track order", "btn.cancel": "Cancel",
+    "hero.title1": "Tracking Your Orders", "hero.title2": "In Real Time",
+    "hero.lead": "Find any order by its number or your company name. See where it is, without calling the shop.",
+    "search.label": "Order ID or customer name", "search.ph": "Enter order ID (SO-001) or customer name", "search.btn": "Search", "search.try": "Try:",
+    "res.searching": "Searching... (the server can take up to a minute to wake up)",
+    "res.found1": "1 order found", "res.foundN": "{n} orders found",
+    "res.noneT": "No order found", "res.noneP": "Check the number (it looks like SO-001) or try your company name.",
+    "res.errT": "Search is not available right now", "res.errP": "Please try again in a moment.",
+    "card.amount": "Amount", "card.deadline": "Delivery deadline", "card.noDeadline": "No deadline", "card.late": "Past deadline", "card.item": "Item",
+    "card.copy": "Copy tracking link", "card.copied": "Tracking link copied", "card.receipt": "Print receipt", "card.history": "Show history", "card.hide": "Hide history",
+    "card.historyTitle": "Order history", "card.created": "Order created", "card.noHistory": "Status changes will appear here.", "card.historyErr": "History is not available yet.", "card.now": "Current status",
+    "st.Accepted": "Accepted", "st.Packed": "Packed", "st.Delivering": "Delivering", "st.Shipped": "Shipped",
+    "mini.three": "statuses, one simple route",
+    "dark.title": '<span class="o">No calls.</span> Order Tracking For Small Shops',
+    "dark.p": "ITS keeps orders, customers, items and stock in one cloud database. Customers check their order themselves; the shop updates it in one click.",
+    "dark.btn1": "Track an order", "dark.btn2": "Admin login",
+    "journey.title": "The Journey Of<br>Every Order", "journey.s1": "Step 1", "journey.s2": "Step 2", "journey.s3": "Step 3",
+    "tut.tag": "Tutorial", "tut.title": 'Learn ITS <span class="o">Step By Step</span>',
+    "tut.lead": "Watch the video or follow the guides. Customers need one minute; admins, a few more.",
+    "tut.video": "ITS video tutorial", "tut.guides": "Step-By-Step Guides", "tut.forCustomers": "For customers", "tut.forAdmins": "For admins",
+    "tut.soon": "The tutorial video is coming soon. Follow the guides below for now.",
+    "faq.title": 'Questions <span class="o">&amp; Answers</span>',
+    "contacts.tag": "Contacts", "contacts.title": 'Get In <span class="o">Touch</span>',
+    "contacts.team": "Team ITS", "contacts.code": "Project code", "contacts.phone": "Phone", "contacts.email": "Email", "contacts.address": "Address", "contacts.instagram": "Instagram", "contacts.open": "Open on GitHub",
+    "cta.title": "Track Your Order<br>In Seconds", "cta.p": "Type your order number and press Track now.",
+    "quick.title": "Quickly Track Your Order", "quick.ph": "Enter your order ID", "quick.btn": "Track now",
+    "login.tag": "Admin only", "login.title": "Welcome back", "login.sub": "Log in to manage orders and inventory.", "login.user": "Login", "login.pass": "Password",
+    "receipt.customer": "Customer", "receipt.status": "Status", "receipt.title": "Order receipt", "receipt.thanks": "Thank you for choosing us!", "receipt.printed": "Printed",
+    chapters: [
+      ["Find your order", "Customers", "Type your order number (SO-001) or customer name in the search bar at the top of the page."],
+      ["Read the status", "Customers", "Accepted means the shop has it, Delivering means it is on the way, Shipped means delivered."],
+      ["Log in as admin", "Admins", "Press Log in at the top right and enter your login and password."],
+      ["Manage orders", "Admins", "Add orders with + Sales order, edit them with the pencil, change the status in the table."]
+    ],
+    guides: {
+      customer: [["Open the site", "No account or app needed. Any phone or laptop browser works.", "Main page"], ["Search", "Enter the order number from your receipt, or your company name.", "SO-034"], ["Check the status", "The bar shows how far your order has gone. Open the history to see when it changed.", "Delivering"], ["Share or print", "Copy the tracking link or print a receipt for your records.", "Print receipt"]],
+      admin: [["Log in", "Use the Log in button at the top. Passwords are stored as bcrypt hashes.", "Log in"], ["Add an order", "Press + Sales order, pick an item and quantity; stock goes down automatically.", "+ Sales order"], ["Edit or move it", "Use the pencil to change customer, amount, item or date, or pick a new status in the table.", "Delivering"], ["Watch stock and delays", "A red banner warns about low stock; the Past deadline filter shows late orders.", "Past deadline"]]
+    },
+    faq: [
+      ["Do I need an account to track my order?", "No. Customers only need the order number or company name. Accounts are for shop admins."],
+      ["Where do I find my order number?", "It is on your receipt or invoice and looks like SO-001."],
+      ["What do the statuses mean?", "Accepted: the shop has your order. Delivering: it is on the way. Shipped: it was delivered."],
+      ["My order is past its deadline. What now?", "Contact the shop with your order number. Late orders are highlighted for the admin too."],
+      ["Can I share my order status?", "Yes. Press Copy tracking link under your order and send it to anyone."],
+      ["Can other people see my details?", "The public search shows only order number, customer, amount, deadline and status. Passwords are hashed and all traffic is encrypted."]
+    ]
+  },
+  ru: {
+    "nav.track": "Отследить", "nav.how": "Как работает", "nav.tutorial": "Обучение", "nav.faq": "Вопросы", "nav.contacts": "Контакты",
+    "btn.login": "Войти", "btn.track": "Отследить", "btn.cancel": "Отмена",
+    "hero.title1": "Отслеживайте заказы", "hero.title2": "В реальном времени",
+    "hero.lead": "Найдите заказ по номеру или названию компании. Узнайте, где он, не звоня в магазин.",
+    "search.label": "Номер заказа или имя клиента", "search.ph": "Номер заказа (SO-001) или имя клиента", "search.btn": "Найти", "search.try": "Например:",
+    "res.searching": "Ищем... (сервер может просыпаться до минуты)",
+    "res.found1": "Найден 1 заказ", "res.foundN": "Найдено заказов: {n}",
+    "res.noneT": "Заказ не найден", "res.noneP": "Проверьте номер (вида SO-001) или попробуйте название компании.",
+    "res.errT": "Поиск сейчас недоступен", "res.errP": "Попробуйте ещё раз через минуту.",
+    "card.amount": "Сумма", "card.deadline": "Срок доставки", "card.noDeadline": "Без срока", "card.late": "Срок прошёл", "card.item": "Товар",
+    "card.copy": "Скопировать ссылку", "card.copied": "Ссылка скопирована", "card.receipt": "Печать квитанции", "card.history": "История", "card.hide": "Скрыть историю",
+    "card.historyTitle": "История заказа", "card.created": "Заказ создан", "card.noHistory": "Здесь появятся изменения статуса.", "card.historyErr": "История пока недоступна.", "card.now": "Текущий статус",
+    "st.Accepted": "Принят", "st.Packed": "Упакован", "st.Delivering": "В пути", "st.Shipped": "Доставлен",
+    "mini.three": "статуса, один простой путь",
+    "dark.title": '<span class="o">Без звонков.</span> Отслеживание заказов для магазинов',
+    "dark.p": "ITS хранит заказы, клиентов, товары и склад в одной облачной базе. Клиент сам проверяет заказ, а магазин обновляет его в один клик.",
+    "dark.btn1": "Отследить заказ", "dark.btn2": "Вход для админа",
+    "journey.title": "Путь<br>каждого заказа", "journey.s1": "Шаг 1", "journey.s2": "Шаг 2", "journey.s3": "Шаг 3",
+    "tut.tag": "Обучение", "tut.title": 'Освойте ITS <span class="o">шаг за шагом</span>',
+    "tut.lead": "Посмотрите видео или следуйте инструкциям. Клиенту хватит минуты, админу чуть больше.",
+    "tut.video": "Видеоинструкция ITS", "tut.guides": "Пошаговые инструкции", "tut.forCustomers": "Для клиентов", "tut.forAdmins": "Для админов",
+    "tut.soon": "Видео скоро появится. Пока воспользуйтесь инструкциями ниже.",
+    "faq.title": 'Вопросы <span class="o">и ответы</span>',
+    "contacts.tag": "Контакты", "contacts.title": 'Свяжитесь <span class="o">с нами</span>',
+    "contacts.team": "Команда ITS", "contacts.code": "Код проекта", "contacts.phone": "Телефон", "contacts.email": "Почта", "contacts.address": "Адрес", "contacts.instagram": "Instagram", "contacts.open": "Открыть на GitHub",
+    "cta.title": "Отследите заказ<br>за секунды", "cta.p": "Введите номер заказа и нажмите «Отследить».",
+    "quick.title": "Быстрое отслеживание", "quick.ph": "Номер заказа", "quick.btn": "Отследить",
+    "login.tag": "Только для админа", "login.title": "С возвращением", "login.sub": "Войдите, чтобы управлять заказами и складом.", "login.user": "Логин", "login.pass": "Пароль",
+    "receipt.customer": "Клиент", "receipt.status": "Статус", "receipt.title": "Квитанция заказа", "receipt.thanks": "Спасибо, что выбрали нас!", "receipt.printed": "Напечатано",
+    chapters: [
+      ["Найдите заказ", "Клиенты", "Введите номер заказа (SO-001) или имя клиента в строке поиска вверху страницы."],
+      ["Проверьте статус", "Клиенты", "«Принят» — заказ у магазина, «В пути» — едет к вам, «Доставлен» — получен."],
+      ["Вход для админа", "Админы", "Нажмите «Войти» справа вверху и введите логин и пароль."],
+      ["Управляйте заказами", "Админы", "Добавляйте заказы кнопкой «+ Sales order», правьте карандашом, меняйте статус в таблице."]
+    ],
+    guides: {
+      customer: [["Откройте сайт", "Не нужен ни аккаунт, ни приложение. Подойдёт любой браузер.", "Главная"], ["Найдите", "Введите номер заказа из чека или название компании.", "SO-034"], ["Проверьте статус", "Полоса показывает, как далеко заказ. В истории видно, когда менялся статус.", "В пути"], ["Поделитесь или распечатайте", "Скопируйте ссылку на заказ или распечатайте квитанцию.", "Печать квитанции"]],
+      admin: [["Войдите", "Кнопка «Войти» вверху. Пароли хранятся как bcrypt-хеши.", "Войти"], ["Добавьте заказ", "«+ Sales order», выберите товар и количество — склад уменьшится сам.", "+ Sales order"], ["Измените заказ", "Карандаш меняет клиента, сумму, товар и дату; статус меняется в таблице.", "В пути"], ["Следите за складом", "Красный баннер предупредит о низком остатке; фильтр Past deadline покажет просрочку.", "Срок прошёл"]]
+    },
+    faq: [
+      ["Нужен ли аккаунт, чтобы отследить заказ?", "Нет. Достаточно номера заказа или названия компании. Аккаунты нужны только админам магазина."],
+      ["Где найти номер заказа?", "Он указан в чеке или накладной и выглядит как SO-001."],
+      ["Что значат статусы?", "Принят — заказ у магазина. В пути — едет к вам. Доставлен — вы его получили."],
+      ["Срок доставки прошёл. Что делать?", "Свяжитесь с магазином и назовите номер заказа. Админ тоже видит просроченные заказы."],
+      ["Можно поделиться статусом заказа?", "Да. Нажмите «Скопировать ссылку» под заказом и отправьте её."],
+      ["Видят ли другие мои данные?", "Поиск показывает только номер, клиента, сумму, срок и статус. Пароли хешируются, весь трафик шифруется."]
+    ]
+  },
+  kk: {
+    "nav.track": "Бақылау", "nav.how": "Қалай істейді", "nav.tutorial": "Нұсқаулық", "nav.faq": "Сұрақтар", "nav.contacts": "Байланыс",
+    "btn.login": "Кіру", "btn.track": "Бақылау", "btn.cancel": "Болдырмау",
+    "hero.title1": "Тапсырыстарыңызды", "hero.title2": "Нақты уақытта бақылаңыз",
+    "hero.lead": "Тапсырысты нөмірі немесе компания атауы арқылы табыңыз. Дүкенге қоңырау шалмай-ақ оның қайда екенін біліңіз.",
+    "search.label": "Тапсырыс нөмірі немесе клиент аты", "search.ph": "Тапсырыс нөмірі (SO-001) немесе клиент аты", "search.btn": "Іздеу", "search.try": "Мысалы:",
+    "res.searching": "Іздеп жатырмыз... (сервер бір минутқа дейін оянуы мүмкін)",
+    "res.found1": "1 тапсырыс табылды", "res.foundN": "{n} тапсырыс табылды",
+    "res.noneT": "Тапсырыс табылмады", "res.noneP": "Нөмірді тексеріңіз (SO-001 сияқты) немесе компания атауын енгізіңіз.",
+    "res.errT": "Іздеу қазір қолжетімсіз", "res.errP": "Бір минуттан кейін қайталап көріңіз.",
+    "card.amount": "Сомасы", "card.deadline": "Жеткізу мерзімі", "card.noDeadline": "Мерзімсіз", "card.late": "Мерзімі өтті", "card.item": "Тауар",
+    "card.copy": "Сілтемені көшіру", "card.copied": "Сілтеме көшірілді", "card.receipt": "Түбіртекті басып шығару", "card.history": "Тарих", "card.hide": "Тарихты жасыру",
+    "card.historyTitle": "Тапсырыс тарихы", "card.created": "Тапсырыс жасалды", "card.noHistory": "Мәртебе өзгерістері осында көрсетіледі.", "card.historyErr": "Тарих әзірге қолжетімсіз.", "card.now": "Қазіргі мәртебе",
+    "st.Accepted": "Қабылданды", "st.Packed": "Буып-түйілді", "st.Delivering": "Жолда", "st.Shipped": "Жеткізілді",
+    "mini.three": "мәртебе, бір қарапайым жол",
+    "dark.title": '<span class="o">Қоңыраусыз.</span> Дүкендерге арналған тапсырыс бақылау',
+    "dark.p": "ITS тапсырыстарды, клиенттерді, тауарларды және қойманы бір бұлтты дерекқорда сақтайды. Клиент тапсырысын өзі тексереді, дүкен оны бір басумен жаңартады.",
+    "dark.btn1": "Тапсырысты бақылау", "dark.btn2": "Әкімші кіруі",
+    "journey.title": "Әр тапсырыстың<br>жолы", "journey.s1": "1-қадам", "journey.s2": "2-қадам", "journey.s3": "3-қадам",
+    "tut.tag": "Нұсқаулық", "tut.title": 'ITS-ті <span class="o">қадам-қадаммен</span> үйреніңіз',
+    "tut.lead": "Бейнені қараңыз немесе нұсқаулықты орындаңыз. Клиентке бір минут жеткілікті.",
+    "tut.video": "ITS бейненұсқаулығы", "tut.guides": "Қадамдық нұсқаулық", "tut.forCustomers": "Клиенттерге", "tut.forAdmins": "Әкімшілерге",
+    "tut.soon": "Бейне жақында шығады. Әзірге төмендегі нұсқаулықты пайдаланыңыз.",
+    "faq.title": 'Сұрақтар <span class="o">мен жауаптар</span>',
+    "contacts.tag": "Байланыс", "contacts.title": 'Бізбен <span class="o">байланысыңыз</span>',
+    "contacts.team": "ITS командасы", "contacts.code": "Жоба коды", "contacts.phone": "Телефон", "contacts.email": "Пошта", "contacts.address": "Мекенжай", "contacts.instagram": "Instagram", "contacts.open": "GitHub-та ашу",
+    "cta.title": "Тапсырысты<br>секундта бақылаңыз", "cta.p": "Тапсырыс нөмірін енгізіп, «Бақылау» батырмасын басыңыз.",
+    "quick.title": "Жылдам бақылау", "quick.ph": "Тапсырыс нөмірі", "quick.btn": "Бақылау",
+    "login.tag": "Тек әкімшіге", "login.title": "Қош келдіңіз", "login.sub": "Тапсырыстар мен қойманы басқару үшін кіріңіз.", "login.user": "Логин", "login.pass": "Құпиясөз",
+    "receipt.customer": "Клиент", "receipt.status": "Мәртебе", "receipt.title": "Тапсырыс түбіртегі", "receipt.thanks": "Бізді таңдағаныңызға рақмет!", "receipt.printed": "Басып шығарылды",
+    chapters: [
+      ["Тапсырысты табыңыз", "Клиенттер", "Беттің жоғарысындағы іздеу жолына тапсырыс нөмірін (SO-001) немесе клиент атын енгізіңіз."],
+      ["Мәртебені тексеріңіз", "Клиенттер", "«Қабылданды» — дүкенде, «Жолда» — сізге келе жатыр, «Жеткізілді» — қолыңызда."],
+      ["Әкімші ретінде кіру", "Әкімшілер", "Жоғарғы оң жақтағы «Кіру» батырмасын басып, логин мен құпиясөзді енгізіңіз."],
+      ["Тапсырыстарды басқару", "Әкімшілер", "«+ Sales order» арқылы қосыңыз, қарындашпен өзгертіңіз, кестеде мәртебені ауыстырыңыз."]
+    ],
+    guides: {
+      customer: [["Сайтты ашыңыз", "Аккаунт та, қосымша да керек емес. Кез келген браузер жарайды.", "Басты бет"], ["Іздеңіз", "Түбіртектегі тапсырыс нөмірін немесе компания атауын енгізіңіз.", "SO-034"], ["Мәртебені тексеріңіз", "Жолақ тапсырыстың қай жерде екенін көрсетеді. Тарихта өзгерістер уақыты бар.", "Жолда"], ["Бөлісіңіз не басыңыз", "Сілтемені көшіріңіз немесе түбіртекті басып шығарыңыз.", "Түбіртек"]],
+      admin: [["Кіріңіз", "Жоғарыдағы «Кіру» батырмасы. Құпиясөздер bcrypt-хеш ретінде сақталады.", "Кіру"], ["Тапсырыс қосыңыз", "«+ Sales order», тауар мен санын таңдаңыз — қойма өзі азаяды.", "+ Sales order"], ["Өзгертіңіз", "Қарындаш клиентті, соманы, тауарды және күнді өзгертеді.", "Жолда"], ["Қойманы бақылаңыз", "Қызыл баннер қор аз екенін ескертеді; Past deadline сүзгісі кешіккенін көрсетеді.", "Мерзімі өтті"]]
+    },
+    faq: [
+      ["Тапсырысты бақылау үшін аккаунт керек пе?", "Жоқ. Тапсырыс нөмірі немесе компания атауы жеткілікті. Аккаунт тек дүкен әкімшілеріне керек."],
+      ["Тапсырыс нөмірін қайдан табамын?", "Ол түбіртекте немесе жүкқұжатта көрсетілген, SO-001 сияқты."],
+      ["Мәртебелер нені білдіреді?", "Қабылданды — дүкенде. Жолда — сізге келе жатыр. Жеткізілді — сіз алдыңыз."],
+      ["Жеткізу мерзімі өтті. Не істеймін?", "Дүкенге тапсырыс нөмірімен хабарласыңыз. Әкімші де кешіккен тапсырыстарды көреді."],
+      ["Тапсырыс мәртебесімен бөлісуге бола ма?", "Иә. Тапсырыс астындағы «Сілтемені көшіру» батырмасын басыңыз."],
+      ["Менің деректерімді басқалар көре ме?", "Іздеу тек нөмірді, клиентті, соманы, мерзімді және мәртебені көрсетеді. Құпиясөздер хештеледі, трафик шифрланады."]
+    ]
+  }
+};
+function t(key, vars) {
+  let s = (I18N[lang] && I18N[lang][key]) ?? I18N.en[key] ?? key;
+  if (vars) Object.keys(vars).forEach(k => { s = s.replace("{" + k + "}", vars[k]); });
+  return s;
+}
+function stLabel(s) { return t("st." + s) === "st." + s ? s : t("st." + s); }
+function setLang(l) {
+  lang = I18N[l] ? l : "en";
+  try { localStorage.setItem("lang", lang); } catch (e) {}
+  document.documentElement.lang = lang === "kk" ? "kk" : lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  document.querySelectorAll("#langSwitch button").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+  buildTutorial(); buildFaq(); buildContacts();
+  if (lastResults) renderResults(lastResults);
+}
 
 /* ====================== HELPERS ====================== */
 function esc(v) {
@@ -656,19 +957,22 @@ function fmtDate(v) {
   const d = new Date(v);
   return isNaN(d) ? String(v) : d.toISOString().slice(0, 10);
 }
+function fmtDateTime(v) {
+  if (!v) return "";
+  const s = String(v).replace("T", " ");
+  return s.length > 16 ? s.slice(0, 16) : s;
+}
 function todayISO() { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
 function isLate(o) { const dl = fmtDate(o.deadline); return !!dl && (o.delivery_status || "Accepted") !== "Shipped" && dl < todayISO(); }
 function money(n) { return "$" + Number(n || 0).toFixed(2); }
-function pillClass(s) {
-  return { Accepted: "pill-accepted", Delivering: "pill-delivering", Shipped: "pill-shipped" }[s] || "pill-other";
-}
+function pillClass(s) { return { Accepted: "pill-accepted", Delivering: "pill-delivering", Shipped: "pill-shipped" }[s] || "pill-other"; }
 let toastTimer = null;
 function showToast(msg, isError) {
-  const t = document.getElementById("toast");
-  t.className = "toast show" + (isError ? " error" : "");
-  t.innerHTML = (isError ? "" : '<span class="dot">✓</span>') + esc(msg);
+  const el = document.getElementById("toast");
+  el.className = "toast show" + (isError ? " error" : "");
+  el.innerHTML = (isError ? "" : '<span class="dot">✓</span>') + esc(msg);
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 3200);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 3400);
 }
 function setButtonLoading(btn, isLoading, loadingText) {
   if (isLoading) {
@@ -680,6 +984,10 @@ function setButtonLoading(btn, isLoading, loadingText) {
     if (btn.dataset.originalHtml) btn.innerHTML = btn.dataset.originalHtml;
   }
 }
+async function errorText(res) {
+  try { const j = await res.json(); if (j && j.detail) return typeof j.detail === "string" ? j.detail : JSON.stringify(j.detail); } catch (e) {}
+  return "Server error " + res.status;
+}
 function openModal(id) { document.getElementById(id).classList.add("is-visible"); }
 function closeModal(id) { document.getElementById(id).classList.remove("is-visible"); }
 document.addEventListener("keydown", e => {
@@ -690,8 +998,22 @@ document.addEventListener("keydown", e => {
 function focusSearch() { setTimeout(() => document.getElementById("userQueryInput").focus(), 300); }
 function goHome(e) { if (e) e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }
 
+/* ====================== THEME ====================== */
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  const icon = document.getElementById("themeIcon");
+  icon.innerHTML = theme === "dark"
+    ? '<circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+    : '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>';
+}
+function toggleTheme() {
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  try { localStorage.setItem("theme", next); } catch (e) {}
+  applyTheme(next);
+  if (statsChart) showStat(document.querySelector(".stats-item.active").dataset.stat);
+}
+
 /* ====================== AUTH FETCH ====================== */
-// Sends the admin token (if the server gave one) with every change request.
 async function authFetch(url, opts = {}) {
   const token = localStorage.getItem("adminToken");
   const headers = Object.assign({}, opts.headers || {});
@@ -710,6 +1032,7 @@ async function authFetch(url, opts = {}) {
 function setAdminChrome(isAdmin) {
   document.getElementById("authBtn").style.display = isAdmin ? "none" : "";
   document.getElementById("trackTopBtn").style.display = isAdmin ? "none" : "";
+  document.getElementById("langSwitch").style.display = isAdmin ? "none" : "";
   document.getElementById("logoutBtn").style.display = isAdmin ? "" : "none";
   document.getElementById("adminBadge").style.display = isAdmin ? "inline-flex" : "none";
   document.getElementById("userNav").style.display = isAdmin ? "none" : "";
@@ -741,7 +1064,7 @@ function submitLogin() {
   if (btn.disabled) return;
   if (!userVal || !passVal) { errorBox.textContent = "Please enter your login and password."; return; }
   errorBox.textContent = "";
-  setButtonLoading(btn, true, "Logging in...");
+  setButtonLoading(btn, true, "...");
   fetch(`${API_URL}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -768,48 +1091,66 @@ function triggerLogout(silent) {
   localStorage.removeItem("adminToken");
   setAdminChrome(false);
   const r = document.getElementById("userResults");
-  r.classList.remove("show"); r.innerHTML = "";
+  r.classList.remove("show"); r.innerHTML = ""; lastResults = null;
   document.getElementById("userQueryInput").value = "";
   if (silent !== true) { window.scrollTo({ top: 0 }); showToast("Logged out"); }
 }
 document.addEventListener("DOMContentLoaded", () => {
+  let savedTheme = null, savedLang = null;
+  try { savedTheme = localStorage.getItem("theme"); savedLang = localStorage.getItem("lang"); } catch (e) {}
+  applyTheme(savedTheme || "light");
   document.getElementById("todayLabel").textContent = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-  buildTutorial();
+  setLang(savedLang || "en");
   checkPersistentLogin();
+  const track = new URLSearchParams(location.search).get("track");
+  if (track && currentRole !== "Admin") { document.getElementById("userQueryInput").value = track; performSearch(); }
 });
 
 /* ====================== USER SEARCH ====================== */
+let lastResults = null;
 function quickSearch(q) {
   document.getElementById("userQueryInput").value = q || "";
   document.getElementById("track").scrollIntoView({ behavior: "smooth" });
   performSearch();
 }
-function orderCardHTML(o) {
+function orderCardHTML(o, idx) {
   const status = o.delivery_status || "Accepted";
-  const step = { Accepted: 0, Delivering: 1, Shipped: 2 }[status];
+  const step = { Accepted: 0, Packed: 0, Delivering: 1, Shipped: 2 }[status];
   const on = i => (step !== undefined && i <= step) ? " on" : "";
+  const num = esc(o.order_number);
   return `
   <article class="order-card">
     <div class="order-top">
       <div class="order-id">
         <span class="box-icon" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M3 7.5L12 3L21 7.5V16.5L12 21L3 16.5ZM3 7.5L12 12L21 7.5M12 12V21" fill="none" stroke="#FF6B1A" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
-        <div><strong>${esc(o.order_number)}</strong><span>${esc(o.customer)}</span></div>
+        <div><strong>${num}</strong><span>${esc(o.customer)}</span></div>
       </div>
       <div class="pills">
-        ${isLate(o) ? '<span class="pill pill-late">Past deadline</span>' : ""}
-        <span class="pill ${pillClass(status)}">${esc(status)}</span>
+        ${isLate(o) ? `<span class="pill pill-late">${esc(t("card.late"))}</span>` : ""}
+        <span class="pill ${pillClass(status)}">${esc(stLabel(status))}</span>
       </div>
     </div>
     <div class="track" aria-label="Delivery progress">
-      <div><span class="bar${on(0)}"></span><span>Accepted</span></div>
-      <div><span class="bar${on(1)}"></span><span class="${step >= 1 ? "" : "muted"}">Delivering</span></div>
-      <div><span class="bar${on(2)}"></span><span class="${step >= 2 ? "" : "muted"}">Shipped</span></div>
+      <div><span class="bar${on(0)}"></span><span>${esc(stLabel("Accepted"))}</span></div>
+      <div><span class="bar${on(1)}"></span><span class="${step >= 1 ? "" : "muted"}">${esc(stLabel("Delivering"))}</span></div>
+      <div><span class="bar${on(2)}"></span><span class="${step >= 2 ? "" : "muted"}">${esc(stLabel("Shipped"))}</span></div>
     </div>
     <div class="facts">
-      <span class="fact"><span>Amount</span><b>${money(o.amount)}</b></span>
-      <span class="fact"><span>Delivery deadline</span><b>${esc(fmtDate(o.deadline) || "No deadline")}</b></span>
+      <span class="fact"><span>${esc(t("card.amount"))}</span><b>${money(o.amount)}</b></span>
+      <span class="fact"><span>${esc(t("card.deadline"))}</span><b>${esc(fmtDate(o.deadline) || t("card.noDeadline"))}</b></span>
+      ${o.item_name ? `<span class="fact"><span>${esc(t("card.item"))}</span><b>${esc(o.item_name)} × ${esc(o.quantity || 1)}</b></span>` : ""}
     </div>
+    <div class="card-actions">
+      <button class="btn btn-ghost" type="button" data-order="${num}" onclick="copyTrackLink(this.dataset.order)">${esc(t("card.copy"))}</button>
+      <button class="btn btn-ghost" type="button" onclick="printReceipt(${idx})">${esc(t("card.receipt"))}</button>
+      <button class="btn btn-ghost" type="button" id="histBtn${idx}" data-order="${num}" onclick="toggleHistory(${idx}, this.dataset.order)">${esc(t("card.history"))}</button>
+    </div>
+    <div class="history-box" id="hist${idx}"></div>
   </article>`;
+}
+function renderResults(orders) {
+  const box = document.getElementById("userResults");
+  box.innerHTML = `<p class="results-meta">${esc(orders.length === 1 ? t("res.found1") : t("res.foundN", { n: orders.length }))}</p>` + orders.map(orderCardHTML).join("");
 }
 function performSearch() {
   const searchVal = document.getElementById("userQueryInput").value.trim();
@@ -818,72 +1159,118 @@ function performSearch() {
   if (!searchVal || btn.disabled) { document.getElementById("userQueryInput").focus(); return; }
   setButtonLoading(btn, true, "");
   box.classList.add("show");
-  box.innerHTML = `<p class="results-meta"><span class="spinner spinner-dark"></span>Searching... (the server can take up to a minute to wake up)</p>`;
+  lastResults = null;
+  box.innerHTML = `<p class="results-meta"><span class="spinner spinner-dark"></span>${esc(t("res.searching"))}</p>`;
   fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
   .then(res => { if (!res.ok) throw new Error("Server error " + res.status); return res.json(); })
   .then(orders => {
     if (!Array.isArray(orders) || orders.length === 0) {
-      box.innerHTML = `<div class="empty-card"><h3>No order found</h3><p>Check the number (it looks like SO-001) or try your company name.</p></div>`;
+      box.innerHTML = `<div class="empty-card"><h3>${esc(t("res.noneT"))}</h3><p>${esc(t("res.noneP"))}</p></div>`;
       return;
     }
-    box.innerHTML = `<p class="results-meta">${orders.length === 1 ? "1 order found" : orders.length + " orders found"}</p>` + orders.map(orderCardHTML).join("");
+    lastResults = orders;
+    renderResults(orders);
   })
   .catch(err => {
     console.error(err);
-    box.innerHTML = `<div class="empty-card"><h3>Search is not available right now</h3><p>${esc(err.message)}. Please try again in a moment.</p></div>`;
+    box.innerHTML = `<div class="empty-card"><h3>${esc(t("res.errT"))}</h3><p>${esc(err.message)}. ${esc(t("res.errP"))}</p></div>`;
   })
   .finally(() => setButtonLoading(btn, false));
 }
+function trackUrl(orderNumber) { return location.origin + location.pathname + "?track=" + encodeURIComponent(orderNumber); }
+function copyTrackLink(orderNumber) {
+  const url = trackUrl(orderNumber);
+  const done = () => showToast(t("card.copied"));
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => { prompt("Copy:", url); });
+  else { prompt("Copy:", url); }
+}
+async function toggleHistory(idx, orderNumber) {
+  const box = document.getElementById("hist" + idx);
+  const btn = document.getElementById("histBtn" + idx);
+  if (box.classList.contains("show")) { box.classList.remove("show"); btn.textContent = t("card.history"); return; }
+  box.classList.add("show");
+  btn.textContent = t("card.hide");
+  box.innerHTML = `<p class="results-meta"><span class="spinner spinner-dark"></span></p>`;
+  try {
+    const res = await fetch(`${API_URL}/orders/${encodeURIComponent(orderNumber)}/history`);
+    if (!res.ok) throw new Error();
+    const h = await res.json();
+    const items = [];
+    if (h.order_date) items.push([t("card.created"), fmtDate(h.order_date)]);
+    (h.events || []).forEach(e => items.push([stLabel(e.status), fmtDateTime(e.changed_at)]));
+    if (!(h.events || []).length) items.push([t("card.now") + ": " + stLabel(h.current_status), t("card.noHistory")]);
+    box.innerHTML = `<h4>${esc(t("card.historyTitle"))}</h4><ol class="timeline">${items.map(i => `<li><span class="dot"></span><div><b>${esc(i[0])}</b><br><span>${esc(i[1])}</span></div></li>`).join("")}</ol>`;
+  } catch (e) {
+    box.innerHTML = `<p class="results-meta">${esc(t("card.historyErr"))}</p>`;
+  }
+}
+function printReceipt(idx) {
+  const o = lastResults && lastResults[idx];
+  if (!o) return;
+  const w = window.open("", "_blank", "width=520,height=720");
+  if (!w) { showToast("Please allow pop-ups to print the receipt", true); return; }
+  const row = (k, v) => `<tr><td>${esc(k)}</td><td><b>${esc(v)}</b></td></tr>`;
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(o.order_number)}</title>
+  <style>body{font-family:Arial,sans-serif;color:#141414;padding:32px;max-width:440px;margin:0 auto}
+  .logo{font-size:28px;font-weight:800}.logo span{color:#FF6B1A}h1{font-size:20px;margin:18px 0 4px}
+  table{width:100%;border-collapse:collapse;margin:18px 0}td{padding:10px 0;border-bottom:1px dashed #ccc;font-size:15px}
+  td:last-child{text-align:right}.foot{font-size:13px;color:#5c5c5c;margin-top:18px}</style></head><body>
+  <div class="logo">ITS<span>.</span></div><div style="font-size:13px;color:#5c5c5c">Inventory Tracking System</div>
+  <h1>${esc(t("receipt.title"))} ${esc(o.order_number)}</h1>
+  <table>${row(t("receipt.customer"), o.customer)}
+  ${o.item_name ? row(t("card.item"), o.item_name + " × " + (o.quantity || 1)) : ""}
+  ${row(t("card.amount"), money(o.amount))}${row(t("card.deadline"), fmtDate(o.deadline) || t("card.noDeadline"))}
+  ${row(t("receipt.status"), stLabel(o.delivery_status || "Accepted"))}</table>
+  <div class="foot">${esc(t("receipt.thanks"))}<br>${esc(t("receipt.printed"))}: ${esc(new Date().toLocaleString())}<br>${esc(trackUrl(o.order_number))}</div>
+  <script>window.onload=function(){window.print();}<\/script></body></html>`);
+  w.document.close();
+}
 
-/* ====================== TUTORIAL ====================== */
-const CHAPTERS = [
-  { title: "Find your order", who: "Customers", text: "Type your order number (SO-001) or customer name in the search bar at the top of the page." },
-  { title: "Read the status", who: "Customers", text: "Accepted means the shop has it, Delivering means it is on the way, Shipped means delivered." },
-  { title: "Log in as admin", who: "Admins", text: "Press Log in at the top right and enter your login and password." },
-  { title: "Manage orders", who: "Admins", text: "Add orders with + Sales order, change the status in the table, delete with the bin icon." }
-];
-const GUIDES = {
-  customer: [
-    { t: "Open the site", p: "No account or app needed. Any phone or laptop browser works.", c: "Main page" },
-    { t: "Search", p: "Enter the order number from your receipt, or your company name.", c: "SO-034" },
-    { t: "Check the status", p: "The bar shows how far your order has gone: Accepted, Delivering, Shipped.", c: "Delivering" },
-    { t: "Late order?", p: "If the deadline has passed you will see a red Past deadline label. Contact the shop.", c: "Past deadline" }
-  ],
-  admin: [
-    { t: "Log in", p: "Use the Log in button at the top. Passwords are stored as bcrypt hashes.", c: "Log in" },
-    { t: "Add an order", p: "Press + Sales order, enter customer, amount and delivery date, then Save.", c: "+ Sales order" },
-    { t: "Change the status", p: "Pick Accepted, Delivering or Shipped in the table. It saves at once.", c: "Delivering" },
-    { t: "Watch the late ones", p: "Use the Past deadline filter and counter to see which orders to chase first.", c: "Past deadline" }
-  ]
-};
+/* ====================== TUTORIAL / FAQ / CONTACTS ====================== */
 let chapter = 0;
 function buildTutorial() {
-  document.getElementById("chapters").innerHTML = CHAPTERS.map((c, i) =>
-    `<button class="chapter${i === 0 ? " active" : ""}" role="listitem" type="button" onclick="setChapter(${i})"><span class="num">${i + 1}</span><span><b>${esc(c.title)}</b><small>${esc(c.who)}</small></span></button>`).join("");
-  setChapter(0);
-  showGuide("customer");
+  const ch = t("chapters");
+  document.getElementById("chapters").innerHTML = ch.map((c, i) =>
+    `<button class="chapter${i === chapter ? " active" : ""}" role="listitem" type="button" onclick="setChapter(${i})"><span class="num">${i + 1}</span><span><b>${esc(c[0])}</b><small>${esc(c[1])}</small></span></button>`).join("");
+  setChapter(chapter);
+  showGuide(document.getElementById("tabAdmin").classList.contains("active") ? "admin" : "customer");
 }
 function setChapter(i) {
   chapter = i;
+  const ch = t("chapters");
   document.querySelectorAll(".chapter").forEach((b, k) => b.classList.toggle("active", k === i));
   document.querySelectorAll("#chapterProgress span").forEach((s, k) => s.classList.toggle("on", k <= i));
-  document.getElementById("chapterBadge").textContent = `Chapter ${i + 1} of ${CHAPTERS.length}`;
-  document.getElementById("chapterTitle").textContent = CHAPTERS[i].title;
-  document.getElementById("chapterText").textContent = CHAPTERS[i].text;
+  document.getElementById("chapterBadge").textContent = `${i + 1} / ${ch.length}`;
+  document.getElementById("chapterTitle").textContent = ch[i][0];
+  document.getElementById("chapterText").textContent = ch[i][2];
 }
 function playTutorial() {
-  if (!TUTORIAL_VIDEO_URL) { showToast("The tutorial video is coming soon. Follow the guides below for now."); return; }
-  const p = document.getElementById("player");
-  p.innerHTML = `<iframe src="${esc(TUTORIAL_VIDEO_URL)}?autoplay=1" title="ITS video tutorial" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  if (!TUTORIAL_VIDEO_URL) { showToast(t("tut.soon")); return; }
+  document.getElementById("player").innerHTML = `<iframe src="${esc(TUTORIAL_VIDEO_URL)}?autoplay=1" title="ITS video tutorial" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
 }
 function showGuide(which) {
   document.getElementById("tabCustomer").classList.toggle("active", which === "customer");
   document.getElementById("tabAdmin").classList.toggle("active", which === "admin");
   document.getElementById("tabCustomer").setAttribute("aria-selected", which === "customer");
   document.getElementById("tabAdmin").setAttribute("aria-selected", which === "admin");
-  const g = GUIDES[which];
+  const g = t("guides")[which];
   document.getElementById("guideSteps").innerHTML = g.map((s, i) =>
-    `<article class="step${i === 1 ? " orange" : i === g.length - 1 ? " dark" : ""}"><span class="n">0${i + 1}</span><h3>${esc(s.t)}</h3><p>${esc(s.p)}</p><span class="s-chip">${esc(s.c)}</span></article>`).join("");
+    `<article class="step${i === 1 ? " orange" : i === g.length - 1 ? " dark" : ""}"><span class="n">0${i + 1}</span><h3>${esc(s[0])}</h3><p>${esc(s[1])}</p><span class="s-chip">${esc(s[2])}</span></article>`).join("");
+}
+function buildFaq() {
+  document.getElementById("faqList").innerHTML = t("faq").map((f, i) =>
+    `<details${i === 0 ? " open" : ""}><summary>${esc(f[0])}</summary><p>${esc(f[1])}</p></details>`).join("");
+}
+function buildContacts() {
+  const ic = p => `<span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24">${p}</svg></span>`;
+  const cards = [];
+  if (CONTACT.phone) cards.push(`<div class="contact-card">${ic('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" fill="none" stroke="#FF6B1A" stroke-width="2"/>')}<b>${esc(t("contacts.phone"))}</b><a href="tel:${esc(CONTACT.phone.replace(/\s/g, ""))}">${esc(CONTACT.phone)}</a></div>`);
+  if (CONTACT.email) cards.push(`<div class="contact-card">${ic('<rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="#FF6B1A" stroke-width="2"/><path d="M3 7l9 6 9-6" fill="none" stroke="#FF6B1A" stroke-width="2"/>')}<b>${esc(t("contacts.email"))}</b><a href="mailto:${esc(CONTACT.email)}">${esc(CONTACT.email)}</a></div>`);
+  if (CONTACT.address) cards.push(`<div class="contact-card">${ic('<path d="M12 21s-7-7-7-11.5a7 7 0 0 1 14 0C19 14 12 21 12 21z" fill="none" stroke="#FF6B1A" stroke-width="2"/>')}<b>${esc(t("contacts.address"))}</b><span>${esc(CONTACT.address)}</span></div>`);
+  if (CONTACT.instagram) cards.push(`<div class="contact-card">${ic('<rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="#FF6B1A" stroke-width="2"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="#FF6B1A" stroke-width="2"/>')}<b>${esc(t("contacts.instagram"))}</b><a href="https://instagram.com/${esc(CONTACT.instagram.replace("@", ""))}" target="_blank" rel="noopener">${esc(CONTACT.instagram)}</a></div>`);
+  cards.push(`<div class="contact-card">${ic('<circle cx="9" cy="8" r="3.5" fill="none" stroke="#FF6B1A" stroke-width="2"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14c2.2.6 3.5 2.8 3.5 6" fill="none" stroke="#FF6B1A" stroke-width="2" stroke-linecap="round"/>')}<b>${esc(t("contacts.team"))}</b><span>Kenzhebek Aspandiyar<br>Kaziev Alinur<br>Mukhatay Askar</span></div>`);
+  if (CONTACT.github) cards.push(`<div class="contact-card">${ic('<path d="M8 6l-6 6 6 6M16 6l6 6-6 6" fill="none" stroke="#FF6B1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>')}<b>${esc(t("contacts.code"))}</b><a href="${esc(CONTACT.github)}" target="_blank" rel="noopener">${esc(t("contacts.open"))} →</a></div>`);
+  document.getElementById("contactCards").innerHTML = cards.join("");
 }
 
 /* ====================== ADMIN: ORDERS ====================== */
@@ -895,32 +1282,62 @@ function updateKpis() {
   document.getElementById("kpiLate").textContent = ordersCache.filter(isLate).length;
 }
 function setFilter(f) {
-  orderFilter = f;
+  orderFilter = f; orderPage = 1;
   document.querySelectorAll("#orderFilters .filter").forEach(b => b.classList.toggle("active", b.dataset.f === f));
   renderOrders();
 }
-function renderOrders() {
-  const tbody = document.querySelector("#ordersTable tbody");
+function setSort(key) {
+  if (sortKey === key) sortDir = -sortDir; else { sortKey = key; sortDir = key === "amount" || key === "order_number" ? -1 : 1; }
+  renderOrders();
+}
+function sortValue(o, key) {
+  if (key === "order_number") return parseInt(String(o.order_number).replace(/\D/g, ""), 10) || 0;
+  if (key === "amount") return Number(o.amount || 0);
+  if (key === "deadline") return fmtDate(o.deadline) || "9999";
+  return String(o[key] || "").toLowerCase();
+}
+function filteredOrders() {
   const q = document.getElementById("adminFilterInput").value.trim().toLowerCase();
-  let list = ordersCache;
+  let list = ordersCache.slice();
   if (orderFilter === "Late") list = list.filter(isLate);
   else if (orderFilter !== "All") list = list.filter(o => (o.delivery_status || "Accepted") === orderFilter);
-  if (q) list = list.filter(o => String(o.order_number).toLowerCase().includes(q) || String(o.customer).toLowerCase().includes(q));
-  if (list.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-msg">No orders match this filter.</td></tr>`; return; }
-  tbody.innerHTML = list.map(order => {
+  if (q) list = list.filter(o => String(o.order_number).toLowerCase().includes(q) || String(o.customer).toLowerCase().includes(q) || String(o.item_name || "").toLowerCase().includes(q));
+  list.sort((a, b) => { const x = sortValue(a, sortKey), y = sortValue(b, sortKey); return (x > y ? 1 : x < y ? -1 : 0) * sortDir; });
+  return list;
+}
+function renderOrders() {
+  document.querySelectorAll("#ordersTable th.sortable").forEach(th => {
+    th.querySelector(".arrow").textContent = th.dataset.sort === sortKey ? (sortDir > 0 ? "▲" : "▼") : "";
+    th.setAttribute("aria-sort", th.dataset.sort === sortKey ? (sortDir > 0 ? "ascending" : "descending") : "none");
+  });
+  const tbody = document.querySelector("#ordersTable tbody");
+  const list = filteredOrders();
+  const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  if (orderPage > pages) orderPage = pages;
+  const pageList = list.slice((orderPage - 1) * PAGE_SIZE, orderPage * PAGE_SIZE);
+  document.getElementById("orderCount").textContent = list.length ? `Showing ${(orderPage - 1) * PAGE_SIZE + 1}–${(orderPage - 1) * PAGE_SIZE + pageList.length} of ${list.length} orders` : "";
+  renderPager(pages);
+  if (list.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="table-msg">No orders match this filter.</td></tr>`; return; }
+  tbody.innerHTML = pageList.map(order => {
     const s = order.delivery_status || "Accepted";
     const num = esc(order.order_number);
-    const opts = ["Accepted", "Delivering", "Shipped"].concat(["Accepted", "Delivering", "Shipped"].includes(s) ? [] : [s]);
+    const base = ["Accepted", "Delivering", "Shipped"];
+    const opts = base.includes(s) ? base : [s].concat(base);
     return `<tr>
       <td class="id">${num}</td>
-      <td>${esc(order.customer)}</td>
+      <td>${esc(order.customer)}${order.item_name ? `<span class="item-sub">${esc(order.item_name)} × ${esc(order.quantity || 1)}</span>` : ""}</td>
       <td>${money(order.amount)}</td>
       <td>${esc(fmtDate(order.deadline) || "No deadline")}${isLate(order) ? '<span class="late-tag">LATE</span>' : ""}</td>
-      <td><div class="cell-flex">
+      <td>
         <label class="sr-only" for="st-${num}">Status of ${num}</label>
         <select id="st-${num}" class="status-dropdown ${pillClass(s)}" data-order="${num}" onchange="changeOrderDeliveryStatus(this.dataset.order, this.value, this)">
           ${opts.map(v => `<option value="${esc(v)}"${v === s ? " selected" : ""}>${esc(v)}</option>`).join("")}
         </select>
+      </td>
+      <td><div class="row-actions">
+        <button class="icon-btn edit" title="Edit order" aria-label="Edit ${num}" data-order="${num}" onclick="openEditOrder(this.dataset.order)">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </button>
         <button class="icon-btn" title="Delete order" aria-label="Delete ${num}" data-order="${num}" onclick="deleteOrder(this.dataset.order)">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 18 18"><path d="M3 5H15M7 5V3H11V5M5 5L6 15H12L13 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
         </button>
@@ -928,9 +1345,34 @@ function renderOrders() {
     </tr>`;
   }).join("");
 }
+function renderPager(pages) {
+  const el = document.getElementById("orderPager");
+  if (pages <= 1) { el.innerHTML = ""; return; }
+  let html = `<button type="button" aria-label="Previous page" ${orderPage === 1 ? "disabled" : ""} onclick="goPage(${orderPage - 1})">‹</button>`;
+  for (let p = 1; p <= pages; p++) {
+    if (pages > 7 && p > 2 && p < pages - 1 && Math.abs(p - orderPage) > 1) { if (!html.endsWith("…")) html += `<span>…</span>`; continue; }
+    html += `<button type="button" class="${p === orderPage ? "active" : ""}" onclick="goPage(${p})">${p}</button>`;
+  }
+  html += `<button type="button" aria-label="Next page" ${orderPage === pages ? "disabled" : ""} onclick="goPage(${orderPage + 1})">›</button>`;
+  el.innerHTML = html.replace(/<span>…<\/span>(<span>…<\/span>)+/g, "<span>…</span>");
+}
+function goPage(p) { orderPage = p; renderOrders(); document.getElementById("ordersSection").scrollIntoView({ behavior: "smooth", block: "start" }); }
+function exportCsv() {
+  const list = filteredOrders();
+  const cell = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const lines = [["Order #", "Customer", "Item", "Quantity", "Amount ($)", "Delivery deadline", "Status", "Order date"].map(cell).join(",")]
+    .concat(list.map(o => [o.order_number, o.customer, o.item_name || "", o.quantity || "", Number(o.amount || 0).toFixed(2), fmtDate(o.deadline), o.delivery_status, fmtDate(o.order_date)].map(cell).join(",")));
+  const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `its-orders-${todayISO()}.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  showToast(`Exported ${list.length} orders`);
+}
 function loadAdminTableRecords() {
   document.querySelector("#ordersTable tbody").innerHTML =
-    `<tr><td colspan="5" class="table-msg"><span class="spinner spinner-dark"></span>Loading orders...</td></tr>`;
+    `<tr><td colspan="6" class="table-msg"><span class="spinner spinner-dark"></span>Loading orders...</td></tr>`;
   fetch(`${API_URL}/orders`)
   .then(res => { if (!res.ok) throw new Error("Server error " + res.status); return res.json(); })
   .then(orders => {
@@ -941,7 +1383,7 @@ function loadAdminTableRecords() {
   })
   .catch(err => {
     document.querySelector("#ordersTable tbody").innerHTML =
-      `<tr><td colspan="5" class="table-msg" style="color:var(--red)">Could not load orders: ${esc(err.message)}</td></tr>`;
+      `<tr><td colspan="6" class="table-msg" style="color:var(--red)">Could not load orders: ${esc(err.message)}</td></tr>`;
   });
 }
 async function changeOrderDeliveryStatus(orderNumber, newStatus, selectEl) {
@@ -954,7 +1396,7 @@ async function changeOrderDeliveryStatus(orderNumber, newStatus, selectEl) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ delivery_status: newStatus })
     });
-    if (!response.ok) throw new Error("Status update failed");
+    if (!response.ok) throw new Error(await errorText(response));
     if (order) order.delivery_status = newStatus;
     statsOrdersCache = null;
     updateKpis();
@@ -963,7 +1405,7 @@ async function changeOrderDeliveryStatus(orderNumber, newStatus, selectEl) {
   } catch (err) {
     console.error(err);
     if (selectEl && prev) { selectEl.value = prev; selectEl.className = "status-dropdown " + pillClass(prev); }
-    showToast("Could not save the status: " + err.message, true);
+    if (err.message !== "Session expired") showToast("Could not save the status: " + err.message, true);
   } finally {
     if (selectEl) selectEl.disabled = false;
   }
@@ -983,53 +1425,131 @@ async function confirmDeleteOrder() {
   setButtonLoading(btn, true, "Deleting...");
   try {
     const response = await authFetch(`${API_URL}/orders/${encodeURIComponent(orderNumber)}`, { method: "DELETE" });
-    if (!response.ok) throw new Error("Deletion failed");
+    if (!response.ok) throw new Error(await errorText(response));
     closeDeleteModal();
     showToast(`Order ${orderNumber} deleted`);
     loadAdminTableRecords();
+    loadInventoryCache();
   } catch (err) {
     closeDeleteModal();
-    showToast("Could not delete: " + err.message, true);
+    if (err.message !== "Session expired") showToast("Could not delete: " + err.message, true);
   } finally {
     setButtonLoading(btn, false);
   }
 }
-function openOrderModalWindow() {
+
+/* ---------- Create / edit order modal ---------- */
+let editingOrder = null;
+function fillItemSelect(selectedId) {
+  const sel = document.getElementById("modalItem");
+  sel.innerHTML = `<option value="">— No item —</option>` + inventoryCache.map(i => {
+    const id = i.item_id;
+    const left = Number(i.quantity || 0) + (editingOrder && Number(editingOrder.inventory_item_id) === Number(id) ? Number(editingOrder.quantity || 0) : 0);
+    return `<option value="${esc(id)}" data-price="${esc(i.unit_price)}" data-left="${left}"${String(id) === String(selectedId) ? " selected" : ""}>${esc(i.name || i.item_name)} · ${money(i.unit_price)} · ${left} left</option>`;
+  }).join("");
+  document.getElementById("customerList").innerHTML = [...new Set(ordersCache.map(o => o.customer))].sort().map(c => `<option value="${esc(c)}">`).join("");
+  updateStockHint();
+}
+function updateStockHint() {
+  const opt = document.getElementById("modalItem").selectedOptions[0];
+  const hint = document.getElementById("stockHint");
+  if (!opt || !opt.value) { hint.textContent = ""; return; }
+  const left = Number(opt.dataset.left), q = parseInt(document.getElementById("modalQuantity").value, 10) || 0;
+  hint.textContent = q > left ? `Only ${left} in stock.` : `${left - q} will be left in stock after this order.`;
+  hint.style.color = q > left ? "var(--red)" : "";
+}
+function recalcAmount() {
+  const opt = document.getElementById("modalItem").selectedOptions[0];
+  const qEl = document.getElementById("modalQuantity");
+  qEl.disabled = !(opt && opt.value);
+  if (opt && opt.value) {
+    const q = Math.max(1, parseInt(qEl.value, 10) || 1);
+    document.getElementById("modalPurchaseAmount").value = (Number(opt.dataset.price) * q).toFixed(2);
+  }
+  updateStockHint();
+}
+async function prepareOrderModal() {
+  if (!inventoryCache.length) await loadInventoryCache();
+}
+async function openOrderModalWindow() {
+  editingOrder = null;
+  document.getElementById("orderTag").textContent = "Starts as Accepted";
+  document.getElementById("orderTitle").textContent = "New sales order";
+  document.getElementById("orderSub").textContent = "The customer can find it right after you save.";
   document.getElementById("modalCustomerName").value = "";
   document.getElementById("modalPurchaseAmount").value = "";
+  document.getElementById("modalQuantity").value = 1;
   document.getElementById("modalDeliveryDate").value = todayISO();
+  document.getElementById("modalStatusGroup").style.display = "none";
   document.getElementById("orderError").textContent = "";
   openModal("orderModalWindow");
+  await prepareOrderModal();
+  fillItemSelect("");
+  recalcAmount();
   setTimeout(() => document.getElementById("modalCustomerName").focus(), 50);
 }
-function closeOrderModalWindow() { closeModal("orderModalWindow"); }
+async function openEditOrder(orderNumber) {
+  const o = ordersCache.find(x => String(x.order_number) === String(orderNumber));
+  if (!o) return;
+  editingOrder = o;
+  document.getElementById("orderTag").textContent = "Editing " + o.order_number;
+  document.getElementById("orderTitle").textContent = "Edit order " + o.order_number;
+  document.getElementById("orderSub").textContent = "Changes are visible to the customer right after you save.";
+  document.getElementById("modalCustomerName").value = o.customer || "";
+  document.getElementById("modalPurchaseAmount").value = Number(o.amount || 0).toFixed(2);
+  document.getElementById("modalQuantity").value = o.quantity || 1;
+  document.getElementById("modalDeliveryDate").value = fmtDate(o.deadline);
+  const s = o.delivery_status || "Accepted";
+  const base = ["Accepted", "Delivering", "Shipped"];
+  document.getElementById("modalStatus").innerHTML = (base.includes(s) ? base : [s].concat(base)).map(v => `<option${v === s ? " selected" : ""}>${esc(v)}</option>`).join("");
+  document.getElementById("modalStatusGroup").style.display = "";
+  document.getElementById("orderError").textContent = "";
+  openModal("orderModalWindow");
+  await prepareOrderModal();
+  fillItemSelect(o.inventory_item_id || "");
+  document.getElementById("modalQuantity").disabled = !o.inventory_item_id;
+  setTimeout(() => document.getElementById("modalCustomerName").focus(), 50);
+}
+function closeOrderModalWindow() { closeModal("orderModalWindow"); editingOrder = null; }
 async function submitModalOrderData() {
   const customer = document.getElementById("modalCustomerName").value.trim();
   const amountInput = document.getElementById("modalPurchaseAmount").value;
   const deadline = document.getElementById("modalDeliveryDate").value;
+  const itemVal = document.getElementById("modalItem").value;
+  const quantity = parseInt(document.getElementById("modalQuantity").value, 10);
   const errorBox = document.getElementById("orderError");
   const btn = document.getElementById("orderSubmitBtn");
   if (btn.disabled) return;
-  if (!customer || !amountInput || !deadline) { errorBox.textContent = "Please fill in all three fields."; return; }
+  if (!customer || !amountInput || !deadline) { errorBox.textContent = "Please fill in customer, amount and delivery date."; return; }
   const amount = parseFloat(amountInput);
   if (isNaN(amount) || amount <= 0) { errorBox.textContent = "Please enter an amount greater than 0."; return; }
+  if (itemVal && (isNaN(quantity) || quantity < 1)) { errorBox.textContent = "Quantity must be at least 1."; return; }
+  const opt = document.getElementById("modalItem").selectedOptions[0];
+  if (itemVal && opt && quantity > Number(opt.dataset.left)) { errorBox.textContent = `Only ${opt.dataset.left} in stock.`; return; }
   errorBox.textContent = "";
+  const body = { customer, amount, deadline };
+  if (itemVal) { body.inventory_item_id = parseInt(itemVal, 10); body.quantity = quantity; }
+  const isEdit = !!editingOrder;
+  const num = isEdit ? editingOrder.order_number : null;
+  if (isEdit) body.delivery_status = document.getElementById("modalStatus").value;
+  else { body.stock_status = "In stock"; body.delivery_status = "Accepted"; }
   setButtonLoading(btn, true, "Saving...");
   try {
-    const response = await authFetch(`${API_URL}/orders`, {
-      method: "POST",
+    const response = await authFetch(isEdit ? `${API_URL}/orders/${encodeURIComponent(num)}` : `${API_URL}/orders`, {
+      method: isEdit ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ customer, amount, deadline, stock_status: "In stock", delivery_status: "Accepted" })
+      body: JSON.stringify(body)
     });
-    if (!response.ok) throw new Error("The server rejected the order");
-    const sound = document.getElementById("orderSound");
-    sound.volume = 0.3; sound.currentTime = 0; sound.play().catch(() => {});
+    if (!response.ok) throw new Error(await errorText(response));
+    const data = await response.json().catch(() => ({}));
+    if (!isEdit) { const sound = document.getElementById("orderSound"); sound.volume = 0.3; sound.currentTime = 0; sound.play().catch(() => {}); }
     closeOrderModalWindow();
-    showToast(`Order for ${customer} created`);
-    setFilter("All");
+    showToast(isEdit ? `Order ${num} updated` : `Order ${data.order_number || ""} for ${customer} created`);
+    if (!isEdit) setFilter("All");
     loadAdminTableRecords();
+    loadInventoryCache();
   } catch (err) {
-    errorBox.textContent = "Could not save the order: " + err.message;
+    if (err.message !== "Session expired") errorBox.textContent = "Could not save the order: " + err.message;
   } finally {
     setButtonLoading(btn, false);
   }
@@ -1039,24 +1559,45 @@ function showAdminTab(tab) {
   document.getElementById("ordersSection").style.display = isOrders ? "" : "none";
   document.getElementById("inventorySection").style.display = isOrders ? "none" : "";
   document.getElementById("orderFilters").style.display = isOrders ? "" : "none";
+  document.getElementById("exportBtn").style.display = isOrders ? "" : "none";
   document.getElementById("tabOrders").classList.toggle("active", isOrders);
   document.getElementById("tabInventory").classList.toggle("active", !isOrders);
   document.getElementById("salesOrderBtn").style.display = isOrders ? "" : "none";
   document.getElementById("inventoryBtn").style.display = isOrders ? "none" : "";
   if (isOrders) loadAdminTableRecords(); else loadInventory();
+  loadInventoryCache();
 }
 
 /* ====================== ADMIN: INVENTORY ====================== */
+async function loadInventoryCache() {
+  try {
+    const res = await fetch(`${API_URL}/inventory`);
+    if (!res.ok) throw new Error();
+    const items = await res.json();
+    inventoryCache = Array.isArray(items) ? items : [];
+  } catch (e) { inventoryCache = inventoryCache || []; }
+  updateLowStockBanner();
+  return inventoryCache;
+}
+function updateLowStockBanner() {
+  const low = inventoryCache.filter(i => Number(i.quantity || 0) < LOW_STOCK_LIMIT);
+  const el = document.getElementById("lowStockBanner");
+  el.classList.toggle("show", low.length > 0);
+  if (low.length) document.getElementById("lowStockText").textContent =
+    `⚠ Low stock: ${low.map(i => `${i.name || i.item_name} (${i.quantity})`).join(", ")}`;
+}
+function itemStatus(item) {
+  const q = Number(item.quantity || 0);
+  return q <= 0 ? "Out of stock" : q < LOW_STOCK_LIMIT ? "Low stock" : "In stock";
+}
 function loadInventory() {
   const tbody = document.querySelector("#inventoryTable tbody");
-  tbody.innerHTML = `<tr><td colspan="6" class="table-msg"><span class="spinner spinner-dark"></span>Loading inventory...</td></tr>`;
-  fetch(`${API_URL}/inventory`)
-  .then(res => { if (!res.ok) throw new Error("Server error " + res.status); return res.json(); })
-  .then(items => {
-    if (!Array.isArray(items) || items.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="table-msg">No inventory items yet.</td></tr>`; return; }
+  tbody.innerHTML = `<tr><td colspan="7" class="table-msg"><span class="spinner spinner-dark"></span>Loading inventory...</td></tr>`;
+  loadInventoryCache().then(items => {
+    if (!items.length) { tbody.innerHTML = `<tr><td colspan="7" class="table-msg">No inventory items yet.</td></tr>`; return; }
     tbody.innerHTML = items.map(item => {
-      const st = item.status || "In stock";
-      const cls = (st === "Stock" || st === "In stock") ? "in-stock" : st === "Low stock" ? "low-stock" : "not-available";
+      const st = itemStatus(item);
+      const cls = st === "In stock" ? "in-stock" : st === "Low stock" ? "low-stock" : "not-available";
       const code = item.inventory_id ?? "INV-" + String(item.item_id).padStart(3, "0");
       return `<tr>
         <td class="id">${esc(code)}</td>
@@ -1064,22 +1605,43 @@ function loadInventory() {
         <td>${esc(item.category ?? "")}</td>
         <td>${esc(item.quantity)}</td>
         <td>${money(item.unit_price)}</td>
-        <td><div class="cell-flex"><span class="status ${cls}">${esc(st)}</span>
-          <button class="icon-btn" aria-label="Delete ${esc(code)}" data-id="${esc(item.item_id)}" data-code="${esc(code)}" onclick="deleteInventoryItem(this.dataset.id, this.dataset.code)">
+        <td><span class="status ${cls}">${esc(st)}</span></td>
+        <td><div class="row-actions">
+          <button class="icon-btn edit" title="Edit item" aria-label="Edit ${esc(code)}" data-id="${esc(item.item_id)}" onclick="openEditItem(this.dataset.id)">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="icon-btn" title="Delete item" aria-label="Delete ${esc(code)}" data-id="${esc(item.item_id)}" data-code="${esc(code)}" onclick="deleteInventoryItem(this.dataset.id, this.dataset.code)">
             <svg aria-hidden="true" width="16" height="16" viewBox="0 0 18 18"><path d="M3 5H15M7 5V3H11V5M5 5L6 15H12L13 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-          </button></div></td>
+          </button>
+        </div></td>
       </tr>`;
     }).join("");
-  })
-  .catch(err => { tbody.innerHTML = `<tr><td colspan="6" class="table-msg" style="color:var(--red)">Could not load inventory: ${esc(err.message)}</td></tr>`; });
+  });
 }
+let editingItemId = null;
 function openItemModal() {
+  editingItemId = null;
+  document.getElementById("itemTitle").textContent = "New inventory item";
+  document.getElementById("itemSub").textContent = "Add a product to the stock list.";
   ["modalItemName", "modalItemCategory", "modalItemQuantity", "modalItemPrice"].forEach(id => document.getElementById(id).value = "");
   document.getElementById("itemError").textContent = "";
   openModal("itemModalWindow");
   setTimeout(() => document.getElementById("modalItemName").focus(), 50);
 }
-function closeItemModal() { closeModal("itemModalWindow"); }
+function openEditItem(itemId) {
+  const it = inventoryCache.find(i => String(i.item_id) === String(itemId));
+  if (!it) return;
+  editingItemId = it.item_id;
+  document.getElementById("itemTitle").textContent = "Edit " + (it.inventory_id || "item");
+  document.getElementById("itemSub").textContent = "Change name, category, quantity or price.";
+  document.getElementById("modalItemName").value = it.name ?? it.item_name ?? "";
+  document.getElementById("modalItemCategory").value = it.category ?? "";
+  document.getElementById("modalItemQuantity").value = it.quantity ?? 0;
+  document.getElementById("modalItemPrice").value = Number(it.unit_price || 0).toFixed(2);
+  document.getElementById("itemError").textContent = "";
+  openModal("itemModalWindow");
+}
+function closeItemModal() { closeModal("itemModalWindow"); editingItemId = null; }
 async function submitItemData() {
   const name = document.getElementById("modalItemName").value.trim();
   const category = document.getElementById("modalItemCategory").value.trim();
@@ -1092,19 +1654,20 @@ async function submitItemData() {
   if (isNaN(quantity) || quantity < 0) { errorBox.textContent = "Quantity must be 0 or more."; return; }
   if (isNaN(unit_price) || unit_price < 0) { errorBox.textContent = "Please enter a valid price."; return; }
   errorBox.textContent = "";
+  const isEdit = editingItemId !== null;
   setButtonLoading(btn, true, "Saving...");
   try {
-    const response = await authFetch(`${API_URL}/inventory`, {
-      method: "POST",
+    const response = await authFetch(isEdit ? `${API_URL}/inventory/${encodeURIComponent(editingItemId)}` : `${API_URL}/inventory`, {
+      method: isEdit ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ item_name: name, category, quantity, unit_price })
     });
-    if (!response.ok) throw new Error("Server error " + response.status);
+    if (!response.ok) throw new Error(await errorText(response));
     closeItemModal();
-    showToast(`${name} added to inventory`);
+    showToast(isEdit ? `${name} updated` : `${name} added to inventory`);
     loadInventory();
   } catch (err) {
-    errorBox.textContent = "Could not save the item: " + err.message;
+    if (err.message !== "Session expired") errorBox.textContent = "Could not save the item: " + err.message;
   } finally {
     setButtonLoading(btn, false);
   }
@@ -1124,13 +1687,13 @@ async function confirmDeleteItem() {
   setButtonLoading(btn, true, "Deleting...");
   try {
     const response = await authFetch(`${API_URL}/inventory/${encodeURIComponent(itemId)}`, { method: "DELETE" });
-    if (!response.ok) throw new Error("Server error " + response.status);
+    if (!response.ok) throw new Error(await errorText(response));
     closeDeleteItemModal();
     showToast("Item deleted");
     loadInventory();
   } catch (err) {
     closeDeleteItemModal();
-    showToast("Could not delete the item: " + err.message, true);
+    if (err.message !== "Session expired") showToast("Could not delete the item: " + err.message, true);
   } finally {
     setButtonLoading(btn, false);
   }
@@ -1159,19 +1722,21 @@ function statsPaint(title, sub, type, labels, values, datasetLabel, tableHead, r
      <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
   if (statsChart) statsChart.destroy();
   if (typeof Chart === "undefined") return;
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
   const isPie = type === "doughnut";
   Chart.defaults.font.family = "Outfit, Arial, sans-serif";
+  Chart.defaults.color = dark ? "#BDBDBD" : "#5C5C5C";
   statsChart = new Chart(document.getElementById("statsCanvas"), {
     type,
     data: { labels, datasets: [{ label: datasetLabel, data: values,
       backgroundColor: isPie ? colors : "#FF6B1A",
-      borderColor: type === "line" ? "#FF6B1A" : "#ffffff",
+      borderColor: type === "line" ? "#FF6B1A" : (dark ? "#161616" : "#ffffff"),
       borderWidth: type === "line" ? 3 : (isPie ? 3 : 0), tension: .3, fill: false,
-      pointRadius: type === "line" ? 4 : 0, pointBackgroundColor: "#141414", borderRadius: type === "bar" ? 8 : 0 }] },
+      pointRadius: type === "line" ? 4 : 0, pointBackgroundColor: dark ? "#F2F2F2" : "#141414", borderRadius: type === "bar" ? 8 : 0 }] },
     options: { responsive: true, maintainAspectRatio: false, cutout: isPie ? "62%" : undefined,
       indexAxis: type === "bar" ? "y" : "x",
       plugins: { legend: { display: isPie, position: "right" } },
-      scales: isPie ? {} : { x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: "#F0F0F0" } }, y: { beginAtZero: true, ticks: { precision: 0 }, grid: { display: false } } } }
+      scales: isPie ? {} : { x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: dark ? "#262626" : "#F0F0F0" } }, y: { beginAtZero: true, ticks: { precision: 0 }, grid: { display: false } } } }
   });
 }
 async function showStat(name) {
@@ -1181,12 +1746,12 @@ async function showStat(name) {
   try {
     if (name === "status") {
       const orders = await statsGetOrders(true);
-      const orderList = ["Accepted", "Delivering", "Shipped"];
+      const orderList = ["Accepted", "Packed", "Delivering", "Shipped"];
       const counts = {};
       orders.forEach(o => { const s = o.delivery_status || "Accepted"; counts[s] = (counts[s] || 0) + 1; });
       const labels = Object.keys(counts).sort((a, b) => ((orderList.indexOf(a) + 99) % 99) - ((orderList.indexOf(b) + 99) % 99));
       const values = labels.map(l => counts[l]);
-      const colorMap = { Accepted: "#FF6B1A", Delivering: "#141414", Shipped: "#9FD8B3" };
+      const colorMap = { Accepted: "#FF6B1A", Packed: "#FFB088", Delivering: "#3A3A3A", Shipped: "#9FD8B3" };
       statsPaint("Orders per delivery status", `${orders.length} orders in total`, "doughnut",
         labels, values, "Orders", ["Status", "Orders", "Share"],
         labels.map((l, i) => [l, values[i], (100 * values[i] / orders.length).toFixed(1) + "%"]),
@@ -1197,8 +1762,8 @@ async function showStat(name) {
       orders.forEach(o => { const c = o.customer || "Unknown"; sums[c] = (sums[c] || 0) + Number(o.amount || 0); });
       const top = Object.entries(sums).sort((a, b) => b[1] - a[1]).slice(0, 8);
       statsPaint("Top spending customers", "Total order amount per customer (USD), top 8", "bar",
-        top.map(t => t[0]), top.map(t => Math.round(t[1] * 100) / 100), "Total ($)", ["Customer", "Total spent ($)"],
-        top.map(t => [t[0], "$" + t[1].toFixed(2)]));
+        top.map(x => x[0]), top.map(x => Math.round(x[1] * 100) / 100), "Total ($)", ["Customer", "Total spent ($)"],
+        top.map(x => [x[0], "$" + x[1].toFixed(2)]));
     } else if (name === "weekly") {
       const res = await fetch(`${API_URL}/stats/orders-per-week`);
       if (!res.ok) throw new Error("Weekly stats need the backend route /stats/orders-per-week (HTTP " + res.status + ")");
@@ -1212,6 +1777,7 @@ async function showStat(name) {
     main.innerHTML = `<div class="stats-msg">Could not load this statistic.<br><small>${esc(err.message)}</small></div>`;
   }
 }
+
 </script>
 </body>
 </html>
