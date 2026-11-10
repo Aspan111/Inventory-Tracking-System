@@ -1,950 +1,1217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Inventory Tracking System</title>
-    <style>
-        /* General layout configurations */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f7f9fb; }
-        
-        /* Navigation Top Menu Bar Style */
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .logo-text { font-size: 20px; font-weight: 700; color: #0043a4; }
-        .login-btn, .logout-btn { background-color: #0043a4; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 14px; }
-        .logout-btn { background-color: #ff4d4d; display: none; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ITS — Inventory Tracking System</title>
+<meta name="description" content="Track your order by ID or company name. ITS — Inventory Tracking System.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#FF6B1A; --orange-dark:#E0540B; --orange-soft:#FFE6D6; --orange-ink:#9A3A06;
+  --ink:#141414; --ink-2:#1F1F1F; --ink-3:#262626;
+  --grey:#5C5C5C; --grey-2:#8C8C8C; --line:#E2E2E2; --bg-soft:#F6F6F6;
+  --green-bg:#E3F4E9; --green:#17663A; --red-bg:#FDE8E8; --red:#B42318;
+  --radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Outfit',Arial,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button,input,select{font-family:inherit}
+img,svg{display:block}
+.container{max-width:1200px;margin:0 auto;padding:0 32px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
 
-        /* Interface panel toggle mechanics */
-        .interface-panel { display: none; padding: 40px; }
-        .interface-panel.active { display: block; }
+/* ---------- Header ---------- */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1.5px solid var(--line)}
+.header-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding-top:14px;padding-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand-name{font-size:26px;font-weight:800;letter-spacing:.5px}
+.brand-name span{color:var(--orange)}
+.brand-tag{font-size:12px;color:var(--grey);border-left:1.5px solid var(--line);padding-left:10px;line-height:1.2}
+.main-nav{display:flex;flex-wrap:wrap;gap:4px;font-size:15px;font-weight:500}
+.main-nav a{white-space:nowrap;display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:10px;text-decoration:none}
+.main-nav a:hover{background:var(--bg-soft)}
+.header-actions{display:flex;align-items:center;gap:10px}
+.admin-badge{display:none;align-items:center;gap:8px;font-size:14px;color:var(--grey)}
+.admin-badge .avatar{width:36px;height:36px;border-radius:999px;background:var(--orange-soft);color:var(--orange-ink);display:inline-flex;align-items:center;justify-content:center;font-weight:700}
 
-        /* Google-Style User Search Interface Box Design Layout */
-        .search-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; }
-        .search-box-container { display: flex; align-items: center; background: white; border: 1px solid #dfe1e5; box-shadow: none; border-radius: 24px; width: 100%; max-width: 600px; height: 44px; padding: 0 16px; box-sizing: border-box; }
-        .search-box-container:hover { box-shadow: 0 1px 6px rgba(32,33,36,0.28); border-color: rgba(223,225,229,0); }
-        .search-input { flex-grow: 1; height: 34px; border: none; padding: 0; font-size: 16px; outline: none; color: #202124; }
-        .search-input::placeholder { color: #9aa0a6; }
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:12px;border:1.5px solid transparent;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;transition:transform .15s,background .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-orange:hover{background:var(--orange-dark);box-shadow:0 8px 20px rgba(255,107,26,.3)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-outline{background:#fff;border-color:var(--ink);color:var(--ink)}
+.btn-ghost{background:#fff;border-color:#CFCFCF;color:var(--ink)}
+.btn-ghost-dark{background:transparent;border-color:#5C5C5C;color:#fff}
+.btn-sm{min-height:40px;padding:0 14px;font-size:14px}
+button:disabled{opacity:.65;cursor:not-allowed;transform:none}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:8px}
+.spinner-dark{border-color:rgba(0,0,0,.15);border-top-color:var(--orange)}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-        
-        /* Orders / Inventory toggle buttons */
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .admin-tabs { display: inline-flex; gap: 6px; padding: 4px; background: #eaeff6; border-radius: 12px; margin-bottom: 20px; }
-        .admin-tab { border: none; background: transparent; padding: 9px 24px; border-radius: 9px; font-family: inherit; font-size: 14px; font-weight: 500; color: #64748b; cursor: pointer; transition: background .15s, color .15s, box-shadow .15s; }
-        .admin-tab:hover { color: #0b4fc2; }
-        .admin-tab.active { background: linear-gradient(135deg, #2f6fed, #0b4fc2); color: #fff; box-shadow: 0 2px 8px rgba(11,79,194,.25); }
+/* ---------- Panels ---------- */
+.interface-panel{display:none}
+.interface-panel.active{display:block}
 
-        
-        /* Loading spinner */
-        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 8px; }
-        .spinner-dark { border-color: rgba(0,0,0,0.15); border-top-color: #0043a4; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        button:disabled { opacity: 0.7; cursor: not-allowed; }
+/* ---------- Hero ---------- */
+.hero{padding:64px 0 0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:28px}
+.hero h1{margin:0;font-weight:600;font-size:clamp(42px,6.4vw,84px);line-height:1.08;letter-spacing:-1px}
+.hero h1 .accent{display:inline-flex;align-items:center;gap:18px;color:var(--orange)}
+.globe{width:.78em;height:.78em;border-radius:999px;background:var(--orange-soft);display:inline-flex;align-items:center;justify-content:center}
+.hero p.lead{margin:0;max-width:560px;font-size:18px;line-height:1.6;color:var(--grey)}
+.search-form{display:flex;gap:10px;width:100%;max-width:640px}
+.search-field{flex:1;display:flex;align-items:center;gap:10px;height:58px;padding:0 18px;border:1.5px solid #CFCFCF;border-radius:14px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.search-field:focus-within{border-color:var(--orange);box-shadow:0 0 0 4px var(--orange-soft)}
+.search-input{flex:1;min-width:0;height:54px;border:0;outline:0;background:transparent;font-size:16px;color:var(--ink)}
+.search-input::placeholder{color:var(--grey-2)}
+.search-btn{height:58px;min-width:58px;padding:0 22px;border:0;border-radius:14px;background:var(--ink);color:#fff;font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.search-btn:hover{background:#000}
+.try-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;font-size:14px;color:var(--grey)}
+.chip-btn{min-height:36px;padding:0 14px;border:1.5px solid var(--line);border-radius:999px;background:#fff;font-size:14px;color:var(--ink);cursor:pointer}
+.chip-btn:hover{border-color:var(--orange);color:var(--orange-ink)}
 
+/* ---------- Results ---------- */
+.results{width:100%;max-width:860px;display:none;flex-direction:column;gap:16px;text-align:left}
+.results.show{display:flex}
+.results-meta{margin:0;font-size:15px;color:var(--grey)}
+.order-card{background:#fff;border:1.5px solid #ECECEC;border-radius:var(--radius);padding:26px 28px;box-shadow:0 18px 40px rgba(20,20,20,.08);display:flex;flex-direction:column;gap:22px;animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.order-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+.order-id{display:flex;align-items:center;gap:14px}
+.box-icon{width:52px;height:52px;border-radius:14px;background:var(--ink);display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.order-id strong{display:block;font-size:24px}
+.order-id span{font-size:15px;color:var(--grey)}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;padding:7px 14px;border-radius:999px;font-size:14px;font-weight:600}
+.pill-accepted{background:var(--orange-soft);color:var(--orange-ink)}
+.pill-delivering{background:var(--ink);color:#fff}
+.pill-shipped{background:var(--green-bg);color:var(--green)}
+.pill-other{background:var(--bg-soft);color:var(--ink)}
+.pill-late{background:var(--red-bg);color:var(--red)}
+.track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.track div{display:flex;flex-direction:column;gap:10px;font-size:14px;font-weight:600}
+.track .bar{height:6px;border-radius:999px;background:#E6E6E6}
+.track .bar.on{background:var(--orange)}
+.track .muted{color:var(--grey-2);font-weight:500}
+.facts{display:flex;flex-wrap:wrap;gap:12px}
+.fact{flex:1 1 160px;padding:14px 16px;border-radius:14px;background:var(--bg-soft);display:flex;flex-direction:column;gap:2px}
+.fact span{font-size:13px;color:var(--grey)}
+.fact b{font-size:18px;font-weight:600}
+.empty-card{padding:28px;border-radius:var(--radius);background:var(--bg-soft)}
+.empty-card h3{margin:0 0 6px;font-size:22px;font-weight:600}
+.empty-card p{margin:0;font-size:16px;color:var(--grey)}
 
-        
-        /* Management Table styling properties */
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #edf2f7; }
-        th { background-color: #f8fafc; font-weight: 600; color: #4a5568; }
-        
-        /* Badges & Actions styles */
-        .status { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-        .status.in-stock { background-color: #def7ec; color: #03543f; }
-        .status.low-stock { background-color: #fff3d6; color: #a16207; }
-        .status.not-available { background-color: #fde8e8; color: #9b1c1c; }
-        .status.packed { background-color: #e1effe; color: #1e429f; }
-        .status.not-shipped { background-color: #fef08a; color: #713f12; }
-        .delivery-cell-container { position: relative; display: flex; align-items: center; justify-content: space-between; }
-        .trash-delete-btn { background: none; border: none; cursor: pointer; color: #a0a0a0; }
-        .trash-delete-btn:hover { color: #ff4d4d; }
-        .admin-controls { display: none; margin-bottom: 20px; }
+/* ---------- Illustration + dark section ---------- */
+.hero-art{width:100%;display:flex;justify-content:center;margin-bottom:-150px;position:relative;z-index:2}
+.hero-art svg{width:100%;max-width:640px;height:auto}
+.dark-wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+.dark{background:var(--ink);color:#fff;border-radius:40px;padding:190px 48px 64px;display:flex;flex-direction:column;gap:64px}
+.tech-row{display:flex;flex-wrap:wrap;justify-content:space-around;gap:20px 40px;font-size:20px;font-weight:600;color:var(--grey-2)}
+.split{display:flex;flex-wrap:wrap;align-items:center;gap:48px}
+.split > *{flex:1 1 380px}
+.art-card{aspect-ratio:4/3;border-radius:28px;background:var(--ink-2);display:flex;align-items:center;justify-content:center;padding:24px}
+.art-card svg{width:100%;height:100%}
+.mini-row{display:flex;gap:16px;margin-top:16px}
+.mini{flex:1;min-height:96px;border-radius:22px;background:var(--ink-3);display:flex;align-items:center;gap:14px;padding:0 22px}
+.mini b{font-size:32px;color:var(--orange)}
+.mini span{font-size:14px;color:#BDBDBD}
+.mini-star{width:96px;height:96px;border-radius:22px;background:var(--orange-soft);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.section-title{margin:0;font-weight:600;font-size:clamp(32px,3.6vw,46px);line-height:1.15}
+.section-title .o{color:var(--orange)}
+.muted-text{margin:0;font-size:17px;line-height:1.7;color:#BDBDBD}
 
-        /* Overlay layer blurring out the background grid views */
-        .modal-overlay-container {
-            display: none; /* Hidden by default state criteria */
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Open visibility class trigger state parameter */
-        .modal-overlay-container.is-visible {
-            display: flex;
-        }
-        
-        /* White centered container card matching your structural layout photo reference */
-        .modal-card-content {
-            background-color: #ffffff;
-            width: 100%;
-            max-width: 520px;
-            padding: 32px;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            box-sizing: border-box;
-        }
-        
-        .input-form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label-text {
-            display: block;
-            font-size: 15px;
-            font-weight: 600;
-            color: #334155;
-            margin-bottom: 8px;
-        }
-        
-        /* Input fields matching the gray styling bounds from your layout reference image */
-        .form-input-box {
-            width: 100%;
-            height: 40px;
-            background-color: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 0 12px;
-            font-size: 15px;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        
-        .form-input-box:focus {
-            border-color: #3b82f6;
-            background-color: #ffffff;
-        }
-        
-        /* Bright blue submission button matching the layout design reference button */
-        .modal-submit-btn {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            height: 44px;
-            padding: 0 24px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.15s;
-        }
-        
-        .modal-submit-btn:hover {
-            background-color: #2563eb;
-        }
-        
-        .modal-cancel-btn {
-            background: none;
-            border: 1px solid #cbd5e1;
-            color: #64748b;
-            height: 44px;
-            padding: 0 20px;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .modal-cancel-btn:hover {
-            background-color: #f8fafc;
-        }
+/* ---------- Generic sections ---------- */
+.section{padding:96px 0 0}
+.center{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.tag{display:inline-flex;align-self:flex-start;padding:6px 14px;border-radius:999px;background:var(--orange-soft);color:var(--orange-ink);font-size:13px;font-weight:600}
+.center .tag{align-self:center}
+.journey{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:40px}
+.j-card{height:300px;border-radius:28px;background:var(--ink-2);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:26px;transition:transform .2s}
+.j-card:hover{transform:translateY(-4px)}
+.j-card.orange{background:var(--orange);color:var(--ink)}
+.j-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.j-foot small{display:block;font-size:13px;opacity:.75}
+.j-foot b{font-size:22px;font-weight:600}
+.circle-arrow{width:44px;height:44px;border-radius:999px;border:1.5px solid currentColor;display:inline-flex;align-items:center;justify-content:center}
 
-        /* Search button inside the bar */
-        .search-box-container { padding-right: 4px; }          /* button sits close to the right edge */
-        .search-btn {
-            align-self: stretch; margin: 4px 0; padding: 0 24px;
-            border: none; border-radius: 20px; cursor: pointer;
-            background: linear-gradient(135deg, #2f6fed, #0b4fc2); color: #fff;
-            font-family: inherit; font-size: 14px; font-weight: 500;
-            transition: transform .15s, box-shadow .15s;
-        }
-        .search-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(11,79,194,.3); }
-        
-        /* Spinner (skip these 3 lines if you already added them) */
-        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 8px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        button:disabled { opacity: 0.7; cursor: not-allowed; }
+/* ---------- Tutorial ---------- */
+.tutorial-grid{display:flex;flex-wrap:wrap;gap:20px;margin-top:40px;align-items:stretch}
+.player{flex:999 1 620px;min-width:0;position:relative;aspect-ratio:16/9;border-radius:32px;background:var(--ink);overflow:hidden;color:#fff}
+.player iframe,.player video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player-ui{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:28px}
+.player-glow{position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:999px;background:var(--orange);opacity:.14}
+.player-top{display:flex;justify-content:space-between;gap:12px;position:relative;font-size:13px}
+.player-top span:first-child{padding:6px 12px;border-radius:999px;background:var(--ink-3)}
+.player-top span:last-child{color:#BDBDBD}
+.player-mid{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;position:relative}
+.play-btn{width:96px;height:96px;border:0;border-radius:999px;background:var(--orange);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 0 16px rgba(255,107,26,.18)}
+.player-mid strong{font-size:clamp(22px,2.6vw,32px);font-weight:600}
+.player-bottom{position:relative;display:flex;flex-direction:column;gap:10px}
+.progress{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.progress span{height:5px;border-radius:999px;background:#3A3A3A}
+.progress span.on{background:var(--orange)}
+.player-bottom p{margin:0;font-size:14px;color:#BDBDBD}
+.chapters{flex:1 1 300px;display:flex;flex-direction:column;gap:10px}
+.chapter{display:flex;align-items:center;gap:14px;width:100%;min-height:76px;padding:14px 16px;border-radius:20px;border:1.5px solid #ECECEC;background:#fff;text-align:left;cursor:pointer;color:var(--ink)}
+.chapter .num{flex:0 0 auto;width:40px;height:40px;border-radius:12px;background:#F4F4F4;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+.chapter b{display:block;font-size:16px;font-weight:600}
+.chapter small{font-size:13px;opacity:.75}
+.chapter.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.chapter.active .num{background:var(--orange);color:#fff}
+.tabs{display:inline-flex;gap:6px;padding:6px;border-radius:16px;background:#F4F4F4}
+.tab{min-height:46px;padding:0 22px;border:0;border-radius:12px;background:transparent;color:var(--grey);font-size:15px;font-weight:600;cursor:pointer}
+.tab.active{background:var(--ink);color:#fff}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:28px;width:100%}
+.step{border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:12px;background:var(--bg-soft)}
+.step .n{font-size:44px;font-weight:700;line-height:1;color:var(--orange)}
+.step h3{margin:0;font-size:20px;font-weight:600}
+.step p{margin:0;font-size:15px;line-height:1.6;color:var(--grey)}
+.step .s-chip{align-self:flex-start;margin-top:auto;padding:8px 14px;border-radius:12px;background:#fff;font-size:14px;font-weight:600}
+.step.orange{background:var(--orange);color:#fff}.step.orange .n{color:#fff}.step.orange p{color:#FFF1E8}.step.orange .s-chip{color:var(--ink)}
+.step.dark{background:var(--ink);color:#fff}.step.dark .n{color:#FF8A4C}.step.dark p{color:#BDBDBD}.step.dark .s-chip{background:var(--ink-3);color:#fff}
+.faq{max-width:860px;margin:32px auto 0;display:flex;flex-direction:column;gap:12px}
+.faq details{border:1.5px solid #ECECEC;border-radius:20px;background:#fff;overflow:hidden}
+.faq details[open]{background:#FFF6F0;border-color:#FFD2B8}
+.faq summary{list-style:none;cursor:pointer;min-height:64px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:17px;font-weight:600}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";flex:0 0 auto;width:34px;height:34px;border-radius:999px;background:#F4F4F4;display:inline-flex;align-items:center;justify-content:center;font-size:20px}
+.faq details[open] summary::after{content:"−";background:var(--orange);color:#fff}
+.faq p{margin:0;padding:0 22px 20px;font-size:16px;line-height:1.6;color:var(--grey)}
+.cta{border-radius:32px;background:var(--ink-2);padding:40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:32px;color:#fff}
+.quick{flex:1 1 300px;max-width:360px;background:#fff;color:var(--ink);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:12px}
+.quick b{font-size:18px;text-align:center}
+.quick input{height:50px;padding:0 16px;border:0;border-radius:12px;background:#F3F3F3;font-size:15px}
+.site-footer{border-top:1.5px solid var(--line);margin-top:96px}
+.footer-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding:28px 0;font-size:14px;color:var(--grey)}
 
-        .stats-overlay.open{display:flex}
-        .stats-modal{background:#fff;border-radius:16px;width:min(980px,100%);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(15,23,42,.35);overflow:hidden}
-        .stats-head{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid #e2e8f0}
-        .stats-head h2{margin:0;font-size:20px;color:#0f172a}
-        .stats-close{border:0;background:#f1f5f9;border-radius:8px;width:34px;height:34px;font-size:18px;cursor:pointer}
-        .stats-body{display:flex;min-height:420px;flex:1;overflow:hidden}
-        .stats-menu{width:250px;background:#f8fafc;border-right:1px solid #e2e8f0;padding:16px 12px;display:flex;flex-direction:column;gap:8px}
-        .stats-menu small{color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:0 6px 4px}
-        .stats-item{text-align:left;border:1px solid transparent;background:transparent;padding:11px 12px;border-radius:10px;cursor:pointer;font-size:14px;color:#334155;line-height:1.3}
-        .stats-item:hover{background:#eef2ff}
-        .stats-item.active{background:#1d4ed8;color:#fff;font-weight:600}
-        .stats-main{flex:1;padding:18px 22px;overflow:auto;min-width:0}
-        .stats-main h3{margin:0 0 4px;font-size:17px;color:#0f172a}
-        .stats-main p.sub{margin:0 0 14px;color:#64748b;font-size:13px}
-        .stats-chart-box{position:relative;height:290px}
-        .stats-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px}
-        .stats-table th,.stats-table td{text-align:left;padding:7px 8px;border-bottom:1px solid #e2e8f0}
-        .stats-table th{color:#64748b;font-weight:600}
-        .stats-msg{color:#64748b;padding:40px 0;text-align:center}
-        .stats-btn{background:none;border:0;cursor:pointer;padding:4px 8px}
-        @media (max-width:700px){.stats-body{flex-direction:column}.stats-menu{width:auto;flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid #e2e8f0}.stats-menu small{display:none}}        
-        
-    </style>
+/* ---------- Admin ---------- */
+.admin-wrap{padding:40px 0 72px;display:flex;flex-direction:column;gap:28px}
+.admin-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px}
+.admin-head small{font-size:15px;color:var(--grey)}
+.admin-head h1{margin:6px 0 0;font-weight:600;font-size:clamp(34px,4.4vw,54px);line-height:1.08}
+.admin-head h1 span{color:var(--orange)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+.kpi{border-radius:24px;border:1.5px solid #ECECEC;padding:22px 24px;display:flex;flex-direction:column;gap:8px}
+.kpi span{font-size:14px;color:var(--grey)}
+.kpi b{font-size:40px;font-weight:700}
+.kpi.orange{background:var(--orange);border-color:var(--orange);color:#fff}.kpi.orange span{color:#FFF1E8}
+.kpi.dark{background:var(--ink);border-color:var(--ink);color:#fff}.kpi.dark span{color:#BDBDBD}.kpi.dark b{color:#FF8A4C}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.admin-tabs{display:inline-flex;gap:6px;padding:6px;border-radius:16px;background:#F4F4F4}
+.admin-tab{min-height:44px;padding:0 20px;border:0;border-radius:12px;background:transparent;color:var(--grey);font-size:15px;font-weight:600;cursor:pointer}
+.admin-tab.active{background:var(--ink);color:#fff}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filter{min-height:40px;padding:0 14px;border:1.5px solid var(--line);border-radius:999px;background:#fff;font-size:14px;font-weight:600;color:var(--grey);cursor:pointer}
+.filter.active{background:var(--orange-soft);border-color:#FFD2B8;color:var(--orange-ink)}
+.table-search{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;border:1.5px solid #CFCFCF;border-radius:12px;background:#fff;min-width:240px}
+.table-search input{border:0;outline:0;flex:1;font-size:15px;background:transparent}
+.table-card{border:1.5px solid #ECECEC;border-radius:24px;overflow:hidden;background:#fff}
+.table-scroll{overflow-x:auto}
+table{width:100%;min-width:760px;border-collapse:collapse;font-size:15px}
+th{text-align:left;padding:14px 18px;font-size:12px;letter-spacing:1px;color:var(--grey);font-weight:600;background:#FAFAFA;border-bottom:1.5px solid #ECECEC}
+td{padding:14px 18px;border-bottom:1px solid #F0F0F0;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#FFFBF8}
+td.id{font-weight:700;color:var(--orange-ink)}
+.cell-flex{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.status-dropdown{min-height:38px;padding:0 34px 0 14px;border:0;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23141414' stroke-width='1.8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.status-dropdown.pill-delivering{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23ffffff' stroke-width='1.8'/%3E%3C/svg%3E")}
+.icon-btn{width:40px;height:40px;border:0;border-radius:12px;background:#F4F4F4;color:var(--grey);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.icon-btn:hover{background:var(--red-bg);color:var(--red)}
+.late-tag{display:inline-block;margin-left:8px;padding:3px 8px;border-radius:6px;background:var(--red-bg);color:var(--red);font-size:11px;font-weight:700;letter-spacing:.5px}
+.table-msg{text-align:center;color:var(--grey);padding:28px}
+.status.in-stock{background:var(--green-bg);color:var(--green)}
+.status.low-stock{background:#FFF3D6;color:#8A5300}
+.status.not-available{background:var(--red-bg);color:var(--red)}
+.status{display:inline-flex;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600}
+
+/* ---------- Modals ---------- */
+.modal-overlay-container{display:none;position:fixed;inset:0;background:rgba(20,20,20,.55);z-index:1000;align-items:center;justify-content:center;padding:24px}
+.modal-overlay-container.is-visible{display:flex}
+.modal-card-content{background:#fff;width:100%;max-width:520px;padding:32px;border-radius:28px;box-shadow:0 30px 60px rgba(20,20,20,.25);animation:rise .25s ease both}
+.modal-card-content h3{margin:0 0 6px;font-size:28px;font-weight:600}
+.modal-card-content .sub{margin:0 0 22px;color:var(--grey);font-size:15px}
+.input-form-group{margin-bottom:16px;display:flex;flex-direction:column;gap:8px}
+.form-label-text{font-size:14px;font-weight:600}
+.form-input-box{height:52px;padding:0 16px;border:1.5px solid #CFCFCF;border-radius:14px;font-size:16px;outline:0;background:#fff;width:100%}
+.form-input-box:focus{border-color:var(--orange);box-shadow:0 0 0 4px var(--orange-soft)}
+.form-row{display:flex;flex-wrap:wrap;gap:14px}.form-row > *{flex:1 1 180px}
+.form-error{color:var(--red);font-size:14px;min-height:18px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+
+/* ---------- Stats ---------- */
+.stats-overlay{display:none;position:fixed;inset:0;background:rgba(20,20,20,.55);z-index:1000;align-items:center;justify-content:center;padding:24px}
+.stats-overlay.open{display:flex}
+.stats-modal{background:#fff;border-radius:28px;width:min(1000px,100%);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 30px 60px rgba(20,20,20,.3);overflow:hidden}
+.stats-head{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1.5px solid #ECECEC}
+.stats-head h2{margin:0;font-size:24px;font-weight:600}
+.stats-body{display:flex;min-height:440px;flex:1;overflow:hidden}
+.stats-menu{width:260px;background:#FAFAFA;border-right:1.5px solid #ECECEC;padding:16px 12px;display:flex;flex-direction:column;gap:8px}
+.stats-menu small{color:var(--grey);font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:0 6px 4px;font-size:12px}
+.stats-item{text-align:left;border:0;background:transparent;padding:12px 14px;border-radius:12px;cursor:pointer;font-size:15px;color:var(--ink)}
+.stats-item:hover{background:#F0F0F0}
+.stats-item.active{background:var(--ink);color:#fff;font-weight:600}
+.stats-main{flex:1;padding:20px 24px;overflow:auto;min-width:0}
+.stats-main h3{margin:0 0 4px;font-size:20px;font-weight:600}
+.stats-main p.sub{margin:0 0 14px;color:var(--grey);font-size:14px}
+.stats-chart-box{position:relative;height:290px}
+.stats-table{width:100%;min-width:0;border-collapse:collapse;margin-top:14px;font-size:14px}
+.stats-table th,.stats-table td{padding:8px 10px;background:none}
+.stats-msg{color:var(--grey);padding:40px 0;text-align:center}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:2000;display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:999px;background:var(--ink);color:#fff;font-size:15px;box-shadow:0 14px 30px rgba(20,20,20,.25);transition:opacity .2s,transform .2s;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.error{background:var(--red)}
+.toast .dot{color:#FF8A4C}
+
+@media (max-width:820px){
+  .container{padding:0 18px}
+  .main-nav{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;margin:0 -6px}
+  .header-row{gap:10px;padding-top:10px;padding-bottom:10px}
+  .hero{padding-top:36px}
+  .header-actions .btn{min-height:42px;padding:0 14px}
+  .brand-tag{display:none}
+  .dark{padding:170px 24px 40px;border-radius:28px}
+  .hero-art{margin-bottom:-120px}
+  .search-btn .label{display:none}
+  .stats-body{flex-direction:column}
+  .stats-menu{width:auto;flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1.5px solid #ECECEC}
+  .stats-menu small{display:none}
+  .table-search{min-width:0;flex:1}
+  .cta{padding:28px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
 
-    <!-- Unified Application Top Header Bar -->
-    <div class="top-navbar">
-        <!--<div class="logo-text">ITS</div>-->
-        <img src = "its-logo-hd.png" alt = "Logo-image" width = "200"> 
-        <!--<button id="authBtn" class="login-btn" onclick="handleAuthAction()">Login (For Admin)</button>-->
-        <button id="authBtn" class="login-btn" onclick="openLoginModal()">Login (For Admin)</button>
-        <button id="logoutBtn" class="logout-btn" onclick="triggerLogout()">Logout</button>
-        <!--<button id="salesOrderBtn" class="login-btn" style="visibility: hidden;" onclick="openOrderModalWindow()">+ Sales order</button>-->
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <div class="container header-row">
+    <a class="brand" href="#" onclick="goHome(event)" aria-label="ITS home">
+      <svg aria-hidden="true" width="40" height="32" viewBox="0 0 40 32"><rect x="0" y="0" width="16" height="32" rx="5" fill="#141414"/><path d="M20 0 H34 A6 6 0 0 1 40 6 V10 H26 A6 6 0 0 1 20 4 Z" fill="#FF6B1A"/><rect x="20" y="13" width="20" height="19" rx="5" fill="#141414"/></svg>
+      <span class="brand-name">ITS<span>.</span></span>
+      <span class="brand-tag">Inventory<br>Tracking System</span>
+    </a>
+    <nav class="main-nav" id="userNav" aria-label="Main">
+      <a href="#track">Track Order</a>
+      <a href="#journey">How It Works</a>
+      <a href="#tutorial">Tutorial</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <span class="admin-badge" id="adminBadge"><span class="avatar" aria-hidden="true">A</span>Admin</span>
+      <button id="authBtn" class="btn btn-outline" onclick="openLoginModal()">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Log in
+      </button>
+      <a id="trackTopBtn" class="btn btn-orange" href="#track" onclick="focusSearch()">Track order</a>
+      <button id="logoutBtn" class="btn btn-ghost" style="display:none" onclick="triggerLogout()">Log out</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= 1. USER INTERFACE ================= -->
+<main id="userPanel" class="interface-panel active">
+
+  <section id="track" class="container hero">
+    <h1>Tracking Your Orders<br>
+      <span class="accent"><span class="globe" aria-hidden="true"><svg width="56%" height="56%" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#FF6B1A" stroke-width="2"/><path d="M3 12H21M12 3C8 7 8 17 12 21M12 3C16 7 16 17 12 21" fill="none" stroke="#FF6B1A" stroke-width="2"/></svg></span>In Real Time</span>
+    </h1>
+    <p class="lead">Find any order by its number or your company name. See where it is, without calling the shop.</p>
+
+    <form class="search-form" onsubmit="event.preventDefault(); performSearch();" role="search">
+      <label class="search-field" for="userQueryInput">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M12 21s-7-7-7-11.5a7 7 0 0 1 14 0C19 14 12 21 12 21z" fill="none" stroke="#5C5C5C" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="#5C5C5C" stroke-width="2"/></svg>
+        <span class="sr-only">Order ID or customer name</span>
+        <input type="text" id="userQueryInput" class="search-input" placeholder="Enter order ID (SO-001) or customer name" autocomplete="off">
+      </label>
+      <button id="searchBtn" class="search-btn" type="submit" aria-label="Search">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#fff" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span class="label">Search</span>
+      </button>
+    </form>
+    <div class="try-row">
+      <span>Try:</span>
+      <button class="chip-btn" type="button" onclick="quickSearch('SO-034')">SO-034</button>
+      <button class="chip-btn" type="button" onclick="quickSearch('Premium Goods')">Premium Goods</button>
     </div>
 
-    <!-- 1. USER INTERFACE MODE PANEL -->
-    <div id="userPanel" class="interface-panel active">
-        <div class="search-wrapper">
-            <img src = "Image_Main_Transp.png" alt = "Main-menu-image" width = "442"> 
-            <div class="search-box-container">
-                <input type="text" id="userQueryInput" class="search-input" placeholder="Enter order ID e.g. (SO-001) or Customer name" onkeypress="handleSearchKeyPress(event)">
-                <button id="searchBtn" class="search-btn" onclick="performSearch()">Search</button>
-            </div>
-            
-            <!-- Result Output Table directly rendered inside the consumer pipeline panel -->
-            <table id="userResultsTable" style="display: none; margin-top: 40px;">
-                <thead>
-                    <tr>
-                        <th>ORDER #</th>
-                        <th>CUSTOMER</th>
-                        <th>AMOUNT ($)</th>
-                        <th>DELIVERY DEADLINE</th>
-                        <!--<th>STOCK STATUS</th>-->
-                        <th>DELIVERY STATUS</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
+    <div id="userResults" class="results" aria-live="polite"></div>
 
+    <div class="hero-art"><svg role="img" aria-label="ITS shipping container" viewBox="0 0 560 380" style="width: 100%; max-width: 640px; height: auto"><path d="M30 300 C 120 360, 250 330, 300 300" fill="none" stroke="#FF6B1A" stroke-width="2.5"></path><circle cx="30" cy="300" r="9" fill="#FFFFFF" stroke="#FF6B1A" stroke-width="3"></circle><path d="M330 70 C 400 20, 480 20, 535 60" fill="none" stroke="#FF6B1A" stroke-width="2.5"></path><circle cx="535" cy="60" r="9" fill="#FFFFFF" stroke="#FF6B1A" stroke-width="3"></circle><path d="M420 26 l22 0 l10 12 l-10 12 l-22 0 z" fill="#FFFFFF" stroke="#FF6B1A" stroke-width="2.5" stroke-linejoin="round"></path><ellipse cx="300" cy="360" rx="230" ry="24" fill="#141414" opacity="0.12"></ellipse><polygon points="70,170 310,90 490,160 250,240" fill="#4A4A4A"></polygon><polygon points="70,170 250,240 250,360 70,290" fill="#1E1E1E"></polygon><polygon points="250,240 490,160 490,280 250,360" fill="#2E2E2E"></polygon><line x1="262" y1="240.0" x2="262" y2="352.0" stroke="#222222" stroke-width="5"></line><line x1="276" y1="235.3" x2="276" y2="347.3" stroke="#222222" stroke-width="5"></line><line x1="290" y1="230.7" x2="290" y2="342.7" stroke="#222222" stroke-width="5"></line><line x1="304" y1="226.0" x2="304" y2="338.0" stroke="#222222" stroke-width="5"></line><line x1="318" y1="221.3" x2="318" y2="333.3" stroke="#222222" stroke-width="5"></line><line x1="332" y1="216.7" x2="332" y2="328.7" stroke="#222222" stroke-width="5"></line><line x1="346" y1="212.0" x2="346" y2="324.0" stroke="#222222" stroke-width="5"></line><line x1="360" y1="207.3" x2="360" y2="319.3" stroke="#222222" stroke-width="5"></line><line x1="374" y1="202.7" x2="374" y2="314.7" stroke="#222222" stroke-width="5"></line><line x1="388" y1="198.0" x2="388" y2="310.0" stroke="#222222" stroke-width="5"></line><line x1="402" y1="193.3" x2="402" y2="305.3" stroke="#222222" stroke-width="5"></line><line x1="416" y1="188.7" x2="416" y2="300.7" stroke="#222222" stroke-width="5"></line><line x1="430" y1="184.0" x2="430" y2="296.0" stroke="#222222" stroke-width="5"></line><line x1="444" y1="179.3" x2="444" y2="291.3" stroke="#222222" stroke-width="5"></line><line x1="458" y1="174.7" x2="458" y2="286.7" stroke="#222222" stroke-width="5"></line><line x1="472" y1="170.0" x2="472" y2="282.0" stroke="#222222" stroke-width="5"></line><line x1="486" y1="165.3" x2="486" y2="277.3" stroke="#222222" stroke-width="5"></line><line x1="82" y1="178.7" x2="82" y2="290.7" stroke="#121212" stroke-width="4"></line><line x1="94" y1="183.3" x2="94" y2="295.3" stroke="#121212" stroke-width="4"></line><line x1="106" y1="188.0" x2="106" y2="300.0" stroke="#121212" stroke-width="4"></line><line x1="118" y1="192.7" x2="118" y2="304.7" stroke="#121212" stroke-width="4"></line><line x1="130" y1="197.3" x2="130" y2="309.3" stroke="#121212" stroke-width="4"></line><line x1="142" y1="202.0" x2="142" y2="314.0" stroke="#121212" stroke-width="4"></line><line x1="154" y1="206.7" x2="154" y2="318.7" stroke="#121212" stroke-width="4"></line><line x1="166" y1="211.3" x2="166" y2="323.3" stroke="#121212" stroke-width="4"></line><line x1="178" y1="216.0" x2="178" y2="328.0" stroke="#121212" stroke-width="4"></line><line x1="190" y1="220.7" x2="190" y2="332.7" stroke="#121212" stroke-width="4"></line><line x1="202" y1="225.3" x2="202" y2="337.3" stroke="#121212" stroke-width="4"></line><line x1="214" y1="230.0" x2="214" y2="342.0" stroke="#121212" stroke-width="4"></line><line x1="226" y1="234.7" x2="226" y2="346.7" stroke="#121212" stroke-width="4"></line><line x1="238" y1="239.3" x2="238" y2="351.3" stroke="#121212" stroke-width="4"></line><line x1="130" y1="201.3" x2="130" y2="305.3" stroke="#FF6B1A" stroke-width="3.5"></line><line x1="190" y1="224.7" x2="190" y2="328.7" stroke="#FF6B1A" stroke-width="3.5"></line><line x1="160" y1="207.0" x2="160" y2="323.0" stroke="#111111" stroke-width="3"></line><polyline points="70,170 250,240 490,160" fill="none" stroke="#5C5C5C" stroke-width="2"></polyline><g transform="translate(290,295) skewY(-18.43)"><rect x="0" y="-46" width="36" height="48" rx="4" fill="#FF6B1A"></rect><text x="48" y="0" font-family="Outfit, Arial, sans-serif" font-weight="800" font-size="52" fill="#FFFFFF">ITS.</text></g><circle cx="70" cy="150" r="44" fill="#FF6B1A"></circle><text x="70" y="146" text-anchor="middle" font-family="Outfit, Arial, sans-serif" font-weight="700" font-size="18" fill="#141414">LIVE</text><text x="70" y="168" text-anchor="middle" font-family="Outfit, Arial, sans-serif" font-weight="500" font-size="13" fill="#141414">status</text></svg></div>
+  </section>
 
-    
-    <!-- 2. ADMIN INTERFACE MODE PANEL -->
-    <div id="adminPanel" class="interface-panel">
-
-        <!-- Title + the only "+ Sales order" button -->
-        <div class="admin-header">
-            <h2 style="margin: 0; color: #1a202c;">Admin Management Dashboard</h2>
-            <div>
-                <button id="salesOrderBtn" class="login-btn" onclick="openOrderModalWindow()">+ Sales order</button>
-                <button id="inventoryBtn" class="login-btn" style="display: none;" onclick="openItemModal()">+ Inventory Item</button>
-            </div>
-        </div>
-    
-        <!-- Switch buttons -->
-        <div class="admin-tabs">
-            <button id="tabOrders" class="admin-tab active" onclick="showAdminTab('orders')">Orders</button>
-            <button id="tabInventory" class="admin-tab" onclick="showAdminTab('inventory')">Inventory</button>
-        </div>
-    
-        <!-- Orders table -->
-        <div id="ordersSection">
-            <table id="ordersTable">
-                <thead>
-                    <tr>
-                        <th>ORDER #</th>
-                        <th>CUSTOMER</th>
-                        <th>AMOUNT ($)</th>
-                        <th>DELIVERY DEADLINE</th>
-                        <th>DELIVERY STATUS</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    
-        <!-- Inventory table -->
-        <div id="inventorySection" style="display: none;">
-            <table id="inventoryTable">
-                <thead>
-                    <tr>
-                        <th>INVENTORY ID</th>
-                        <th>NAME</th>
-                        <th>CATEGORY</th>
-                        <th>QUANTITY</th>
-                        <th>UNIT PRICE ($)</th>
-                        <th>STATUS</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-
-    
-    <!-- Custom Interactive Form Modal Window Container Layout -->
-    <div id="orderModalWindow" class="modal-overlay-container">
-        <div class="modal-card-content">
-            <h3 style="margin-top: 0; color: #1a202c; font-size: 20px; font-weight: 700; margin-bottom: 24px;">Create New Order</h3>
-            
-            <div class="input-form-group">
-                <label class="form-label-text">Customer Name:</label>
-                <input type="text" id="modalCustomerName" class="form-input-box" placeholder="e.g. Bulk Buyers Inc">
-            </div>
-            
-            <div class="input-form-group">
-                <label class="form-label-text">Purchase Amount ($):</label>
-                <input type="number" step="0.01" id="modalPurchaseAmount" class="form-input-box" placeholder="0.00">
-            </div>
-            
-            <div class="input-form-group">
-                <label class="form-label-text">Delivery Date (YYYY-MM-DD):</label>
-                <input type="date" id="modalDeliveryDate" class="form-input-box">
-            </div>
-            
-            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
-                <button class="modal-cancel-btn" onclick="closeOrderModalWindow()">Cancel</button>
-                <!--<button class="modal-submit-btn" onclick="submitModalOrderData()">New Order</button>-->
-                <button id="orderSubmitBtn" class="modal-submit-btn" onclick="submitModalOrderData()">New Order</button>
-            </div>
-        </div>
-    </div>
-
-    <audio id="orderSound" src="Sound.mp3" preload="auto"></audio>
-
-    <!-- Admin Login Modal -->
-    <div id="loginModalWindow" class="modal-overlay-container">
-        <div class="modal-card-content">
-            <h3 style="margin-top: 0; color: #1a202c; font-size: 20px; font-weight: 700; margin-bottom: 24px;">Admin Login</h3>
-    
-            <div class="input-form-group"> 
-                <label class="form-label-text">Login:</label>
-                <input type="text" id="loginUsername" class="form-input-box" autocomplete="username" onkeypress="handleLoginKeyPress(event)">
-            </div>
-    
-            <div class="input-form-group">
-                <label class="form-label-text">Password:</label>
-                <input type="password" id="loginPassword" class="form-input-box" autocomplete="current-password" onkeypress="handleLoginKeyPress(event)">
-            </div>
-    
-            <div id="loginError" style="color: #dc2626; font-size: 14px; min-height: 18px;"></div>
-    
-            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
-                <button class="modal-cancel-btn" onclick="closeLoginModal()">Cancel</button>
-                <!--<button class="modal-submit-btn" onclick="submitLogin()">Login</button>-->
-                <button id="loginSubmitBtn" class="modal-submit-btn" onclick="submitLogin()">Login</button>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModalWindow" class="modal-overlay-container">
-        <div class="modal-card-content">
-            <h3 id="deleteModalText" style="margin: 0; color: #1a202c; font-size: 20px; font-weight: 700; line-height: 1.4;"></h3>
-    
-            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
-                <!--<button class="modal-submit-btn" onclick="confirmDeleteOrder()">Yes</button>-->
-                <button id="deleteConfirmBtn" class="modal-submit-btn" onclick="confirmDeleteOrder()">Yes</button>
-                <button class="modal-cancel-btn" style="background-color: #555; border-color: #555; color: white;" onclick="closeDeleteModal()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-
-    
-    <!-- New Inventory Item window -->
-    <div id="itemModalWindow" class="modal-overlay-container">
-        <div class="modal-card-content">
-            <div class="input-form-group">
-                <label class="form-label-text">Item Name:</label>
-                <input type="text" id="modalItemName" class="form-input-box">
-            </div>
-            <div class="input-form-group">
-                <label class="form-label-text">Item Category:</label>
-                <input type="text" id="modalItemCategory" class="form-input-box">
-            </div>
-            <div class="input-form-group">
-                <label class="form-label-text">Quantity:</label>
-                <input type="number" id="modalItemQuantity" class="form-input-box" min="0" step="1">
-            </div>
-            <div class="input-form-group">
-                <label class="form-label-text">Price ($):</label>
-                <input type="number" id="modalItemPrice" class="form-input-box" min="0" step="0.01">
-            </div>
-            <div id="itemError" style="color: #dc2626; font-size: 14px; min-height: 18px;"></div>
-            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
-                <button class="modal-cancel-btn" onclick="closeItemModal()">Cancel</button>
-                <button id="itemSubmitBtn" class="modal-submit-btn" onclick="submitItemData()">New Item</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Delete inventory item confirmation -->
-    <div id="deleteItemModalWindow" class="modal-overlay-container">
-        <div class="modal-card-content">
-            <h3 id="deleteItemText" style="margin: 0; color: #1a202c; font-size: 20px; line-height: 1.4;"></h3>
-            <div class="modal-action-row" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
-                <button id="deleteItemConfirmBtn" class="modal-submit-btn" onclick="confirmDeleteItem()">Yes</button>
-                <button class="modal-cancel-btn" style="background-color: #555; border-color: #555; color: white;" onclick="closeDeleteItemModal()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="statsOverlay" class="stats-overlay" onclick="if(event.target===this)closeStats()">
-      <div class="stats-modal" role="dialog" aria-modal="true" aria-label="Statistics">
-        <div class="stats-head"><h2>Statistics</h2><button class="stats-close" onclick="closeStats()" aria-label="Close">&times;</button></div>
-        <div class="stats-body">
-          <div class="stats-menu">
-            <small>Which statistic</small>
-            <button class="stats-item active" data-stat="status"    onclick="showStat('status')">Orders per delivery status</button>
-            <button class="stats-item"        data-stat="customers" onclick="showStat('customers')">Top spending customers</button>
-            <button class="stats-item"        data-stat="weekly"    onclick="showStat('weekly')">Orders per week</button>
+  <section class="dark-wrap">
+    <div class="dark">
+      <div class="tech-row" aria-label="Built with"><span>GitHub Pages</span><span>Python API</span><span>MySQL 8.4</span><span>Aiven Cloud</span><span>bcrypt</span><span>HTTPS / TLS</span></div>
+      <div class="split">
+        <div>
+          <div class="art-card"><svg aria-hidden="true" viewBox="0 0 480 420" style="width: 100%; height: 100%"><polygon points="184,190.0 240,162.0 296,190.0 240,218.0" fill="#4A4A4A"></polygon><polygon points="184,190.0 240,218.0 240,274.0 184,246.0" fill="#1A1A1A"></polygon><polygon points="240,218.0 296,190.0 296,246.0 240,274.0" fill="#2B2B2B"></polygon><polygon points="128,218.0 184,190.0 240,218.0 184,246.0" fill="#4A4A4A"></polygon><polygon points="128,218.0 184,246.0 184,302.0 128,274.0" fill="#1A1A1A"></polygon><polygon points="184,246.0 240,218.0 240,274.0 184,302.0" fill="#2B2B2B"></polygon><polygon points="240,218.0 296,190.0 352,218.0 296,246.0" fill="#4A4A4A"></polygon><polygon points="240,218.0 296,246.0 296,302.0 240,274.0" fill="#1A1A1A"></polygon><polygon points="296,246.0 352,218.0 352,274.0 296,302.0" fill="#2B2B2B"></polygon><polygon points="72,246.0 128,218.0 184,246.0 128,274.0" fill="#FF8A4C"></polygon><polygon points="72,246.0 128,274.0 128,330.0 72,302.0" fill="#D9500A"></polygon><polygon points="128,274.0 184,246.0 184,302.0 128,330.0" fill="#FF6B1A"></polygon><polygon points="184,246.0 240,218.0 296,246.0 240,274.0" fill="#4A4A4A"></polygon><polygon points="184,246.0 240,274.0 240,330.0 184,302.0" fill="#1A1A1A"></polygon><polygon points="240,274.0 296,246.0 296,302.0 240,330.0" fill="#2B2B2B"></polygon><polygon points="296,246.0 352,218.0 408,246.0 352,274.0" fill="#FF8A4C"></polygon><polygon points="296,246.0 352,274.0 352,330.0 296,302.0" fill="#D9500A"></polygon><polygon points="352,274.0 408,246.0 408,302.0 352,330.0" fill="#FF6B1A"></polygon><polygon points="128,274.0 184,246.0 240,274.0 184,302.0" fill="#4A4A4A"></polygon><polygon points="128,274.0 184,302.0 184,358.0 128,330.0" fill="#1A1A1A"></polygon><polygon points="184,302.0 240,274.0 240,330.0 184,358.0" fill="#2B2B2B"></polygon><polygon points="240,274.0 296,246.0 352,274.0 296,302.0" fill="#4A4A4A"></polygon><polygon points="240,274.0 296,302.0 296,358.0 240,330.0" fill="#1A1A1A"></polygon><polygon points="296,302.0 352,274.0 352,330.0 296,358.0" fill="#2B2B2B"></polygon><polygon points="184,302.0 240,274.0 296,302.0 240,330.0" fill="#FF8A4C"></polygon><polygon points="184,302.0 240,330.0 240,386.0 184,358.0" fill="#D9500A"></polygon><polygon points="240,330.0 296,302.0 296,358.0 240,386.0" fill="#FF6B1A"></polygon><polygon points="184,134.0 240,106.0 296,134.0 240,162.0" fill="#4A4A4A"></polygon><polygon points="184,134.0 240,162.0 240,218.0 184,190.0" fill="#1A1A1A"></polygon><polygon points="240,162.0 296,134.0 296,190.0 240,218.0" fill="#2B2B2B"></polygon><polygon points="128,162.0 184,134.0 240,162.0 184,190.0" fill="#4A4A4A"></polygon><polygon points="128,162.0 184,190.0 184,246.0 128,218.0" fill="#1A1A1A"></polygon><polygon points="184,190.0 240,162.0 240,218.0 184,246.0" fill="#2B2B2B"></polygon><polygon points="240,162.0 296,134.0 352,162.0 296,190.0" fill="#FF8A4C"></polygon><polygon points="240,162.0 296,190.0 296,246.0 240,218.0" fill="#D9500A"></polygon><polygon points="296,190.0 352,162.0 352,218.0 296,246.0" fill="#FF6B1A"></polygon><polygon points="184,190.0 240,162.0 296,190.0 240,218.0" fill="#FF8A4C"></polygon><polygon points="184,190.0 240,218.0 240,274.0 184,246.0" fill="#D9500A"></polygon><polygon points="240,218.0 296,190.0 296,246.0 240,274.0" fill="#FF6B1A"></polygon><polygon points="184,78.0 240,50.0 296,78.0 240,106.0" fill="#FF8A4C"></polygon><polygon points="184,78.0 240,106.0 240,162.0 184,134.0" fill="#D9500A"></polygon><polygon points="240,106.0 296,78.0 296,134.0 240,162.0" fill="#FF6B1A"></polygon></svg></div>
+          <div class="mini-row">
+            <div class="mini"><b>3</b><span>statuses, one simple route</span></div>
+            <div class="mini-star" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 100 100"><g stroke="#FF6B1A" stroke-width="14" stroke-linecap="round"><line x1="50" y1="10" x2="50" y2="90"/><line x1="15" y1="30" x2="85" y2="70"/><line x1="85" y1="30" x2="15" y2="70"/></g></svg></div>
           </div>
-          <div class="stats-main" id="statsMain"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <h2 class="section-title"><span class="o">No calls.</span> Order Tracking For Small Shops</h2>
+          <p class="muted-text">ITS keeps orders, customers, items and stock in one cloud database. Customers check their order themselves; the shop updates it in one click.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <a class="btn btn-orange" href="#track" onclick="focusSearch()">Track an order</a>
+            <button class="btn btn-ghost-dark" type="button" onclick="openLoginModal()">Admin login</button>
+          </div>
         </div>
       </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    
-    <!-- Execution Script bindings -->
-    <script>
+  </section>
 
-        let statsChart = null, statsOrdersCache = null;
-        
-        function openStats() {
-          document.getElementById("statsOverlay").classList.add("open");
-          showStat("status");
-        }
-        function closeStats() {
-          document.getElementById("statsOverlay").classList.remove("open");
-          if (statsChart) { statsChart.destroy(); statsChart = null; }
-        }
-        document.addEventListener("keydown", e => { if (e.key === "Escape") closeStats(); });
-        
-        async function statsGetOrders(force) {
-          if (statsOrdersCache && !force) return statsOrdersCache;
-          const res = await fetch(`${API_URL}/orders`);
-          if (!res.ok) throw new Error("Orders request failed (" + res.status + ")");
-          statsOrdersCache = await res.json();
-          return statsOrdersCache;
-        }
-        
-        function statsPaint(title, sub, type, labels, values, datasetLabel, tableHead, rows) {
-          const main = document.getElementById("statsMain");
-          main.innerHTML =
-            `<h3>${title}</h3><p class="sub">${sub}</p>
-             <div class="stats-chart-box"><canvas id="statsCanvas"></canvas></div>
-             <table class="stats-table"><thead><tr>${tableHead.map(h => `<th>${h}</th>`).join("")}</tr></thead>
-             <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
-          if (statsChart) statsChart.destroy();
-          const palette = ["#2563eb","#f59e0b","#10b981","#ef4444","#8b5cf6","#0ea5e9","#64748b","#ec4899"];
-          const isPie = type === "doughnut";
-          statsChart = new Chart(document.getElementById("statsCanvas"), {
-            type,
-            data: { labels, datasets: [{ label: datasetLabel, data: values,
-              backgroundColor: isPie ? palette : "#2563eb",
-              borderColor: type === "line" ? "#2563eb" : "#ffffff",
-              borderWidth: type === "line" ? 3 : 1, tension: .3, fill: false,
-              pointRadius: type === "line" ? 4 : 0, borderRadius: type === "bar" ? 6 : 0 }] },
-            options: { responsive: true, maintainAspectRatio: false,
-              indexAxis: type === "bar" ? "y" : "x",
-              plugins: { legend: { display: isPie, position: "right" } },
-              scales: isPie ? {} : { x: { beginAtZero: true, ticks: { precision: 0 } }, y: { beginAtZero: true, ticks: { precision: 0 } } } }
-          });
-        }
-        
-        async function showStat(name) {
-          document.querySelectorAll(".stats-item").forEach(b => b.classList.toggle("active", b.dataset.stat === name));
-          const main = document.getElementById("statsMain");
-          main.innerHTML = `<div class="stats-msg">Loading...</div>`;
-          try {
-            if (name === "status") {
-              const orders = await statsGetOrders(true);
-              const order = ["Accepted","Packed","Shipped","Delivering","Delivered"];
-              const counts = {};
-              orders.forEach(o => { const s = o.delivery_status || "Accepted"; counts[s] = (counts[s] || 0) + 1; });
-              const labels = Object.keys(counts).sort((a,b) => (order.indexOf(a)+99)%99 - (order.indexOf(b)+99)%99);
-              const values = labels.map(l => counts[l]);
-              statsPaint("Orders per delivery status", `${orders.length} orders in total`, "doughnut",
-                labels, values, "Orders", ["Status","Orders","Share"],
-                labels.map((l,i) => [l, values[i], (100*values[i]/orders.length).toFixed(1) + "%"]));
-            } else if (name === "customers") {
-              const orders = await statsGetOrders(false);
-              const sums = {};
-              orders.forEach(o => { const c = o.customer || "Unknown"; sums[c] = (sums[c] || 0) + Number(o.amount || 0); });
-              const top = Object.entries(sums).sort((a,b) => b[1]-a[1]).slice(0, 8);
-              statsPaint("Top spending customers", "Total order amount per customer (USD), top 8", "bar",
-                top.map(t => t[0]), top.map(t => Math.round(t[1]*100)/100), "Total ($)", ["Customer","Total spent ($)"],
-                top.map(t => [t[0], "$" + t[1].toFixed(2)]));
-            } else if (name === "weekly") {
-              const res = await fetch(`${API_URL}/stats/orders-per-week`);
-              if (!res.ok) throw new Error("Weekly stats need the new backend route (HTTP " + res.status + ")");
-              const rows = await res.json();   // [{week_start:"2026-10-26", orders: 7}, ...]
-              statsPaint("Orders per week", "Number of orders created each week (weeks start on Monday)", "line",
-                rows.map(r => r.week_start), rows.map(r => Number(r.orders)), "Orders", ["Week starting","Orders"],
-                rows.map(r => [r.week_start, r.orders]));
-            }
-          } catch (err) {
-            console.error(err);
-            main.innerHTML = `<div class="stats-msg">Could not load this statistic.<br><small>${err.message}</small></div>`;
-          }
-        }
-        
-        const API_URL = "https://inventory-backend-1-md7r.onrender.com";
-        let currentRole = "User"; // Standard default state rule parameter
+  <section id="journey" class="container section">
+    <div class="center">
+      <h2 class="section-title">The Journey Of<br>Every Order</h2>
+    </div>
+    <div class="journey">
+      <div class="j-card">
+        <svg aria-hidden="true" width="120" height="120" viewBox="0 0 64 64"><path d="M6 28L32 12L58 28V56H6Z" fill="none" stroke="#FF6B1A" stroke-width="3" stroke-linejoin="round"/><rect x="20" y="36" width="10" height="10" fill="#FF6B1A"/><rect x="32" y="36" width="10" height="10" fill="#fff"/><rect x="26" y="25" width="10" height="10" fill="#FF6B1A"/></svg>
+        <div class="j-foot"><span><small>Step 1</small><b>Accepted</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
+      </div>
+      <div class="j-card orange">
+        <svg aria-hidden="true" width="140" height="120" viewBox="0 0 72 56"><path d="M4 12H42V40H4ZM42 22H56L66 32V40H42" fill="none" stroke="#141414" stroke-width="3" stroke-linejoin="round"/><circle cx="16" cy="44" r="6" fill="#141414"/><circle cx="54" cy="44" r="6" fill="#141414"/></svg>
+        <div class="j-foot"><span><small>Step 2</small><b>Delivering</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
+      </div>
+      <div class="j-card">
+        <svg aria-hidden="true" width="120" height="120" viewBox="0 0 64 64"><rect x="14" y="6" width="36" height="52" rx="3" fill="none" stroke="#FF6B1A" stroke-width="3"/><circle cx="42" cy="32" r="2.5" fill="#fff"/><path d="M22 20L28 26L40 14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="j-foot"><span><small>Step 3</small><b>Shipped</b></span><span class="circle-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 4L12 12M12 5V12H5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span></div>
+      </div>
+    </div>
+  </section>
 
-        // NEW: This function runs automatically every time the page loads or refreshes
-        function checkPersistentLogin() {
-            const savedRole = localStorage.getItem("userRole");
-            
-            if (savedRole === "Admin") {
-                // If the browser remembers you were an Admin, restore the Admin interface instantly
-                currentRole = "Admin";
-                document.getElementById("authBtn").style.display = "none";
-                document.getElementById("logoutBtn").style.display = "block";
-                //document.getElementById("salesOrderBtn").style.visibility = "visible";
-                document.getElementById("userPanel").classList.remove("active");
-                document.getElementById("adminPanel").classList.add("active");
-                loadAdminTableRecords();
-            } else {
-                // Otherwise, keep the standard clean User search view
-                triggerLogout();
-            }
-        }
+  <section id="tutorial" class="container section">
+    <div class="center">
+      <span class="tag">Tutorial</span>
+      <h2 class="section-title">Learn ITS <span class="o">Step By Step</span></h2>
+      <p style="margin:0;max-width:560px;font-size:17px;line-height:1.6;color:var(--grey)">Watch the video or follow the guides. Customers need one minute; admins, a few more.</p>
+    </div>
+    <div class="tutorial-grid">
+      <div class="player" id="player">
+        <div class="player-ui" id="playerUi">
+          <div class="player-glow" aria-hidden="true"></div>
+          <div class="player-top"><span id="chapterBadge">Chapter 1 of 4</span><span>ITS video tutorial</span></div>
+          <div class="player-mid">
+            <button class="play-btn" id="playBtn" type="button" onclick="playTutorial()" aria-label="Play video">
+              <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24"><path d="M8 5L19 12L8 19Z" fill="#fff"/></svg>
+            </button>
+            <strong id="chapterTitle">Find your order</strong>
+          </div>
+          <div class="player-bottom">
+            <div class="progress" id="chapterProgress"><span class="on"></span><span></span><span></span><span></span></div>
+            <p id="chapterText"></p>
+          </div>
+        </div>
+      </div>
+      <div class="chapters" id="chapters" role="list"></div>
+    </div>
 
-        function setButtonLoading(btn, isLoading, loadingText) {
-            if (isLoading) {
-                btn.dataset.originalText = btn.textContent;
-                btn.disabled = true;
-                btn.innerHTML = `<span class="spinner"></span>${loadingText}`;
-            } else {
-                btn.disabled = false;
-                btn.textContent = btn.dataset.originalText;
-            }
-        }
+    <div class="center" style="margin-top:72px">
+      <h3 class="section-title" style="font-size:clamp(28px,3vw,38px)">Step-By-Step Guides</h3>
+      <div class="tabs" role="tablist" aria-label="Guide">
+        <button class="tab active" role="tab" aria-selected="true" id="tabCustomer" onclick="showGuide('customer')">For customers</button>
+        <button class="tab" role="tab" aria-selected="false" id="tabAdmin" onclick="showGuide('admin')">For admins</button>
+      </div>
+    </div>
+    <div class="steps" id="guideSteps"></div>
+  </section>
 
-        function openLoginModal() {
-            document.getElementById("loginUsername").value = "";
-            document.getElementById("loginPassword").value = "";
-            document.getElementById("loginError").textContent = "";
-            document.getElementById("loginModalWindow").classList.add("is-visible");
-            document.getElementById("loginUsername").focus();
-        }
-        
-        function closeLoginModal() {
-            document.getElementById("loginModalWindow").classList.remove("is-visible");
-        }
-        
-        function handleLoginKeyPress(event) {
-            if (event.key === "Enter") submitLogin();
-        }
-        
-        function submitLogin() {
-            const userVal = document.getElementById("loginUsername").value.trim();
-            const passVal = document.getElementById("loginPassword").value;
-            const errorBox = document.getElementById("loginError");
-            const btn = document.getElementById("loginSubmitBtn");          // NEW
-        
-            if (btn.disabled) return;                                       // NEW (blocks double submit, e.g. Enter key)
-            if (!userVal || !passVal) {
-                errorBox.textContent = "Please enter your login and password.";
-                return;
-            }
+  <section id="faq" class="container section">
+    <div class="center"><h2 class="section-title">Questions <span class="o">&amp; Answers</span></h2></div>
+    <div class="faq">
+      <details open><summary>Do I need an account to track my order?</summary><p>No. Customers only need the order number or company name. Accounts are for shop admins.</p></details>
+      <details><summary>Where do I find my order number?</summary><p>It is on your receipt or invoice and looks like SO-001.</p></details>
+      <details><summary>What do the three statuses mean?</summary><p>Accepted: the shop has your order. Delivering: it is on the way. Shipped: it was delivered.</p></details>
+      <details><summary>My order is past its deadline. What now?</summary><p>Contact the shop with your order number. Late orders are highlighted for the admin too.</p></details>
+      <details><summary>Can other people see my details?</summary><p>The public search shows only order number, customer, amount, deadline and status. Passwords are hashed and all traffic is encrypted.</p></details>
+    </div>
+  </section>
 
-            errorBox.textContent = "";                                      // NEW
-            setButtonLoading(btn, true, "Logging in...");                   // NEW
+  <section class="container section">
+    <div class="cta">
+      <div style="flex:999 1 380px;display:flex;flex-direction:column;gap:14px">
+        <h2 class="section-title">Track Your Order<br>In Seconds</h2>
+        <p class="muted-text" style="font-size:16px">Type your order number and press Track now.</p>
+      </div>
+      <form class="quick" onsubmit="event.preventDefault(); quickSearch(document.getElementById('quickInput').value);">
+        <b>Quickly Track Your Order</b>
+        <label for="quickInput" class="sr-only">Order ID or customer name</label>
+        <input id="quickInput" type="text" placeholder="Enter your order ID" autocomplete="off">
+        <button class="btn btn-orange" type="submit">Track now</button>
+      </form>
+    </div>
+  </section>
 
-            
-        
-            fetch(`${API_URL}/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username: userVal, password: passVal })
-            })
-            .then(res => {
-                if (!res.ok) throw new Error("Unauthorized credentials error");
-                return res.json();
-            })
-            .then(data => {
-                currentRole = "Admin";
-                localStorage.setItem("userRole", "Admin");
-        
-                closeLoginModal();
-                showAdminTab("orders");
-                document.getElementById("authBtn").style.display = "none";
-                document.getElementById("logoutBtn").style.display = "block";
-                document.getElementById("userPanel").classList.remove("active");
-                document.getElementById("adminPanel").classList.add("active");
-                //loadAdminTableRecords();
-            })
-            .catch(err => {
-                errorBox.textContent = "Invalid login or password.";
-            })
-            .finally(() => setButtonLoading(btn, false));                   // NEW
-        }
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <span><b style="color:var(--ink)">ITS<span style="color:var(--orange)">.</span></b> · Team ITS · ICT Final Project 2026</span>
+      <span>Kenzhebek Aspandiyar · Kaziev Alinur · Mukhatay Askar</span>
+    </div>
+  </footer>
+</main>
 
-        function triggerLogout() {
-            currentRole = "User";
+<!-- ================= 2. ADMIN INTERFACE ================= -->
+<main id="adminPanel" class="interface-panel">
+  <div class="container admin-wrap">
+    <div class="admin-head">
+      <div>
+        <small id="todayLabel"></small>
+        <h1>Admin <span>Dashboard</span></h1>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <button class="btn btn-ghost" type="button" onclick="openStats()">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Statistics
+        </button>
+        <button id="salesOrderBtn" class="btn btn-orange" type="button" onclick="openOrderModalWindow()">+ Sales order</button>
+        <button id="inventoryBtn" class="btn btn-orange" type="button" style="display:none" onclick="openItemModal()">+ Inventory item</button>
+      </div>
+    </div>
 
-            localStorage.removeItem("userRole");
-            
-            document.getElementById("authBtn").style.display = "block";
-            document.getElementById("logoutBtn").style.display = "none";
-            document.getElementById("adminPanel").classList.remove("active");
-            document.getElementById("userPanel").classList.add("active");
-            document.getElementById("userResultsTable").style.display = "none";
-            document.getElementById("userQueryInput").value = "";
-        }
+    <div class="kpis" id="kpis">
+      <div class="kpi"><span>All orders</span><b id="kpiTotal">–</b></div>
+      <div class="kpi"><span>In progress</span><b id="kpiOpen">–</b></div>
+      <div class="kpi orange"><span>Value in progress</span><b id="kpiValue">–</b></div>
+      <div class="kpi dark"><span>Past deadline</span><b id="kpiLate">–</b></div>
+    </div>
 
-        // Modified: Ensure BOTH loadAdminTableRecords and checkPersistentLogin run smoothly
-        document.addEventListener("DOMContentLoaded", () => {
-            checkPersistentLogin(); // Natively restores session on page launch or reload actions
-        });
+    <div class="toolbar">
+      <div class="admin-tabs" role="tablist">
+        <button id="tabOrders" class="admin-tab active" role="tab" onclick="showAdminTab('orders')">Orders</button>
+        <button id="tabInventory" class="admin-tab" role="tab" onclick="showAdminTab('inventory')">Inventory</button>
+      </div>
+      <div class="filters" id="orderFilters">
+        <button class="filter active" data-f="All" onclick="setFilter('All')">All</button>
+        <button class="filter" data-f="Accepted" onclick="setFilter('Accepted')">Accepted</button>
+        <button class="filter" data-f="Delivering" onclick="setFilter('Delivering')">Delivering</button>
+        <button class="filter" data-f="Shipped" onclick="setFilter('Shipped')">Shipped</button>
+        <button class="filter" data-f="Late" onclick="setFilter('Late')">Past deadline</button>
+        <label class="table-search"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#5C5C5C" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="#5C5C5C" stroke-width="2.2" stroke-linecap="round"/></svg><span class="sr-only">Filter orders</span><input id="adminFilterInput" type="text" placeholder="Filter by ID or customer" oninput="renderOrders()"></label>
+      </div>
+    </div>
 
-        function handleSearchKeyPress(event) {
-            if (event.key === "Enter") performSearch();
-        }
-        
-        function performSearch() {
-            const searchVal = document.getElementById("userQueryInput").value.trim();
-            const btn = document.getElementById("searchBtn");
-            if (!searchVal || btn.disabled) return;
-        
-            setButtonLoading(btn, true, "Searching...");
-        
-            fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
-            .then(res => {
-                if (!res.ok) throw new Error("Server error " + res.status);
-                return res.json();
-            })
-            .then(orders => {
-                const tbody = document.querySelector("#userResultsTable tbody");
-                tbody.innerHTML = "";
-        
-                if (!Array.isArray(orders) || orders.length === 0) {
-                    alert("No transaction records found matching your input parameters.");
-                    document.getElementById("userResultsTable").style.display = "none";
-                    return;
-                }
-        
-                orders.forEach(order => {
-                    const delivery = order.delivery_status || "Accepted";
-                    const deliveryClass = delivery.toLowerCase().replace(" ", "-");
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
-                        <td>${order.customer}</td>
-                        <td>$${Number(order.amount).toFixed(2)}</td>
-                        <td>${order.deadline || "No Deadline"}</td>
-                        <td><div class="status ${deliveryClass}">${delivery}</div></td>
-                    `;
-                    tbody.appendChild(row);
-                });
-                document.getElementById("userResultsTable").style.display = "table";
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Search failed: " + err.message);
-            })
-            .finally(() => setButtonLoading(btn, false));
-        }
-        
-        // Pulls full operational tracking data for the admin management console panel view
-        function loadAdminTableRecords() {
-            // koko
-            document.querySelector("#ordersTable tbody").innerHTML =
-                `<tr><td colspan="5" style="text-align:center; color:#64748b; padding:24px;"><span class="spinner spinner-dark"></span>Loading orders...</td></tr>`;
-            // koko
-            fetch(`${API_URL}/orders`)
-            .then(res => res.json())
-            .then(orders => {
-                const tbody = document.querySelector("#ordersTable tbody");
-                tbody.innerHTML = "";
-                orders.forEach(order => {
-                    const currentStatus = order.delivery_status || "Accepted";
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td style="color: #0043a4; font-weight: 600;">${order.order_number}</td>
-                        <td>${order.customer}</td>
-                        <td>$${Number(order.amount).toFixed(2)}</td>
-                        <td>${order.deadline || "No Deadline"}</td>
-                        <td>
-                            <div class="delivery-cell-container">
-                                <select class="status-dropdown" onchange="changeOrderDeliveryStatus('${order.order_number}', this.value)">
-                                    <option value="Accepted" ${currentStatus === "Accepted" ? "selected" : ""}>Accepted</option>
-                                    <option value="Delivering" ${currentStatus === "Delivering" ? "selected" : ""}>Delivering</option>
-                                    <option value="Shipped" ${currentStatus === "Shipped" ? "selected" : ""}>Shipped</option>
-                                </select>
-                                <button class="trash-delete-btn" title="Delete Row" onclick="deleteOrder('${order.order_number}')">
-                                    <svg width="14" height="16" viewBox="0 0 448 512" fill="currentColor"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            });
-        }
+    <div id="ordersSection" class="table-card">
+      <div class="table-scroll">
+        <table id="ordersTable">
+          <thead><tr><th>ORDER #</th><th>CUSTOMER</th><th>AMOUNT ($)</th><th>DELIVERY DEADLINE</th><th>DELIVERY STATUS</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
 
+    <div id="inventorySection" class="table-card" style="display:none">
+      <div class="table-scroll">
+        <table id="inventoryTable">
+          <thead><tr><th>INVENTORY ID</th><th>NAME</th><th>CATEGORY</th><th>QUANTITY</th><th>UNIT PRICE ($)</th><th>STATUS</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
 
-        async function changeOrderDeliveryStatus(orderNumber, newStatus) {
-            try {
-                const response = await fetch(`${API_URL}/orders/${orderNumber}/status`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ delivery_status: newStatus })
-                });
-                if (!response.ok) throw new Error("Status update operation failed.");
-            } catch (err) {
-                console.error(err);
-                alert("Error saving status change: " + err.message);
-            }
-        }
+<!-- ================= MODALS ================= -->
+<div id="loginModalWindow" class="modal-overlay-container" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="modal-card-content">
+    <span class="tag" style="margin-bottom:12px">Admin only</span>
+    <h3 id="loginTitle">Welcome back</h3>
+    <p class="sub">Log in to manage orders and inventory.</p>
+    <form onsubmit="event.preventDefault(); submitLogin();">
+      <div class="input-form-group">
+        <label class="form-label-text" for="loginUsername">Login</label>
+        <input type="text" id="loginUsername" class="form-input-box" autocomplete="username">
+      </div>
+      <div class="input-form-group">
+        <label class="form-label-text" for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" class="form-input-box" autocomplete="current-password">
+      </div>
+      <div id="loginError" class="form-error" role="alert"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeLoginModal()">Cancel</button>
+        <button type="submit" id="loginSubmitBtn" class="btn btn-orange">Log in</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-        let orderPendingDelete = null;   // remembers which order the admin clicked
+<div id="orderModalWindow" class="modal-overlay-container" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
+  <div class="modal-card-content">
+    <span class="tag" style="margin-bottom:12px">Starts as Accepted</span>
+    <h3 id="orderTitle">New sales order</h3>
+    <p class="sub">The customer can find it right after you save.</p>
+    <form onsubmit="event.preventDefault(); submitModalOrderData();">
+      <div class="input-form-group">
+        <label class="form-label-text" for="modalCustomerName">Customer name</label>
+        <input type="text" id="modalCustomerName" class="form-input-box" placeholder="e.g. Bulk Buyers Inc">
+      </div>
+      <div class="form-row">
+        <div class="input-form-group">
+          <label class="form-label-text" for="modalPurchaseAmount">Amount ($)</label>
+          <input type="number" step="0.01" min="0" id="modalPurchaseAmount" class="form-input-box" placeholder="0.00">
+        </div>
+        <div class="input-form-group">
+          <label class="form-label-text" for="modalDeliveryDate">Delivery date</label>
+          <input type="date" id="modalDeliveryDate" class="form-input-box">
+        </div>
+      </div>
+      <div id="orderError" class="form-error" role="alert"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeOrderModalWindow()">Cancel</button>
+        <button type="submit" id="orderSubmitBtn" class="btn btn-orange">Save order</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-        // Called by the trash icon: only opens the window, doesn't delete yet
-        function deleteOrder(orderNumber) {
-            orderPendingDelete = orderNumber;
-            document.getElementById("deleteModalText").textContent =
-                `Are you sure you want to permanently delete order entry ${orderNumber}?`;
-            document.getElementById("deleteModalWindow").classList.add("is-visible");
-        }
-        
-        function closeDeleteModal() {
-            document.getElementById("deleteModalWindow").classList.remove("is-visible");
-            orderPendingDelete = null;
-        }
+<div id="deleteModalWindow" class="modal-overlay-container" role="alertdialog" aria-modal="true" aria-labelledby="deleteModalText">
+  <div class="modal-card-content">
+    <h3 id="deleteModalText"></h3>
+    <p class="sub">The customer will no longer find this order. This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeDeleteModal()">Keep order</button>
+      <button id="deleteConfirmBtn" class="btn btn-dark" onclick="confirmDeleteOrder()">Delete</button>
+    </div>
+  </div>
+</div>
 
-        async function confirmDeleteOrder() {
-            if (!orderPendingDelete) return;
-            const btn = document.getElementById("deleteConfirmBtn");
-            if (btn.disabled) return;
-            const orderNumber = orderPendingDelete;
-        
-            setButtonLoading(btn, true, "Deleting...");
-            try {
-                const response = await fetch(`${API_URL}/orders/${orderNumber}`, { method: "DELETE" });
-                if (!response.ok) throw new Error("Deletion request error.");
-                closeDeleteModal();
-                loadAdminTableRecords();
-            } catch (err) {
-                closeDeleteModal();
-                alert("Error deleting entry: " + err.message);
-            } finally {
-                setButtonLoading(btn, false);
-            }
-        }
+<div id="itemModalWindow" class="modal-overlay-container" role="dialog" aria-modal="true" aria-labelledby="itemTitle">
+  <div class="modal-card-content">
+    <h3 id="itemTitle">New inventory item</h3>
+    <p class="sub">Add a product to the stock list.</p>
+    <form onsubmit="event.preventDefault(); submitItemData();">
+      <div class="input-form-group"><label class="form-label-text" for="modalItemName">Item name</label><input type="text" id="modalItemName" class="form-input-box"></div>
+      <div class="input-form-group"><label class="form-label-text" for="modalItemCategory">Category</label><input type="text" id="modalItemCategory" class="form-input-box"></div>
+      <div class="form-row">
+        <div class="input-form-group"><label class="form-label-text" for="modalItemQuantity">Quantity</label><input type="number" id="modalItemQuantity" class="form-input-box" min="0" step="1"></div>
+        <div class="input-form-group"><label class="form-label-text" for="modalItemPrice">Price ($)</label><input type="number" id="modalItemPrice" class="form-input-box" min="0" step="0.01"></div>
+      </div>
+      <div id="itemError" class="form-error" role="alert"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeItemModal()">Cancel</button>
+        <button type="submit" id="itemSubmitBtn" class="btn btn-orange">Save item</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-        // Opens the modal box layout and pre-fills current date as target
-        function openOrderModalWindow() {
-            document.getElementById("modalCustomerName").value = "";
-            document.getElementById("modalPurchaseAmount").value = "";
-            // Pre-fill with a placeholder date sequence
-            document.getElementById("modalDeliveryDate").value = new Date().toISOString().split('T')[0];
-            
-            document.getElementById("orderModalWindow").classList.add("is-visible");
-        }
-        
-        // Closes the modal card layer
-        function closeOrderModalWindow() {
-            document.getElementById("orderModalWindow").classList.remove("is-visible");
-        }
-        
-        // Rewired Submission function collecting parameters straight from the modal DOM properties
-        async function submitModalOrderData() {
-            const customer = document.getElementById("modalCustomerName").value.trim();
-            const amountInput = document.getElementById("modalPurchaseAmount").value;
-            const deadline = document.getElementById("modalDeliveryDate").value;
+<div id="deleteItemModalWindow" class="modal-overlay-container" role="alertdialog" aria-modal="true" aria-labelledby="deleteItemText">
+  <div class="modal-card-content">
+    <h3 id="deleteItemText"></h3>
+    <p class="sub">This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeDeleteItemModal()">Keep item</button>
+      <button id="deleteItemConfirmBtn" class="btn btn-dark" onclick="confirmDeleteItem()">Delete</button>
+    </div>
+  </div>
+</div>
 
-            const btn = document.getElementById("orderSubmitBtn");
-            if (btn.disabled) return;
-        
-            if (!customer || !amountInput || !deadline) {
-                alert("Please fill out all operational input fields correctly.");
-                return;
-            }
-        
-            const amount = parseFloat(amountInput);
-            if (isNaN(amount) || amount <= 0) {
-                alert("Invalid input parameters: Please enter a valid payment balance.");
-                return;
-            }
-        
-            const delivery_status = "Accepted"; 
-            const stock_status = "In stock";
+<div id="statsOverlay" class="stats-overlay" onclick="if(event.target===this)closeStats()">
+  <div class="stats-modal" role="dialog" aria-modal="true" aria-label="Statistics">
+    <div class="stats-head"><h2>Statistics</h2><button class="icon-btn" onclick="closeStats()" aria-label="Close">✕</button></div>
+    <div class="stats-body">
+      <div class="stats-menu">
+        <small>Which statistic</small>
+        <button class="stats-item active" data-stat="status" onclick="showStat('status')">Orders per delivery status</button>
+        <button class="stats-item" data-stat="customers" onclick="showStat('customers')">Top spending customers</button>
+        <button class="stats-item" data-stat="weekly" onclick="showStat('weekly')">Orders per week</button>
+      </div>
+      <div class="stats-main" id="statsMain"></div>
+    </div>
+  </div>
+</div>
 
-            setButtonLoading(btn, true, "Saving...");   // start spinner only after validation passed
-        
-            try {
-                const response = await fetch(`${API_URL}/orders`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ customer, amount, deadline, stock_status, delivery_status })
-                });
-        
-                if (!response.ok) throw new Error("Submission transaction rejected by Cloud Database API.");
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<audio id="orderSound" src="Sound.mp3" preload="auto"></audio>
 
-                const sound = document.getElementById("orderSound");
-                sound.volume = 0.3;
-                sound.currentTime = 0;
-                sound.play().catch(() => {});
-                
-                //alert("Order logged successfully inside cloud infrastructure database tables.");
-                closeOrderModalWindow(); // Close overlay layout
-                loadAdminTableRecords(); // Dynamically draw the updated row entries grid
-            } catch (err) { 
-                alert("Error saving transaction order: " + err.message); 
-            } finally {                                                     // NEW
-                setButtonLoading(btn, false);                               // NEW 
-            }
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+/* ====================== CONFIG ====================== */
+const API_URL = "https://inventory-backend-1-md7r.onrender.com";
+// Paste a YouTube embed link here when the tutorial video is ready, e.g. "https://www.youtube.com/embed/VIDEO_ID"
+const TUTORIAL_VIDEO_URL = "";
 
-    function showAdminTab(tab) {
-        const isOrders = tab === "orders";
-        document.getElementById("ordersSection").style.display = isOrders ? "block" : "none";
-        document.getElementById("inventorySection").style.display = isOrders ? "none" : "block";
-        document.getElementById("tabOrders").classList.toggle("active", isOrders);
-        document.getElementById("tabInventory").classList.toggle("active", !isOrders);
-        document.getElementById("salesOrderBtn").style.display = isOrders ? "" : "none";
-        document.getElementById("inventoryBtn").style.display = isOrders ? "none" : "";
-    
-        if (isOrders) loadAdminTableRecords(); else loadInventory();
+let currentRole = "User";
+let ordersCache = [];
+let orderFilter = "All";
+
+/* ====================== HELPERS ====================== */
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function fmtDate(v) {
+  if (!v) return "";
+  if (/^\d{4}-\d{2}-\d{2}/.test(v)) return String(v).slice(0, 10);
+  const d = new Date(v);
+  return isNaN(d) ? String(v) : d.toISOString().slice(0, 10);
+}
+function todayISO() { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
+function isLate(o) { const dl = fmtDate(o.deadline); return !!dl && (o.delivery_status || "Accepted") !== "Shipped" && dl < todayISO(); }
+function money(n) { return "$" + Number(n || 0).toFixed(2); }
+function pillClass(s) {
+  return { Accepted: "pill-accepted", Delivering: "pill-delivering", Shipped: "pill-shipped" }[s] || "pill-other";
+}
+let toastTimer = null;
+function showToast(msg, isError) {
+  const t = document.getElementById("toast");
+  t.className = "toast show" + (isError ? " error" : "");
+  t.innerHTML = (isError ? "" : '<span class="dot">✓</span>') + esc(msg);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3200);
+}
+function setButtonLoading(btn, isLoading, loadingText) {
+  if (isLoading) {
+    btn.dataset.originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner"></span>${esc(loadingText)}`;
+  } else {
+    btn.disabled = false;
+    if (btn.dataset.originalHtml) btn.innerHTML = btn.dataset.originalHtml;
+  }
+}
+function openModal(id) { document.getElementById(id).classList.add("is-visible"); }
+function closeModal(id) { document.getElementById(id).classList.remove("is-visible"); }
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  closeStats();
+  document.querySelectorAll(".modal-overlay-container.is-visible").forEach(m => m.classList.remove("is-visible"));
+});
+function focusSearch() { setTimeout(() => document.getElementById("userQueryInput").focus(), 300); }
+function goHome(e) { if (e) e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+/* ====================== AUTH FETCH ====================== */
+// Sends the admin token (if the server gave one) with every change request.
+async function authFetch(url, opts = {}) {
+  const token = localStorage.getItem("adminToken");
+  const headers = Object.assign({}, opts.headers || {});
+  if (token) headers["Authorization"] = "Bearer " + token;
+  const res = await fetch(url, Object.assign({}, opts, { headers }));
+  if (res.status === 401 && currentRole === "Admin") {
+    triggerLogout(true);
+    showToast("Your session has expired. Please log in again.", true);
+    openLoginModal();
+    throw new Error("Session expired");
+  }
+  return res;
+}
+
+/* ====================== SESSION ====================== */
+function setAdminChrome(isAdmin) {
+  document.getElementById("authBtn").style.display = isAdmin ? "none" : "";
+  document.getElementById("trackTopBtn").style.display = isAdmin ? "none" : "";
+  document.getElementById("logoutBtn").style.display = isAdmin ? "" : "none";
+  document.getElementById("adminBadge").style.display = isAdmin ? "inline-flex" : "none";
+  document.getElementById("userNav").style.display = isAdmin ? "none" : "";
+  document.getElementById("userPanel").classList.toggle("active", !isAdmin);
+  document.getElementById("adminPanel").classList.toggle("active", isAdmin);
+}
+function checkPersistentLogin() {
+  if (localStorage.getItem("userRole") === "Admin") {
+    currentRole = "Admin";
+    setAdminChrome(true);
+    showAdminTab("orders");
+  } else {
+    triggerLogout(true);
+  }
+}
+function openLoginModal() {
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPassword").value = "";
+  document.getElementById("loginError").textContent = "";
+  openModal("loginModalWindow");
+  setTimeout(() => document.getElementById("loginUsername").focus(), 50);
+}
+function closeLoginModal() { closeModal("loginModalWindow"); }
+function submitLogin() {
+  const userVal = document.getElementById("loginUsername").value.trim();
+  const passVal = document.getElementById("loginPassword").value;
+  const errorBox = document.getElementById("loginError");
+  const btn = document.getElementById("loginSubmitBtn");
+  if (btn.disabled) return;
+  if (!userVal || !passVal) { errorBox.textContent = "Please enter your login and password."; return; }
+  errorBox.textContent = "";
+  setButtonLoading(btn, true, "Logging in...");
+  fetch(`${API_URL}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: userVal, password: passVal })
+  })
+  .then(res => { if (!res.ok) throw new Error("Unauthorized"); return res.json(); })
+  .then(data => {
+    currentRole = "Admin";
+    localStorage.setItem("userRole", "Admin");
+    if (data && data.token) localStorage.setItem("adminToken", data.token);
+    else localStorage.removeItem("adminToken");
+    closeLoginModal();
+    setAdminChrome(true);
+    showAdminTab("orders");
+    window.scrollTo({ top: 0 });
+    showToast("Logged in as admin");
+  })
+  .catch(() => { errorBox.textContent = "Invalid login or password."; })
+  .finally(() => setButtonLoading(btn, false));
+}
+function triggerLogout(silent) {
+  currentRole = "User";
+  localStorage.removeItem("userRole");
+  localStorage.removeItem("adminToken");
+  setAdminChrome(false);
+  const r = document.getElementById("userResults");
+  r.classList.remove("show"); r.innerHTML = "";
+  document.getElementById("userQueryInput").value = "";
+  if (silent !== true) { window.scrollTo({ top: 0 }); showToast("Logged out"); }
+}
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("todayLabel").textContent = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  buildTutorial();
+  checkPersistentLogin();
+});
+
+/* ====================== USER SEARCH ====================== */
+function quickSearch(q) {
+  document.getElementById("userQueryInput").value = q || "";
+  document.getElementById("track").scrollIntoView({ behavior: "smooth" });
+  performSearch();
+}
+function orderCardHTML(o) {
+  const status = o.delivery_status || "Accepted";
+  const step = { Accepted: 0, Delivering: 1, Shipped: 2 }[status];
+  const on = i => (step !== undefined && i <= step) ? " on" : "";
+  return `
+  <article class="order-card">
+    <div class="order-top">
+      <div class="order-id">
+        <span class="box-icon" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M3 7.5L12 3L21 7.5V16.5L12 21L3 16.5ZM3 7.5L12 12L21 7.5M12 12V21" fill="none" stroke="#FF6B1A" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+        <div><strong>${esc(o.order_number)}</strong><span>${esc(o.customer)}</span></div>
+      </div>
+      <div class="pills">
+        ${isLate(o) ? '<span class="pill pill-late">Past deadline</span>' : ""}
+        <span class="pill ${pillClass(status)}">${esc(status)}</span>
+      </div>
+    </div>
+    <div class="track" aria-label="Delivery progress">
+      <div><span class="bar${on(0)}"></span><span>Accepted</span></div>
+      <div><span class="bar${on(1)}"></span><span class="${step >= 1 ? "" : "muted"}">Delivering</span></div>
+      <div><span class="bar${on(2)}"></span><span class="${step >= 2 ? "" : "muted"}">Shipped</span></div>
+    </div>
+    <div class="facts">
+      <span class="fact"><span>Amount</span><b>${money(o.amount)}</b></span>
+      <span class="fact"><span>Delivery deadline</span><b>${esc(fmtDate(o.deadline) || "No deadline")}</b></span>
+    </div>
+  </article>`;
+}
+function performSearch() {
+  const searchVal = document.getElementById("userQueryInput").value.trim();
+  const btn = document.getElementById("searchBtn");
+  const box = document.getElementById("userResults");
+  if (!searchVal || btn.disabled) { document.getElementById("userQueryInput").focus(); return; }
+  setButtonLoading(btn, true, "");
+  box.classList.add("show");
+  box.innerHTML = `<p class="results-meta"><span class="spinner spinner-dark"></span>Searching... (the server can take up to a minute to wake up)</p>`;
+  fetch(`${API_URL}/search?query=${encodeURIComponent(searchVal)}`)
+  .then(res => { if (!res.ok) throw new Error("Server error " + res.status); return res.json(); })
+  .then(orders => {
+    if (!Array.isArray(orders) || orders.length === 0) {
+      box.innerHTML = `<div class="empty-card"><h3>No order found</h3><p>Check the number (it looks like SO-001) or try your company name.</p></div>`;
+      return;
     }
-    
-    function loadInventory() {
-        const tbody = document.querySelector("#inventoryTable tbody");
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; padding:24px;">Loading inventory...</td></tr>`;
-    
-        fetch(`${API_URL}/inventory`)
-        .then(res => {
-            if (!res.ok) throw new Error("Server error " + res.status);
-            return res.json();
-        })
-        .then(items => {
-            tbody.innerHTML = "";
-            if (!Array.isArray(items) || items.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px;">No inventory items found.</td></tr>`;
-                return;
-            }
-            
-            items.forEach(item => {
-                const itemStatus = item.status || "Stock";
-                const statusClass = (itemStatus === "Stock" || itemStatus === "In stock") ? "in-stock"
-                                  : itemStatus === "Low stock" ? "low-stock" : "not-available";
-                const itemCode = item.inventory_id ?? "INV-" + String(item.item_id).padStart(3, "0");
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td style="color: #0043a4; font-weight: 600;">${itemCode}</td>
-                    <td></td>
-                    <td></td>
-                    <td>${item.quantity}</td>
-                    <td>$${Number(item.unit_price).toFixed(2)}</td>
-                    <td>
-                        <div class="delivery-cell-container">
-                            <div class="status ${statusClass}">${itemStatus}</div>
-                            <button class="trash-delete-btn" title="Delete Row" onclick="deleteInventoryItem(${item.item_id}, '${itemCode}')">
-                                <svg width="14" height="16" viewBox="0 0 448 512" fill="currentColor"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                row.children[1].textContent = item.name ?? item.item_name ?? "";
-                row.children[2].textContent = item.category;
-                tbody.appendChild(row);
-            });
-        })
-        .catch(err => {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#dc2626; padding:24px;">Could not load inventory: ${err.message}</td></tr>`;
-        });
-    }
-    
-    // ---------- Add item ----------
-    function openItemModal() {
-        ["modalItemName", "modalItemCategory", "modalItemQuantity", "modalItemPrice"]
-            .forEach(id => document.getElementById(id).value = "");
-        document.getElementById("itemError").textContent = "";
-        document.getElementById("itemModalWindow").classList.add("is-visible");
-        document.getElementById("modalItemName").focus();
-    }
-    
-    function closeItemModal() {
-        document.getElementById("itemModalWindow").classList.remove("is-visible");
-    }
-    
-    async function submitItemData() {
-        const name = document.getElementById("modalItemName").value.trim();
-        const category = document.getElementById("modalItemCategory").value.trim();
-        const quantity = parseInt(document.getElementById("modalItemQuantity").value, 10);
-        const unit_price = parseFloat(document.getElementById("modalItemPrice").value);
-        const errorBox = document.getElementById("itemError");
-        const btn = document.getElementById("itemSubmitBtn");
-    
-        if (btn.disabled) return;
-        if (!name) { errorBox.textContent = "Please enter the item name."; return; }
-        if (isNaN(quantity) || quantity < 0) { errorBox.textContent = "Quantity must be 0 or more."; return; }
-        if (isNaN(unit_price) || unit_price < 0) { errorBox.textContent = "Please enter a valid price."; return; }
-    
-        errorBox.textContent = "";
-        btn.disabled = true;
-        btn.textContent = "Saving...";
-        try {
-            const response = await fetch(`${API_URL}/inventory`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ item_name: name, category, quantity, unit_price })
-            });
-            if (!response.ok) throw new Error("Server error " + response.status);
-            closeItemModal();
-            loadInventory();
-        } catch (err) {
-            errorBox.textContent = "Could not save the item: " + err.message;
-        } finally {
-            btn.disabled = false;
-            btn.textContent = "New Item";
-        }
-    }
-    
-    // ---------- Delete item ----------
-    let itemPendingDelete = null;
-    
-    function deleteInventoryItem(itemId, code) {
-        itemPendingDelete = itemId;
-        document.getElementById("deleteItemText").textContent =
-            `Are you sure you want to permanently delete inventory item ${code}?`;
-        document.getElementById("deleteItemModalWindow").classList.add("is-visible");
-    }
-    
-    function closeDeleteItemModal() {
-        document.getElementById("deleteItemModalWindow").classList.remove("is-visible");
-        itemPendingDelete = null;
-    }
-    
-    async function confirmDeleteItem() {
-        if (itemPendingDelete === null) return;
-        const btn = document.getElementById("deleteItemConfirmBtn");
-        if (btn.disabled) return;
-        const itemId = itemPendingDelete;
-    
-        btn.disabled = true;
-        btn.textContent = "Deleting...";
-        try {
-            const response = await fetch(`${API_URL}/inventory/${itemId}`, { method: "DELETE" });
-            if (!response.ok) throw new Error("Server error " + response.status);
-            closeDeleteItemModal();
-            loadInventory();
-        } catch (err) {
-            closeDeleteItemModal();
-            alert("Error deleting item: " + err.message);
-        } finally {
-            btn.disabled = false;
-            btn.textContent = "Yes";
-        }
-    }
+    box.innerHTML = `<p class="results-meta">${orders.length === 1 ? "1 order found" : orders.length + " orders found"}</p>` + orders.map(orderCardHTML).join("");
+  })
+  .catch(err => {
+    console.error(err);
+    box.innerHTML = `<div class="empty-card"><h3>Search is not available right now</h3><p>${esc(err.message)}. Please try again in a moment.</p></div>`;
+  })
+  .finally(() => setButtonLoading(btn, false));
+}
 
-        
-    </script>
+/* ====================== TUTORIAL ====================== */
+const CHAPTERS = [
+  { title: "Find your order", who: "Customers", text: "Type your order number (SO-001) or customer name in the search bar at the top of the page." },
+  { title: "Read the status", who: "Customers", text: "Accepted means the shop has it, Delivering means it is on the way, Shipped means delivered." },
+  { title: "Log in as admin", who: "Admins", text: "Press Log in at the top right and enter your login and password." },
+  { title: "Manage orders", who: "Admins", text: "Add orders with + Sales order, change the status in the table, delete with the bin icon." }
+];
+const GUIDES = {
+  customer: [
+    { t: "Open the site", p: "No account or app needed. Any phone or laptop browser works.", c: "Main page" },
+    { t: "Search", p: "Enter the order number from your receipt, or your company name.", c: "SO-034" },
+    { t: "Check the status", p: "The bar shows how far your order has gone: Accepted, Delivering, Shipped.", c: "Delivering" },
+    { t: "Late order?", p: "If the deadline has passed you will see a red Past deadline label. Contact the shop.", c: "Past deadline" }
+  ],
+  admin: [
+    { t: "Log in", p: "Use the Log in button at the top. Passwords are stored as bcrypt hashes.", c: "Log in" },
+    { t: "Add an order", p: "Press + Sales order, enter customer, amount and delivery date, then Save.", c: "+ Sales order" },
+    { t: "Change the status", p: "Pick Accepted, Delivering or Shipped in the table. It saves at once.", c: "Delivering" },
+    { t: "Watch the late ones", p: "Use the Past deadline filter and counter to see which orders to chase first.", c: "Past deadline" }
+  ]
+};
+let chapter = 0;
+function buildTutorial() {
+  document.getElementById("chapters").innerHTML = CHAPTERS.map((c, i) =>
+    `<button class="chapter${i === 0 ? " active" : ""}" role="listitem" type="button" onclick="setChapter(${i})"><span class="num">${i + 1}</span><span><b>${esc(c.title)}</b><small>${esc(c.who)}</small></span></button>`).join("");
+  setChapter(0);
+  showGuide("customer");
+}
+function setChapter(i) {
+  chapter = i;
+  document.querySelectorAll(".chapter").forEach((b, k) => b.classList.toggle("active", k === i));
+  document.querySelectorAll("#chapterProgress span").forEach((s, k) => s.classList.toggle("on", k <= i));
+  document.getElementById("chapterBadge").textContent = `Chapter ${i + 1} of ${CHAPTERS.length}`;
+  document.getElementById("chapterTitle").textContent = CHAPTERS[i].title;
+  document.getElementById("chapterText").textContent = CHAPTERS[i].text;
+}
+function playTutorial() {
+  if (!TUTORIAL_VIDEO_URL) { showToast("The tutorial video is coming soon. Follow the guides below for now."); return; }
+  const p = document.getElementById("player");
+  p.innerHTML = `<iframe src="${esc(TUTORIAL_VIDEO_URL)}?autoplay=1" title="ITS video tutorial" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+}
+function showGuide(which) {
+  document.getElementById("tabCustomer").classList.toggle("active", which === "customer");
+  document.getElementById("tabAdmin").classList.toggle("active", which === "admin");
+  document.getElementById("tabCustomer").setAttribute("aria-selected", which === "customer");
+  document.getElementById("tabAdmin").setAttribute("aria-selected", which === "admin");
+  const g = GUIDES[which];
+  document.getElementById("guideSteps").innerHTML = g.map((s, i) =>
+    `<article class="step${i === 1 ? " orange" : i === g.length - 1 ? " dark" : ""}"><span class="n">0${i + 1}</span><h3>${esc(s.t)}</h3><p>${esc(s.p)}</p><span class="s-chip">${esc(s.c)}</span></article>`).join("");
+}
+
+/* ====================== ADMIN: ORDERS ====================== */
+function updateKpis() {
+  const open = ordersCache.filter(o => (o.delivery_status || "Accepted") !== "Shipped");
+  document.getElementById("kpiTotal").textContent = ordersCache.length;
+  document.getElementById("kpiOpen").textContent = open.length;
+  document.getElementById("kpiValue").textContent = "$" + Math.round(open.reduce((s, o) => s + Number(o.amount || 0), 0)).toLocaleString("en-US");
+  document.getElementById("kpiLate").textContent = ordersCache.filter(isLate).length;
+}
+function setFilter(f) {
+  orderFilter = f;
+  document.querySelectorAll("#orderFilters .filter").forEach(b => b.classList.toggle("active", b.dataset.f === f));
+  renderOrders();
+}
+function renderOrders() {
+  const tbody = document.querySelector("#ordersTable tbody");
+  const q = document.getElementById("adminFilterInput").value.trim().toLowerCase();
+  let list = ordersCache;
+  if (orderFilter === "Late") list = list.filter(isLate);
+  else if (orderFilter !== "All") list = list.filter(o => (o.delivery_status || "Accepted") === orderFilter);
+  if (q) list = list.filter(o => String(o.order_number).toLowerCase().includes(q) || String(o.customer).toLowerCase().includes(q));
+  if (list.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-msg">No orders match this filter.</td></tr>`; return; }
+  tbody.innerHTML = list.map(order => {
+    const s = order.delivery_status || "Accepted";
+    const num = esc(order.order_number);
+    const opts = ["Accepted", "Delivering", "Shipped"].concat(["Accepted", "Delivering", "Shipped"].includes(s) ? [] : [s]);
+    return `<tr>
+      <td class="id">${num}</td>
+      <td>${esc(order.customer)}</td>
+      <td>${money(order.amount)}</td>
+      <td>${esc(fmtDate(order.deadline) || "No deadline")}${isLate(order) ? '<span class="late-tag">LATE</span>' : ""}</td>
+      <td><div class="cell-flex">
+        <label class="sr-only" for="st-${num}">Status of ${num}</label>
+        <select id="st-${num}" class="status-dropdown ${pillClass(s)}" data-order="${num}" onchange="changeOrderDeliveryStatus(this.dataset.order, this.value, this)">
+          ${opts.map(v => `<option value="${esc(v)}"${v === s ? " selected" : ""}>${esc(v)}</option>`).join("")}
+        </select>
+        <button class="icon-btn" title="Delete order" aria-label="Delete ${num}" data-order="${num}" onclick="deleteOrder(this.dataset.order)">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 18 18"><path d="M3 5H15M7 5V3H11V5M5 5L6 15H12L13 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </button>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+function loadAdminTableRecords() {
+  document.querySelector("#ordersTable tbody").innerHTML =
+    `<tr><td colspan="5" class="table-msg"><span class="spinner spinner-dark"></span>Loading orders...</td></tr>`;
+  fetch(`${API_URL}/orders`)
+  .then(res => { if (!res.ok) throw new Error("Server error " + res.status); return res.json(); })
+  .then(orders => {
+    ordersCache = Array.isArray(orders) ? orders : [];
+    statsOrdersCache = null;
+    updateKpis();
+    renderOrders();
+  })
+  .catch(err => {
+    document.querySelector("#ordersTable tbody").innerHTML =
+      `<tr><td colspan="5" class="table-msg" style="color:var(--red)">Could not load orders: ${esc(err.message)}</td></tr>`;
+  });
+}
+async function changeOrderDeliveryStatus(orderNumber, newStatus, selectEl) {
+  const order = ordersCache.find(o => String(o.order_number) === String(orderNumber));
+  const prev = order ? (order.delivery_status || "Accepted") : null;
+  if (selectEl) { selectEl.disabled = true; selectEl.className = "status-dropdown " + pillClass(newStatus); }
+  try {
+    const response = await authFetch(`${API_URL}/orders/${encodeURIComponent(orderNumber)}/status`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ delivery_status: newStatus })
+    });
+    if (!response.ok) throw new Error("Status update failed");
+    if (order) order.delivery_status = newStatus;
+    statsOrdersCache = null;
+    updateKpis();
+    renderOrders();
+    showToast(`${orderNumber} moved to ${newStatus}`);
+  } catch (err) {
+    console.error(err);
+    if (selectEl && prev) { selectEl.value = prev; selectEl.className = "status-dropdown " + pillClass(prev); }
+    showToast("Could not save the status: " + err.message, true);
+  } finally {
+    if (selectEl) selectEl.disabled = false;
+  }
+}
+let orderPendingDelete = null;
+function deleteOrder(orderNumber) {
+  orderPendingDelete = orderNumber;
+  document.getElementById("deleteModalText").textContent = `Delete order ${orderNumber}?`;
+  openModal("deleteModalWindow");
+}
+function closeDeleteModal() { closeModal("deleteModalWindow"); orderPendingDelete = null; }
+async function confirmDeleteOrder() {
+  if (!orderPendingDelete) return;
+  const btn = document.getElementById("deleteConfirmBtn");
+  if (btn.disabled) return;
+  const orderNumber = orderPendingDelete;
+  setButtonLoading(btn, true, "Deleting...");
+  try {
+    const response = await authFetch(`${API_URL}/orders/${encodeURIComponent(orderNumber)}`, { method: "DELETE" });
+    if (!response.ok) throw new Error("Deletion failed");
+    closeDeleteModal();
+    showToast(`Order ${orderNumber} deleted`);
+    loadAdminTableRecords();
+  } catch (err) {
+    closeDeleteModal();
+    showToast("Could not delete: " + err.message, true);
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+function openOrderModalWindow() {
+  document.getElementById("modalCustomerName").value = "";
+  document.getElementById("modalPurchaseAmount").value = "";
+  document.getElementById("modalDeliveryDate").value = todayISO();
+  document.getElementById("orderError").textContent = "";
+  openModal("orderModalWindow");
+  setTimeout(() => document.getElementById("modalCustomerName").focus(), 50);
+}
+function closeOrderModalWindow() { closeModal("orderModalWindow"); }
+async function submitModalOrderData() {
+  const customer = document.getElementById("modalCustomerName").value.trim();
+  const amountInput = document.getElementById("modalPurchaseAmount").value;
+  const deadline = document.getElementById("modalDeliveryDate").value;
+  const errorBox = document.getElementById("orderError");
+  const btn = document.getElementById("orderSubmitBtn");
+  if (btn.disabled) return;
+  if (!customer || !amountInput || !deadline) { errorBox.textContent = "Please fill in all three fields."; return; }
+  const amount = parseFloat(amountInput);
+  if (isNaN(amount) || amount <= 0) { errorBox.textContent = "Please enter an amount greater than 0."; return; }
+  errorBox.textContent = "";
+  setButtonLoading(btn, true, "Saving...");
+  try {
+    const response = await authFetch(`${API_URL}/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ customer, amount, deadline, stock_status: "In stock", delivery_status: "Accepted" })
+    });
+    if (!response.ok) throw new Error("The server rejected the order");
+    const sound = document.getElementById("orderSound");
+    sound.volume = 0.3; sound.currentTime = 0; sound.play().catch(() => {});
+    closeOrderModalWindow();
+    showToast(`Order for ${customer} created`);
+    setFilter("All");
+    loadAdminTableRecords();
+  } catch (err) {
+    errorBox.textContent = "Could not save the order: " + err.message;
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+function showAdminTab(tab) {
+  const isOrders = tab === "orders";
+  document.getElementById("ordersSection").style.display = isOrders ? "" : "none";
+  document.getElementById("inventorySection").style.display = isOrders ? "none" : "";
+  document.getElementById("orderFilters").style.display = isOrders ? "" : "none";
+  document.getElementById("tabOrders").classList.toggle("active", isOrders);
+  document.getElementById("tabInventory").classList.toggle("active", !isOrders);
+  document.getElementById("salesOrderBtn").style.display = isOrders ? "" : "none";
+  document.getElementById("inventoryBtn").style.display = isOrders ? "none" : "";
+  if (isOrders) loadAdminTableRecords(); else loadInventory();
+}
+
+/* ====================== ADMIN: INVENTORY ====================== */
+function loadInventory() {
+  const tbody = document.querySelector("#inventoryTable tbody");
+  tbody.innerHTML = `<tr><td colspan="6" class="table-msg"><span class="spinner spinner-dark"></span>Loading inventory...</td></tr>`;
+  fetch(`${API_URL}/inventory`)
+  .then(res => { if (!res.ok) throw new Error("Server error " + res.status); return res.json(); })
+  .then(items => {
+    if (!Array.isArray(items) || items.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="table-msg">No inventory items yet.</td></tr>`; return; }
+    tbody.innerHTML = items.map(item => {
+      const st = item.status || "In stock";
+      const cls = (st === "Stock" || st === "In stock") ? "in-stock" : st === "Low stock" ? "low-stock" : "not-available";
+      const code = item.inventory_id ?? "INV-" + String(item.item_id).padStart(3, "0");
+      return `<tr>
+        <td class="id">${esc(code)}</td>
+        <td>${esc(item.name ?? item.item_name ?? "")}</td>
+        <td>${esc(item.category ?? "")}</td>
+        <td>${esc(item.quantity)}</td>
+        <td>${money(item.unit_price)}</td>
+        <td><div class="cell-flex"><span class="status ${cls}">${esc(st)}</span>
+          <button class="icon-btn" aria-label="Delete ${esc(code)}" data-id="${esc(item.item_id)}" data-code="${esc(code)}" onclick="deleteInventoryItem(this.dataset.id, this.dataset.code)">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 18 18"><path d="M3 5H15M7 5V3H11V5M5 5L6 15H12L13 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          </button></div></td>
+      </tr>`;
+    }).join("");
+  })
+  .catch(err => { tbody.innerHTML = `<tr><td colspan="6" class="table-msg" style="color:var(--red)">Could not load inventory: ${esc(err.message)}</td></tr>`; });
+}
+function openItemModal() {
+  ["modalItemName", "modalItemCategory", "modalItemQuantity", "modalItemPrice"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("itemError").textContent = "";
+  openModal("itemModalWindow");
+  setTimeout(() => document.getElementById("modalItemName").focus(), 50);
+}
+function closeItemModal() { closeModal("itemModalWindow"); }
+async function submitItemData() {
+  const name = document.getElementById("modalItemName").value.trim();
+  const category = document.getElementById("modalItemCategory").value.trim();
+  const quantity = parseInt(document.getElementById("modalItemQuantity").value, 10);
+  const unit_price = parseFloat(document.getElementById("modalItemPrice").value);
+  const errorBox = document.getElementById("itemError");
+  const btn = document.getElementById("itemSubmitBtn");
+  if (btn.disabled) return;
+  if (!name) { errorBox.textContent = "Please enter the item name."; return; }
+  if (isNaN(quantity) || quantity < 0) { errorBox.textContent = "Quantity must be 0 or more."; return; }
+  if (isNaN(unit_price) || unit_price < 0) { errorBox.textContent = "Please enter a valid price."; return; }
+  errorBox.textContent = "";
+  setButtonLoading(btn, true, "Saving...");
+  try {
+    const response = await authFetch(`${API_URL}/inventory`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ item_name: name, category, quantity, unit_price })
+    });
+    if (!response.ok) throw new Error("Server error " + response.status);
+    closeItemModal();
+    showToast(`${name} added to inventory`);
+    loadInventory();
+  } catch (err) {
+    errorBox.textContent = "Could not save the item: " + err.message;
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+let itemPendingDelete = null;
+function deleteInventoryItem(itemId, code) {
+  itemPendingDelete = itemId;
+  document.getElementById("deleteItemText").textContent = `Delete inventory item ${code}?`;
+  openModal("deleteItemModalWindow");
+}
+function closeDeleteItemModal() { closeModal("deleteItemModalWindow"); itemPendingDelete = null; }
+async function confirmDeleteItem() {
+  if (itemPendingDelete === null) return;
+  const btn = document.getElementById("deleteItemConfirmBtn");
+  if (btn.disabled) return;
+  const itemId = itemPendingDelete;
+  setButtonLoading(btn, true, "Deleting...");
+  try {
+    const response = await authFetch(`${API_URL}/inventory/${encodeURIComponent(itemId)}`, { method: "DELETE" });
+    if (!response.ok) throw new Error("Server error " + response.status);
+    closeDeleteItemModal();
+    showToast("Item deleted");
+    loadInventory();
+  } catch (err) {
+    closeDeleteItemModal();
+    showToast("Could not delete the item: " + err.message, true);
+  } finally {
+    setButtonLoading(btn, false);
+  }
+}
+
+/* ====================== STATISTICS ====================== */
+let statsChart = null, statsOrdersCache = null;
+function openStats() { document.getElementById("statsOverlay").classList.add("open"); showStat("status"); }
+function closeStats() {
+  document.getElementById("statsOverlay").classList.remove("open");
+  if (statsChart) { statsChart.destroy(); statsChart = null; }
+}
+async function statsGetOrders(force) {
+  if (statsOrdersCache && !force) return statsOrdersCache;
+  const res = await fetch(`${API_URL}/orders`);
+  if (!res.ok) throw new Error("Orders request failed (" + res.status + ")");
+  statsOrdersCache = await res.json();
+  return statsOrdersCache;
+}
+function statsPaint(title, sub, type, labels, values, datasetLabel, tableHead, rows, colors) {
+  const main = document.getElementById("statsMain");
+  main.innerHTML =
+    `<h3>${esc(title)}</h3><p class="sub">${esc(sub)}</p>
+     <div class="stats-chart-box"><canvas id="statsCanvas" role="img" aria-label="${esc(title)}"></canvas></div>
+     <table class="stats-table"><thead><tr>${tableHead.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead>
+     <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  if (statsChart) statsChart.destroy();
+  if (typeof Chart === "undefined") return;
+  const isPie = type === "doughnut";
+  Chart.defaults.font.family = "Outfit, Arial, sans-serif";
+  statsChart = new Chart(document.getElementById("statsCanvas"), {
+    type,
+    data: { labels, datasets: [{ label: datasetLabel, data: values,
+      backgroundColor: isPie ? colors : "#FF6B1A",
+      borderColor: type === "line" ? "#FF6B1A" : "#ffffff",
+      borderWidth: type === "line" ? 3 : (isPie ? 3 : 0), tension: .3, fill: false,
+      pointRadius: type === "line" ? 4 : 0, pointBackgroundColor: "#141414", borderRadius: type === "bar" ? 8 : 0 }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: isPie ? "62%" : undefined,
+      indexAxis: type === "bar" ? "y" : "x",
+      plugins: { legend: { display: isPie, position: "right" } },
+      scales: isPie ? {} : { x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: "#F0F0F0" } }, y: { beginAtZero: true, ticks: { precision: 0 }, grid: { display: false } } } }
+  });
+}
+async function showStat(name) {
+  document.querySelectorAll(".stats-item").forEach(b => b.classList.toggle("active", b.dataset.stat === name));
+  const main = document.getElementById("statsMain");
+  main.innerHTML = `<div class="stats-msg"><span class="spinner spinner-dark"></span>Loading...</div>`;
+  try {
+    if (name === "status") {
+      const orders = await statsGetOrders(true);
+      const orderList = ["Accepted", "Delivering", "Shipped"];
+      const counts = {};
+      orders.forEach(o => { const s = o.delivery_status || "Accepted"; counts[s] = (counts[s] || 0) + 1; });
+      const labels = Object.keys(counts).sort((a, b) => ((orderList.indexOf(a) + 99) % 99) - ((orderList.indexOf(b) + 99) % 99));
+      const values = labels.map(l => counts[l]);
+      const colorMap = { Accepted: "#FF6B1A", Delivering: "#141414", Shipped: "#9FD8B3" };
+      statsPaint("Orders per delivery status", `${orders.length} orders in total`, "doughnut",
+        labels, values, "Orders", ["Status", "Orders", "Share"],
+        labels.map((l, i) => [l, values[i], (100 * values[i] / orders.length).toFixed(1) + "%"]),
+        labels.map(l => colorMap[l] || "#BDBDBD"));
+    } else if (name === "customers") {
+      const orders = await statsGetOrders(false);
+      const sums = {};
+      orders.forEach(o => { const c = o.customer || "Unknown"; sums[c] = (sums[c] || 0) + Number(o.amount || 0); });
+      const top = Object.entries(sums).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      statsPaint("Top spending customers", "Total order amount per customer (USD), top 8", "bar",
+        top.map(t => t[0]), top.map(t => Math.round(t[1] * 100) / 100), "Total ($)", ["Customer", "Total spent ($)"],
+        top.map(t => [t[0], "$" + t[1].toFixed(2)]));
+    } else if (name === "weekly") {
+      const res = await fetch(`${API_URL}/stats/orders-per-week`);
+      if (!res.ok) throw new Error("Weekly stats need the backend route /stats/orders-per-week (HTTP " + res.status + ")");
+      const rows = await res.json();
+      statsPaint("Orders per week", "Number of orders created each week (weeks start on Monday)", "line",
+        rows.map(r => fmtDate(r.week_start)), rows.map(r => Number(r.orders)), "Orders", ["Week starting", "Orders"],
+        rows.map(r => [fmtDate(r.week_start), r.orders]));
+    }
+  } catch (err) {
+    console.error(err);
+    main.innerHTML = `<div class="stats-msg">Could not load this statistic.<br><small>${esc(err.message)}</small></div>`;
+  }
+}
+</script>
 </body>
 </html>
-        
